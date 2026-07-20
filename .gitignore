@@ -1,1 +1,14 @@
-test.exe
+# Build artifacts
+*.exe
+*.out
+*.o
+*.obj
+*.pdb
+*.ilk
+
+# Editor / IDE
+.vscode/
+
+# OS files
+Thumbs.db
+.DS_Store
