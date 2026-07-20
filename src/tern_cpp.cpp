@@ -36,7 +36,7 @@ struct individual {
 
 class Basic_status_calc {
     private:
-        Racial Typhlosion = {50, 84, 78, 109, 85, 100};
+        Racial Typhlosion = {50, 78, 84, 78, 109, 85, 100};
         Racial Swampert = {50, 100, 110, 90, 85, 90, 60};
         
         Status status;
@@ -54,44 +54,24 @@ class Basic_status_calc {
         };
 
         void setStatus(Racial arg) {
-            status.attack = calkAtk(arg);
-            status.hp = calkHp(arg);
+            status.hp = calcStatus(arg.lv, arg.hp);
+            status.attack = calcStatus(arg.lv, arg.attack);
+            status.defense = calcStatus(arg.lv, arg.defense);
+            status.sp_attack = calcStatus(arg.lv, arg.sp_attack);
+            status.sp_defence = calcStatus(arg.lv, arg.sp_defence);
+            status.speed = calcStatus(arg.lv, arg.speed);
         };
 
-
-
-        //HPの算出
-        int calkHp(Racial arg) {
-            int calkEffort = 252 / 4; 
-            int calk1 = arg.hp * 2 + 31 + calkEffort;
-            int calk2 = calk1 * arg.lv;
+        //ステータスを算出する
+        int calcStatus(int lv, int status) {
+            int calkEffort = 252 / 4;
+            int calk1 = status * 2 + 31 + calkEffort;
+            int calk2 = calk1 * lv;
             int calk3 = calk2 / 100;
+            int finalStatus = calk3 + 5;
 
-            int finalHp = calk3 + 5;
-            
-            return finalHp;
-
+            return finalStatus;
         };
-
-        //こうげき力の算出
-        int calkAtk(Racial arg){
-            int calkEffort = 252 / 4; 
-
-            // 1. カッコ内の合計を計算 (種族値×2 + 個体値 + 努力値/4)
-            int calk1 = arg.attack * 2 + 31 + calkEffort;
-
-            // 2. 先に「レベル」を掛ける（★ここが修正ポイント）
-            int calk2 = calk1 * arg.lv;
-
-            // 3. その後、100で割って切り捨てる（★ここが修正ポイント）
-            int calk3 = calk2 / 100;
-
-            // 4. 最後に 5 を足す
-            int finalAtk = calk3 + 5;
-
-            return finalAtk;
-        };
-
 
         Status getStatus() {
             return status;
@@ -104,8 +84,13 @@ int main() {
     Racial me = basic.getPokemon1();
     basic.setRacial(me);
     Status status = basic.getStatus();
-    std::cout << status.attack << std::endl;
+    
     std::cout << status.hp << std::endl;
+    std::cout << status.attack << std::endl;
+    std::cout << status.defense << std::endl;
+    std::cout << status.sp_attack << std::endl;
+    std::cout << status.sp_defence << std::endl;
+    std::cout << status.speed << std::endl;
     return 0;
 
 
