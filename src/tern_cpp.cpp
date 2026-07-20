@@ -55,9 +55,25 @@ class Basic_status_calc {
 
         void setStatus(Racial arg) {
             status.attack = calkAtk(arg);
+            status.hp = calkHp(arg);
+        };
+
+
+
+        //HPの算出
+        int calkHp(Racial arg) {
+            int calkEffort = 252 / 4; 
+            int calk1 = arg.hp * 2 + 31 + calkEffort;
+            int calk2 = calk1 * arg.lv;
+            int calk3 = calk2 / 100;
+
+            int finalHp = calk3 + 5;
+            
+            return finalHp;
 
         };
 
+        //こうげき力の算出
         int calkAtk(Racial arg){
             int calkEffort = 252 / 4; 
 
@@ -76,6 +92,7 @@ class Basic_status_calc {
             return finalAtk;
         };
 
+
         Status getStatus() {
             return status;
         };
@@ -88,6 +105,7 @@ int main() {
     basic.setRacial(me);
     Status status = basic.getStatus();
     std::cout << status.attack << std::endl;
+    std::cout << status.hp << std::endl;
     return 0;
 
 
