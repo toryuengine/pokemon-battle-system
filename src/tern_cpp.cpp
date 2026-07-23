@@ -24,14 +24,33 @@ struct Racial {
 };
 
 //個体値
-struct individual {
-    int lv;
+struct individualValue {
     int hp;
     int attack;
     int defense;
     int sp_attack;
     int sp_defence;
     int speed;
+};
+
+//努力値
+struct effortValue {
+    int hp;
+    int attack;
+    int defense;
+    int sp_attack;
+    int sp_defence;
+    int speed;
+};
+
+
+struct savedata {
+    int id;
+    int identifier;
+    int lv; //レベル
+    individualValue indivisual;//個体値構造体
+    effortValue effort;//努力値構造体
+    int personality;//性格
 };
 
 class Basic_status_calc {
@@ -80,6 +99,16 @@ class Basic_status_calc {
 
 
 int main() {
+    system("chcp 65001");
+    while (true){
+        std::cout << "バクフーン" ;
+        std::cout << "" ;
+        std::cout << "ラグラージ" ;
+        std::cout << "" ;
+        std::cout << "フシギバナ" ;
+        
+    }
+
     Basic_status_calc basic;
     Racial me = basic.getPokemon1();
     basic.setRacial(me);
