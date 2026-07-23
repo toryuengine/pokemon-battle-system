@@ -65,7 +65,7 @@ class CharaCter {
             //種族値の取得
             getRacial();
 
-            status.hp = calcStatus(data.lv, racial.hp, data.indivisual.hp, data.effort.hp);
+            status.hp = calcStatusHP(data.lv, racial.hp, data.indivisual.hp, data.effort.hp);
             status.attack = calcStatus(data.lv, racial.attack, data.indivisual.attack, data.effort.attack);
             status.defense = calcStatus(data.lv, racial.defense, data.indivisual.defense, data.effort.defense);
             status.sp_attack = calcStatus(data.lv, racial.sp_attack, data.indivisual.sp_attack, data.effort.sp_attack);
@@ -82,7 +82,7 @@ class CharaCter {
         void getRacial() {
             //検索は後で追加
             //例）バクフーン
-            racial = {50, 78, 84, 78, 109, 85, 100};
+            racial = {78, 84, 78, 109, 85, 100};
 
         }
 
@@ -94,6 +94,18 @@ class CharaCter {
             int calk2 = calk1 * lv;
             int calk3 = calk2 / 100;
             int finalStatus = calk3 + 5;
+
+            return finalStatus;
+        };
+
+        //HPを算出する
+        //レベル, 種族値, 個体値, 努力値
+        int calcStatusHP(int lv, int rac, int ind, int eff) {
+            int calkEffort = eff / 4;
+            int calk1 = rac * 2 + ind + calkEffort;
+            int calk2 = calk1 * lv;
+            int calk3 = calk2 / 100;
+            int finalStatus = calk3 + lv + 10;
 
             return finalStatus;
         };
@@ -284,8 +296,8 @@ class Basic_status_calc {
             data.identifier = 00001;
             data.lv = 50;
             data.indivisual = {31, 31, 31, 31, 31, 31};
-            data.effort = {255, 255, 0, 0, 0, 0};
-            data.personality = 1;
+            data.effort = {4, 0, 0, 252, 0, 252};
+            data.personality = 16;//控えめ
         };
 };
 
