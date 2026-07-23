@@ -15,7 +15,6 @@ struct Status {
 
 //種族値
 struct Racial {
-    int lv;
     int hp;
     int attack;
     int defense;
@@ -250,31 +249,15 @@ class CharaCter {
 
 class Basic_status_calc {
     private:
-        Racial Typhlosion = {50, 78, 84, 78, 109, 85, 100};
-        Racial Swampert = {50, 100, 110, 90, 85, 90, 60};
+        Racial Typhlosion = {78, 84, 78, 109, 85, 100};
+        Racial Swampert = {100, 110, 90, 85, 90, 60};
         savedata data;
         Status status;
 
     public:
-        int name;
-        Racial getPokemon1() const {
-            return Typhlosion;
-        }
 
-        //種族値をセットする
-        void setRacial(const Racial arg) {
-            Racial racial = arg;
-            setStatus(racial);
-        };
 
-        void setStatus(Racial arg) {
-            status.hp = calcStatus(arg.lv, arg.hp);
-            status.attack = calcStatus(arg.lv, arg.attack);
-            status.defense = calcStatus(arg.lv, arg.defense);
-            status.sp_attack = calcStatus(arg.lv, arg.sp_attack);
-            status.sp_defence = calcStatus(arg.lv, arg.sp_defence);
-            status.speed = calcStatus(arg.lv, arg.speed);
-        };
+
 
         //ステータスを算出する
         int calcStatus(int lv, int status) {
@@ -320,16 +303,17 @@ int main() {
     std::cout << status.sp_defence << std::endl;
     std::cout << status.speed << std::endl;
 
+    
+    while (true){
+        std::cout << "バクフーン" ;
+        std::cout << "" ;
+        std::cout << "ラグラージ" ;
+        std::cout << "" ;
+        std::cout << "フシギバナ" ;
+        std::string input_a; 
+        std::cin >> input_a;
+    }
     return 0;
-    // while (true){
-    //     std::cout << "バクフーン" ;
-    //     std::cout << "" ;
-    //     std::cout << "ラグラージ" ;
-    //     std::cout << "" ;
-    //     std::cout << "フシギバナ" ;
-        
-    // }
-
     // Basic_status_calc basic;
     // Racial me = basic.getPokemon1();
     // basic.setRacial(me);
