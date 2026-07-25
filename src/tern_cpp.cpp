@@ -2,7 +2,8 @@
 #include <cstdlib> // std::system のために必要
 #include <string>
 #include <vector>
-
+#include <conio.h>
+#include <vector>
 //ステータス実数値
 struct Status {
     int hp;
@@ -303,13 +304,99 @@ int main() {
     std::cout << status.sp_defence << std::endl;
     std::cout << status.speed << std::endl;
 
-    
-    while (true){
-        std::cout << "バクフーン" ;
-        std::cout << "" ;
+    //選択したキャラクターを追加するための配列
+    std::vector<int> select_character;
+    bool choosesys = true;
+
+    int select = 0;
+    while (choosesys){
+        if (_kbhit()) {
+            int ch = _getch();
+            if (ch == 0xE0 || ch == 0x00) {
+                int arrow = _getch();
+                switch (arrow) {
+                    case 75:
+                        select -=1;
+                        if (select <= 0){
+                            select = 0;
+                        }
+                        break;
+                        
+                    case 77: 
+                        select +=1;
+                        if (select >= 6){
+                            select = 5;
+                        }
+                        break;
+                    
+                    case 32://スペースを押したとき
+                        select_character.push_back(select);
+                        break;
+                }
+            }
+
+            if (select < 0){
+                select = 0;
+            } else if (select > 6){
+                select = 6;
+            }
+
+            //もし３体選択されたら
+            if (select_character.size() == 3){
+                std::cout << "3体選択されました";
+                choosesys = false;
+            }
+
+                
+
+
+            for (int i = 0; i <= select_character.size(); i++){
+                switch (select_character[i]){
+                    case 0:
+                        chara_0 ="▷バクフーン";
+                        break;
+
+                    case 1:
+                        chara_1 ="▷ラグラージ";
+                        break;
+
+                    case 2:
+                        chara_2 ="▷フシギバナ";
+                        break;
+
+                    case 3:
+                        chara_3 ="▷リザードン";  
+                        break;
+
+                    case 4:
+                        chara_4 ="▷エンペルト";
+                        break;
+                    case 5:
+                        chara_5 ="▷ジュカイン";
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+            
+        
+        
+
+
+
+        std::cout << "▶バクフーン" ;
+        std::cout << " " << std::endl;
         std::cout << "ラグラージ" ;
-        std::cout << "" ;
-        std::cout << "フシギバナ" ;
+        std::cout << " " << std::endl;;
+        std::cout << "フシギバナ";
+        std::cout << " " << std::endl;;
+        std::cout << "リザードン" ;
+        std::cout << " " << std::endl;;
+        std::cout << "エンペルト" ;
+        std::cout << " " << std::endl;;
+        std::cout << "ジュカイン" ;
         std::string input_a; 
         std::cin >> input_a;
     }
