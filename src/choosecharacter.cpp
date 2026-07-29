@@ -7,6 +7,7 @@ std::vector<int> ChooseCharacter::select() {
     bool event = true;
     int position = 0;
     std::vector <int> chooselist; //選択リスト
+    writeConsole(position, charalist);
     while (event){
         if (_kbhit()) { //キーボードが押下されたら
             int selectbtn = getCursor();
@@ -26,12 +27,12 @@ std::vector<int> ChooseCharacter::select() {
 };
 
 //コンソールに表示
-void ChooseCharacter::writeConsole(int select, std::vector <std::string> list) {
-    for (int i = 0; i < charalist.size(); i++){
+void ChooseCharacter::writeConsole(int select, std::vector <std::string> lists) {
+    for (int i = 0; i < lists.size(); i++){
         if(select == i){
-            std::cout << "▶" << charalist[i] << std::endl;
+            std::cout << "▶" << lists[i] << std::endl;
         }else {
-            std::cout << charalist[i] << std::endl;
+            std::cout << lists[i] << std::endl;
         }
     }
 };
@@ -47,19 +48,18 @@ int ChooseCharacter::getCursor() {
             case 72://上キー
                 select = 0;
                 break;
-                        
+
             case 80: //下キー
                 select = 1;
                 break;
 
-            case 32://space
-                select = 2;
-                break;  
-
             default:
                 break;
             }
-        }
+    }else if (ch == 32){//space
+        select = 2;
+        std::cout << "space" << std::endl;
+    }
     return select;
 };
 
@@ -85,19 +85,22 @@ int ChooseCharacter::changePosition(int position, int selectbtn, int range) {
 
 //三体選択した時に、本当にこのポケモンでいいかの確認
 bool ChooseCharacter::askToConfirm(std::vector <int> chooselist){
-    std::vector <std::string> yesno = {"はい", "いいえ"};
+    
 
     for (int i = 0; i < chooselist.size(); i++){
         std::cout << charalist[chooselist[i]] << std::endl;
     }
     std::cout << "選択したこのポケモンでいいですか？" << std::endl;
+    std::vector <std::string> yesno = {"はい", "いいえ"};
 
     int position = 0;
     bool event = true;//イベント
     while (event){
         if (_kbhit()){
             int selectbtn = getCursor();
+            std::cout << "selectbtn" << selectbtn << std::endl;
             if (selectbtn == 0 or selectbtn == 1){
+                std::cout << "ifを通った" << std::endl;
                 position = changePosition(position, selectbtn, 1);
                 writeConsole(position, yesno);
             }else if (selectbtn == 2) {
