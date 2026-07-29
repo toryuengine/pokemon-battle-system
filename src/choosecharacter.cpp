@@ -18,6 +18,11 @@ std::vector<int> ChooseCharacter::select() {
                 chooselist.push_back(position);
                 if(chooselist.size() == 3){//3体選択した時の処理
                     event = askToConfirm(chooselist);
+                    if (event == true){ //もしいいえが選択されたら
+                        position = 0;
+                        chooselist.clear();
+                        writeConsole(position, charalist);
+                    }
                 }
             }
 
@@ -58,7 +63,7 @@ int ChooseCharacter::getCursor() {
             }
     }else if (ch == 32){//space
         select = 2;
-        std::cout << "space" << std::endl;
+
     }
     return select;
 };
@@ -85,34 +90,35 @@ int ChooseCharacter::changePosition(int position, int selectbtn, int range) {
 
 //三体選択した時に、本当にこのポケモンでいいかの確認
 bool ChooseCharacter::askToConfirm(std::vector <int> chooselist){
-    
+    int position = 0;
+    bool event = true;//イベント
+    bool choose = false;
 
     for (int i = 0; i < chooselist.size(); i++){
         std::cout << charalist[chooselist[i]] << std::endl;
     }
     std::cout << "選択したこのポケモンでいいですか？" << std::endl;
     std::vector <std::string> yesno = {"はい", "いいえ"};
+    writeConsole(position, yesno);
 
-    int position = 0;
-    bool event = true;//イベント
     while (event){
         if (_kbhit()){
             int selectbtn = getCursor();
-            std::cout << "selectbtn" << selectbtn << std::endl;
             if (selectbtn == 0 or selectbtn == 1){
-                std::cout << "ifを通った" << std::endl;
-                position = changePosition(position, selectbtn, 1);
+                position = changePosition(position, selectbtn, yesno.size());
                 writeConsole(position, yesno);
             }else if (selectbtn == 2) {
-                if (position == 0){
+                if (position == 0){// はいが選択されたとき
+                    choose = false;
                     event = false; 
-                }else if (position == 1){
-                    event = true;
+                }else if (position == 1){ //いいえが選択されたとき
+                    choose = true;
+                    event = false;
                 }
             }
         }
     }
-    return false;
+    return choose;
 };
 
 
