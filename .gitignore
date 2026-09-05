@@ -9,6 +9,9 @@
 # Editor / IDE
 .vscode/
 
+# 削除予定のPython以外の言語のソース
+delete/
+
 # OS files
 Thumbs.db
 .DS_Store

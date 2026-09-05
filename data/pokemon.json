@@ -1,0 +1,10746 @@
+[
+  {
+    "name": "フシギバナ",
+    "type1": 4,
+    "type2": 7,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 270,
+          "atk": 152,
+          "def": 171,
+          "spatk": 294,
+          "spdef": 268,
+          "spd": 165
+        },
+        "item": 0,
+        "ability": 0,
+        "move": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "status": {
+          "hp": 312,
+          "atk": 152,
+          "def": 234,
+          "spatk": 205,
+          "spdef": 247,
+          "spd": 165
+        },
+        "item": 1,
+        "ability": 0,
+        "move": [
+          4,
+          5,
+          6,
+          3
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 255,
+          "def": 171,
+          "spatk": 184,
+          "spdef": 268,
+          "spd": 165
+        },
+        "item": 2,
+        "ability": 0,
+        "move": [
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      {
+        "status": {
+          "hp": 333,
+          "atk": 152,
+          "def": 171,
+          "spatk": 294,
+          "spdef": 205,
+          "spd": 165
+        },
+        "item": 3,
+        "ability": 0,
+        "move": [
+          11,
+          1,
+          12,
+          13
+        ]
+      }
+    ]
+  },
+  {
+    "name": "リザードン",
+    "type1": 1,
+    "type2": 9,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 266,
+          "atk": 155,
+          "def": 161,
+          "spatk": 314,
+          "spdef": 175,
+          "spd": 268
+        },
+        "item": 4,
+        "ability": 1,
+        "move": [
+          14,
+          15,
+          16,
+          17
+        ]
+      },
+      {
+        "status": {
+          "hp": 266,
+          "atk": 155,
+          "def": 161,
+          "spatk": 314,
+          "spdef": 175,
+          "spd": 268
+        },
+        "item": 0,
+        "ability": 1,
+        "move": [
+          18,
+          19,
+          20,
+          21
+        ]
+      },
+      {
+        "status": {
+          "hp": 266,
+          "atk": 259,
+          "def": 161,
+          "spatk": 200,
+          "spdef": 175,
+          "spd": 268
+        },
+        "item": 5,
+        "ability": 1,
+        "move": [
+          22,
+          8,
+          23,
+          24
+        ]
+      },
+      {
+        "status": {
+          "hp": 266,
+          "atk": 155,
+          "def": 161,
+          "spatk": 286,
+          "spdef": 175,
+          "spd": 294
+        },
+        "item": 6,
+        "ability": 1,
+        "move": [
+          25,
+          15,
+          26,
+          27
+        ]
+      }
+    ]
+  },
+  {
+    "name": "カメックス",
+    "type1": 2,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 268,
+          "atk": 153,
+          "def": 247,
+          "spatk": 238,
+          "spdef": 257,
+          "spd": 161
+        },
+        "item": 7,
+        "ability": 2,
+        "move": [
+          28,
+          29,
+          30,
+          31
+        ]
+      },
+      {
+        "status": {
+          "hp": 331,
+          "atk": 257,
+          "def": 205,
+          "spatk": 157,
+          "spdef": 215,
+          "spd": 161
+        },
+        "item": 8,
+        "ability": 2,
+        "move": [
+          32,
+          33,
+          34,
+          35
+        ]
+      },
+      {
+        "status": {
+          "hp": 331,
+          "atk": 257,
+          "def": 205,
+          "spatk": 157,
+          "spdef": 215,
+          "spd": 161
+        },
+        "item": 9,
+        "ability": 2,
+        "move": [
+          36,
+          8,
+          37,
+          38
+        ]
+      },
+      {
+        "status": {
+          "hp": 331,
+          "atk": 153,
+          "def": 205,
+          "spatk": 261,
+          "spdef": 215,
+          "spd": 161
+        },
+        "item": 8,
+        "ability": 2,
+        "move": [
+          39,
+          40,
+          12,
+          26
+        ]
+      }
+    ]
+  },
+  {
+    "name": "メガニウム",
+    "type1": 4,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 270,
+          "atk": 152,
+          "def": 268,
+          "spatk": 188,
+          "spdef": 268,
+          "spd": 165
+        },
+        "item": 10,
+        "ability": 0,
+        "move": [
+          19,
+          27,
+          13,
+          21
+        ]
+      },
+      {
+        "status": {
+          "hp": 312,
+          "atk": 152,
+          "def": 247,
+          "spatk": 171,
+          "spdef": 271,
+          "spd": 165
+        },
+        "item": 1,
+        "ability": 0,
+        "move": [
+          4,
+          6,
+          41,
+          42
+        ]
+      },
+      {
+        "status": {
+          "hp": 333,
+          "atk": 152,
+          "def": 225,
+          "spatk": 234,
+          "spdef": 205,
+          "spd": 165
+        },
+        "item": 11,
+        "ability": 0,
+        "move": [
+          0,
+          43,
+          44,
+          45
+        ]
+      },
+      {
+        "status": {
+          "hp": 333,
+          "atk": 152,
+          "def": 205,
+          "spatk": 257,
+          "spdef": 205,
+          "spd": 165
+        },
+        "item": 12,
+        "ability": 0,
+        "move": [
+          11,
+          27,
+          12,
+          44
+        ]
+      }
+    ]
+  },
+  {
+    "name": "バクフーン",
+    "type1": 1,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 266,
+          "atk": 259,
+          "def": 161,
+          "spatk": 200,
+          "spdef": 175,
+          "spd": 268
+        },
+        "item": 5,
+        "ability": 1,
+        "move": [
+          46,
+          47,
+          48,
+          49
+        ]
+      },
+      {
+        "status": {
+          "hp": 266,
+          "atk": 236,
+          "def": 161,
+          "spatk": 286,
+          "spdef": 175,
+          "spd": 205
+        },
+        "item": 13,
+        "ability": 1,
+        "move": [
+          25,
+          8,
+          50,
+          51
+        ]
+      },
+      {
+        "status": {
+          "hp": 266,
+          "atk": 259,
+          "def": 161,
+          "spatk": 200,
+          "spdef": 175,
+          "spd": 268
+        },
+        "item": 14,
+        "ability": 1,
+        "move": [
+          22,
+          8,
+          48,
+          52
+        ]
+      },
+      {
+        "status": {
+          "hp": 266,
+          "atk": 155,
+          "def": 161,
+          "spatk": 314,
+          "spdef": 175,
+          "spd": 268
+        },
+        "item": 0,
+        "ability": 1,
+        "move": [
+          18,
+          19,
+          26,
+          21
+        ]
+      }
+    ]
+  },
+  {
+    "name": "オーダイル",
+    "type1": 2,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 280,
+          "atk": 305,
+          "def": 268,
+          "spatk": 146,
+          "spdef": 171,
+          "spd": 161
+        },
+        "item": 15,
+        "ability": 2,
+        "move": [
+          32,
+          53,
+          54,
+          17
+        ]
+      },
+      {
+        "status": {
+          "hp": 280,
+          "atk": 305,
+          "def": 268,
+          "spatk": 146,
+          "spdef": 171,
+          "spd": 161
+        },
+        "item": 0,
+        "ability": 2,
+        "move": [
+          36,
+          55,
+          24,
+          48
+        ]
+      },
+      {
+        "status": {
+          "hp": 280,
+          "atk": 193,
+          "def": 268,
+          "spatk": 248,
+          "spdef": 171,
+          "spd": 161
+        },
+        "item": 3,
+        "ability": 2,
+        "move": [
+          39,
+          40,
+          26,
+          27
+        ]
+      },
+      {
+        "status": {
+          "hp": 280,
+          "atk": 305,
+          "def": 268,
+          "spatk": 146,
+          "spdef": 171,
+          "spd": 161
+        },
+        "item": 16,
+        "ability": 2,
+        "move": [
+          32,
+          8,
+          53,
+          56
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ジュカイン",
+    "type1": 4,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 250,
+          "atk": 238,
+          "def": 135,
+          "spatk": 193,
+          "spdef": 175,
+          "spd": 338
+        },
+        "item": 17,
+        "ability": 0,
+        "move": [
+          57,
+          23,
+          49,
+          58
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 157,
+          "def": 135,
+          "spatk": 278,
+          "spdef": 175,
+          "spd": 338
+        },
+        "item": 18,
+        "ability": 0,
+        "move": [
+          4,
+          6,
+          41,
+          34
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 261,
+          "def": 135,
+          "spatk": 193,
+          "spdef": 175,
+          "spd": 308
+        },
+        "item": 5,
+        "ability": 0,
+        "move": [
+          57,
+          59,
+          60,
+          52
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 157,
+          "def": 135,
+          "spatk": 278,
+          "spdef": 175,
+          "spd": 338
+        },
+        "item": 19,
+        "ability": 0,
+        "move": [
+          0,
+          61,
+          26,
+          12
+        ]
+      }
+    ]
+  },
+  {
+    "name": "バシャーモ",
+    "type1": 1,
+    "type2": 6,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 270,
+          "atk": 338,
+          "def": 145,
+          "spatk": 202,
+          "spdef": 145,
+          "spd": 228
+        },
+        "item": 13,
+        "ability": 1,
+        "move": [
+          62,
+          50,
+          52,
+          51
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 220,
+          "def": 145,
+          "spatk": 288,
+          "spdef": 145,
+          "spd": 250
+        },
+        "item": 6,
+        "ability": 1,
+        "move": [
+          25,
+          26,
+          19,
+          21
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 338,
+          "def": 145,
+          "spatk": 202,
+          "spdef": 145,
+          "spd": 228
+        },
+        "item": 20,
+        "ability": 1,
+        "move": [
+          62,
+          8,
+          48,
+          63
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 338,
+          "def": 145,
+          "spatk": 202,
+          "spdef": 145,
+          "spd": 228
+        },
+        "item": 0,
+        "ability": 1,
+        "move": [
+          22,
+          55,
+          47,
+          60
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ラグラージ",
+    "type1": 2,
+    "type2": 8,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 373,
+          "atk": 316,
+          "def": 185,
+          "spatk": 157,
+          "spdef": 185,
+          "spd": 125
+        },
+        "item": 8,
+        "ability": 2,
+        "move": [
+          32,
+          8,
+          64,
+          65
+        ]
+      },
+      {
+        "status": {
+          "hp": 373,
+          "atk": 316,
+          "def": 185,
+          "spatk": 157,
+          "spdef": 185,
+          "spd": 125
+        },
+        "item": 16,
+        "ability": 2,
+        "move": [
+          36,
+          8,
+          66,
+          10
+        ]
+      },
+      {
+        "status": {
+          "hp": 373,
+          "atk": 202,
+          "def": 185,
+          "spatk": 261,
+          "spdef": 185,
+          "spd": 125
+        },
+        "item": 21,
+        "ability": 2,
+        "move": [
+          67,
+          68,
+          40,
+          69
+        ]
+      },
+      {
+        "status": {
+          "hp": 373,
+          "atk": 316,
+          "def": 185,
+          "spatk": 157,
+          "spdef": 185,
+          "spd": 125
+        },
+        "item": 22,
+        "ability": 2,
+        "move": [
+          8,
+          36,
+          37,
+          31
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ドダイトス",
+    "type1": 4,
+    "type2": 8,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 363,
+          "atk": 314,
+          "def": 215,
+          "spatk": 139,
+          "spdef": 175,
+          "spd": 117
+        },
+        "item": 23,
+        "ability": 0,
+        "move": [
+          8,
+          70,
+          54,
+          10
+        ]
+      },
+      {
+        "status": {
+          "hp": 342,
+          "atk": 223,
+          "def": 257,
+          "spatk": 155,
+          "spdef": 238,
+          "spd": 105
+        },
+        "item": 18,
+        "ability": 0,
+        "move": [
+          4,
+          6,
+          13,
+          2
+        ]
+      },
+      {
+        "status": {
+          "hp": 300,
+          "atk": 200,
+          "def": 278,
+          "spatk": 239,
+          "spdef": 175,
+          "spd": 117
+        },
+        "item": 12,
+        "ability": 0,
+        "move": [
+          11,
+          68,
+          12,
+          6
+        ]
+      },
+      {
+        "status": {
+          "hp": 363,
+          "atk": 314,
+          "def": 215,
+          "spatk": 139,
+          "spdef": 175,
+          "spd": 117
+        },
+        "item": 24,
+        "ability": 0,
+        "move": [
+          71,
+          8,
+          63,
+          23
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ゴウカザル",
+    "type1": 1,
+    "type2": 6,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 262,
+          "atk": 276,
+          "def": 147,
+          "spatk": 191,
+          "spdef": 147,
+          "spd": 312
+        },
+        "item": 25,
+        "ability": 1,
+        "move": [
+          72,
+          46,
+          73,
+          74
+        ]
+      },
+      {
+        "status": {
+          "hp": 262,
+          "atk": 303,
+          "def": 147,
+          "spatk": 191,
+          "spdef": 147,
+          "spd": 284
+        },
+        "item": 26,
+        "ability": 1,
+        "move": [
+          62,
+          48,
+          47,
+          75
+        ]
+      },
+      {
+        "status": {
+          "hp": 262,
+          "atk": 191,
+          "def": 147,
+          "spatk": 303,
+          "spdef": 147,
+          "spd": 284
+        },
+        "item": 6,
+        "ability": 1,
+        "move": [
+          14,
+          26,
+          19,
+          21
+        ]
+      },
+      {
+        "status": {
+          "hp": 262,
+          "atk": 276,
+          "def": 147,
+          "spatk": 191,
+          "spdef": 147,
+          "spd": 312
+        },
+        "item": 15,
+        "ability": 1,
+        "move": [
+          22,
+          72,
+          8,
+          47
+        ]
+      }
+    ]
+  },
+  {
+    "name": "エンペルト",
+    "type1": 2,
+    "type2": 16,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 278,
+          "atk": 264,
+          "def": 181,
+          "spatk": 204,
+          "spdef": 270,
+          "spd": 125
+        },
+        "item": 27,
+        "ability": 2,
+        "move": [
+          32,
+          76,
+          77,
+          78
+        ]
+      },
+      {
+        "status": {
+          "hp": 278,
+          "atk": 264,
+          "def": 181,
+          "spatk": 204,
+          "spdef": 270,
+          "spd": 125
+        },
+        "item": 27,
+        "ability": 2,
+        "move": [
+          79,
+          80,
+          48,
+          54
+        ]
+      },
+      {
+        "status": {
+          "hp": 278,
+          "atk": 264,
+          "def": 181,
+          "spatk": 290,
+          "spdef": 207,
+          "spd": 112
+        },
+        "item": 24,
+        "ability": 2,
+        "move": [
+          81,
+          8,
+          82,
+          29
+        ]
+      },
+      {
+        "status": {
+          "hp": 278,
+          "atk": 264,
+          "def": 181,
+          "spatk": 290,
+          "spdef": 207,
+          "spd": 112
+        },
+        "item": 24,
+        "ability": 2,
+        "move": [
+          39,
+          83,
+          79,
+          8
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ダグトリオ",
+    "type1": 8,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 180,
+          "atk": 228,
+          "def": 105,
+          "spatk": 94,
+          "spdef": 145,
+          "spd": 338
+        },
+        "item": 28,
+        "ability": 3,
+        "move": [
+          8,
+          54,
+          84,
+          85
+        ]
+      },
+      {
+        "status": {
+          "hp": 180,
+          "atk": 148,
+          "def": 105,
+          "spatk": 184,
+          "spdef": 145,
+          "spd": 308
+        },
+        "item": 12,
+        "ability": 3,
+        "move": [
+          68,
+          1,
+          86,
+          87
+        ]
+      },
+      {
+        "status": {
+          "hp": 180,
+          "atk": 228,
+          "def": 105,
+          "spatk": 94,
+          "spdef": 145,
+          "spd": 338
+        },
+        "item": 27,
+        "ability": 3,
+        "move": [
+          88,
+          89,
+          52,
+          60
+        ]
+      },
+      {
+        "status": {
+          "hp": 180,
+          "atk": 250,
+          "def": 105,
+          "spatk": 94,
+          "spdef": 145,
+          "spd": 308
+        },
+        "item": 26,
+        "ability": 3,
+        "move": [
+          8,
+          63,
+          90,
+          48
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ガラガラ",
+    "type1": 8,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 230,
+          "atk": 250,
+          "def": 288,
+          "spatk": 94,
+          "spdef": 165,
+          "spd": 95
+        },
+        "item": 27,
+        "ability": 4,
+        "move": [
+          91,
+          77,
+          92,
+          87
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 250,
+          "def": 288,
+          "spatk": 94,
+          "spdef": 165,
+          "spd": 95
+        },
+        "item": 29,
+        "ability": 4,
+        "move": [
+          91,
+          46,
+          47,
+          54
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 250,
+          "def": 288,
+          "spatk": 94,
+          "spdef": 165,
+          "spd": 95
+        },
+        "item": 29,
+        "ability": 4,
+        "move": [
+          8,
+          89,
+          9,
+          46
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 250,
+          "def": 288,
+          "spatk": 94,
+          "spdef": 165,
+          "spd": 95
+        },
+        "item": 29,
+        "ability": 4,
+        "move": [
+          8,
+          63,
+          93,
+          47
+        ]
+      }
+    ]
+  },
+  {
+    "name": "チャーレム",
+    "type1": 6,
+    "type2": 10,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 230,
+          "atk": 188,
+          "def": 155,
+          "spatk": 112,
+          "spdef": 155,
+          "spd": 250
+        },
+        "item": 13,
+        "ability": 5,
+        "move": [
+          38,
+          50,
+          51,
+          74
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 188,
+          "def": 155,
+          "spatk": 112,
+          "spdef": 155,
+          "spd": 250
+        },
+        "item": 30,
+        "ability": 5,
+        "move": [
+          94,
+          95,
+          96,
+          97
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 112,
+          "def": 155,
+          "spatk": 206,
+          "spdef": 155,
+          "spd": 228
+        },
+        "item": 3,
+        "ability": 5,
+        "move": [
+          98,
+          26,
+          99,
+          100
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 206,
+          "def": 155,
+          "spatk": 112,
+          "spdef": 155,
+          "spd": 228
+        },
+        "item": 5,
+        "ability": 5,
+        "move": [
+          101,
+          46,
+          47,
+          64
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ヌオー",
+    "type1": 2,
+    "type2": 8,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 363,
+          "atk": 261,
+          "def": 175,
+          "spatk": 121,
+          "spdef": 135,
+          "spd": 75
+        },
+        "item": 22,
+        "ability": 6,
+        "move": [
+          8,
+          36,
+          77,
+          69
+        ]
+      },
+      {
+        "status": {
+          "hp": 342,
+          "atk": 175,
+          "def": 217,
+          "spatk": 121,
+          "spdef": 194,
+          "spd": 75
+        },
+        "item": 18,
+        "ability": 6,
+        "move": [
+          102,
+          103,
+          10,
+          2
+        ]
+      },
+      {
+        "status": {
+          "hp": 363,
+          "atk": 157,
+          "def": 175,
+          "spatk": 217,
+          "spdef": 135,
+          "spd": 75
+        },
+        "item": 24,
+        "ability": 6,
+        "move": [
+          81,
+          68,
+          26,
+          1
+        ]
+      },
+      {
+        "status": {
+          "hp": 363,
+          "atk": 261,
+          "def": 175,
+          "spatk": 121,
+          "spdef": 135,
+          "spd": 75
+        },
+        "item": 26,
+        "ability": 6,
+        "move": [
+          8,
+          32,
+          63,
+          64
+        ]
+      }
+    ]
+  },
+  {
+    "name": "グランブル",
+    "type1": 0,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 353,
+          "atk": 338,
+          "def": 155,
+          "spatk": 112,
+          "spdef": 125,
+          "spd": 95
+        },
+        "item": 27,
+        "ability": 7,
+        "move": [
+          104,
+          54,
+          23,
+          105
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 338,
+          "def": 155,
+          "spatk": 112,
+          "spdef": 125,
+          "spd": 95
+        },
+        "item": 24,
+        "ability": 7,
+        "move": [
+          106,
+          107,
+          108,
+          53
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 338,
+          "def": 155,
+          "spatk": 112,
+          "spdef": 125,
+          "spd": 95
+        },
+        "item": 26,
+        "ability": 7,
+        "move": [
+          46,
+          47,
+          64,
+          109
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 338,
+          "def": 155,
+          "spatk": 112,
+          "spdef": 125,
+          "spd": 95
+        },
+        "item": 9,
+        "ability": 7,
+        "move": [
+          89,
+          72,
+          8,
+          63
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ルージュラ",
+    "type1": 5,
+    "type2": 10,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 240,
+          "atk": 94,
+          "def": 75,
+          "spatk": 298,
+          "spdef": 283,
+          "spd": 195
+        },
+        "item": 31,
+        "ability": 8,
+        "move": [
+          98,
+          40,
+          110,
+          111
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 94,
+          "def": 75,
+          "spatk": 298,
+          "spdef": 283,
+          "spd": 195
+        },
+        "item": 12,
+        "ability": 8,
+        "move": [
+          112,
+          110,
+          113,
+          114
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 94,
+          "def": 75,
+          "spatk": 327,
+          "spdef": 195,
+          "spd": 258
+        },
+        "item": 21,
+        "ability": 8,
+        "move": [
+          82,
+          115,
+          29,
+          43
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 94,
+          "def": 75,
+          "spatk": 327,
+          "spdef": 195,
+          "spd": 258
+        },
+        "item": 32,
+        "ability": 8,
+        "move": [
+          40,
+          98,
+          26,
+          99
+        ]
+      }
+    ]
+  },
+  {
+    "name": "バリヤード",
+    "type1": 10,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 190,
+          "atk": 85,
+          "def": 135,
+          "spatk": 268,
+          "spdef": 338,
+          "spd": 185
+        },
+        "item": 30,
+        "ability": 9,
+        "move": [
+          98,
+          29,
+          116,
+          117
+        ]
+      },
+      {
+        "status": {
+          "hp": 190,
+          "atk": 85,
+          "def": 135,
+          "spatk": 268,
+          "spdef": 338,
+          "spd": 185
+        },
+        "item": 11,
+        "ability": 9,
+        "move": [
+          112,
+          118,
+          44,
+          45
+        ]
+      },
+      {
+        "status": {
+          "hp": 190,
+          "atk": 85,
+          "def": 135,
+          "spatk": 294,
+          "spdef": 308,
+          "spd": 185
+        },
+        "item": 33,
+        "ability": 9,
+        "move": [
+          98,
+          119,
+          115,
+          12
+        ]
+      },
+      {
+        "status": {
+          "hp": 190,
+          "atk": 85,
+          "def": 135,
+          "spatk": 294,
+          "spdef": 308,
+          "spd": 185
+        },
+        "item": 32,
+        "ability": 9,
+        "move": [
+          98,
+          120,
+          99,
+          26
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ランターン",
+    "type1": 2,
+    "type2": 3,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 423,
+          "atk": 108,
+          "def": 121,
+          "spatk": 242,
+          "spdef": 157,
+          "spd": 139
+        },
+        "item": 22,
+        "ability": 10,
+        "move": [
+          81,
+          121,
+          105,
+          35
+        ]
+      },
+      {
+        "status": {
+          "hp": 423,
+          "atk": 108,
+          "def": 121,
+          "spatk": 157,
+          "spdef": 242,
+          "spd": 139
+        },
+        "item": 16,
+        "ability": 10,
+        "move": [
+          102,
+          122,
+          105,
+          123
+        ]
+      },
+      {
+        "status": {
+          "hp": 423,
+          "atk": 108,
+          "def": 121,
+          "spatk": 242,
+          "spdef": 157,
+          "spd": 139
+        },
+        "item": 34,
+        "ability": 10,
+        "move": [
+          28,
+          124,
+          82,
+          125
+        ]
+      },
+      {
+        "status": {
+          "hp": 423,
+          "atk": 108,
+          "def": 121,
+          "spatk": 242,
+          "spdef": 157,
+          "spd": 139
+        },
+        "item": 21,
+        "ability": 10,
+        "move": [
+          81,
+          119,
+          40,
+          29
+        ]
+      }
+    ]
+  },
+  {
+    "name": "キノガッサ",
+    "type1": 4,
+    "type2": 6,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 230,
+          "atk": 328,
+          "def": 250,
+          "spatk": 112,
+          "spdef": 125,
+          "spd": 145
+        },
+        "item": 35,
+        "ability": 11,
+        "move": [
+          7,
+          126,
+          54,
+          69
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 360,
+          "def": 165,
+          "spatk": 188,
+          "spdef": 125,
+          "spd": 130
+        },
+        "item": 1,
+        "ability": 11,
+        "move": [
+          94,
+          4,
+          13,
+          6
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 360,
+          "def": 228,
+          "spatk": 112,
+          "spdef": 125,
+          "spd": 145
+        },
+        "item": 36,
+        "ability": 11,
+        "move": [
+          127,
+          47,
+          63,
+          106
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 360,
+          "def": 228,
+          "spatk": 112,
+          "spdef": 125,
+          "spd": 145
+        },
+        "item": 8,
+        "ability": 11,
+        "move": [
+          33,
+          7,
+          89,
+          128
+        ]
+      }
+    ]
+  },
+  {
+    "name": "フォレトス",
+    "type1": 11,
+    "type2": 16,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 260,
+          "atk": 272,
+          "def": 348,
+          "spatk": 125,
+          "spdef": 125,
+          "spd": 76
+        },
+        "item": 19,
+        "ability": 12,
+        "move": [
+          129,
+          130,
+          131,
+          69
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 272,
+          "def": 348,
+          "spatk": 125,
+          "spdef": 125,
+          "spd": 76
+        },
+        "item": 34,
+        "ability": 12,
+        "move": [
+          109,
+          132,
+          133,
+          134
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 272,
+          "def": 348,
+          "spatk": 112,
+          "spdef": 125,
+          "spd": 85
+        },
+        "item": 18,
+        "ability": 12,
+        "move": [
+          135,
+          136,
+          41,
+          34
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 272,
+          "def": 348,
+          "spatk": 112,
+          "spdef": 125,
+          "spd": 85
+        },
+        "item": 12,
+        "ability": 12,
+        "move": [
+          137,
+          138,
+          8,
+          54
+        ]
+      }
+    ]
+  },
+  {
+    "name": "エアームド",
+    "type1": 16,
+    "type2": 9,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 240,
+          "atk": 228,
+          "def": 382,
+          "spatk": 76,
+          "spdef": 145,
+          "spd": 145
+        },
+        "item": 19,
+        "ability": 13,
+        "move": [
+          79,
+          139,
+          134,
+          140
+        ]
+      },
+      {
+        "status": {
+          "hp": 282,
+          "atk": 165,
+          "def": 327,
+          "spatk": 76,
+          "spdef": 205,
+          "spd": 145
+        },
+        "item": 18,
+        "ability": 13,
+        "move": [
+          141,
+          41,
+          34,
+          142
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 228,
+          "def": 382,
+          "spatk": 76,
+          "spdef": 145,
+          "spd": 145
+        },
+        "item": 27,
+        "ability": 13,
+        "move": [
+          79,
+          90,
+          109,
+          60
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 250,
+          "def": 348,
+          "spatk": 76,
+          "spdef": 145,
+          "spd": 145
+        },
+        "item": 9,
+        "ability": 13,
+        "move": [
+          143,
+          139,
+          59,
+          54
+        ]
+      }
+    ]
+  },
+  {
+    "name": "アブソル",
+    "type1": 15,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 240,
+          "atk": 328,
+          "def": 125,
+          "spatk": 139,
+          "spdef": 125,
+          "spd": 239
+        },
+        "item": 37,
+        "ability": 14,
+        "move": [
+          144,
+          106,
+          34,
+          145
+        ]
+      },
+      {
+        "status": {
+          "hp": 303,
+          "atk": 360,
+          "def": 125,
+          "spatk": 139,
+          "spdef": 125,
+          "spd": 155
+        },
+        "item": 24,
+        "ability": 14,
+        "move": [
+          146,
+          136,
+          123,
+          105
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 328,
+          "def": 125,
+          "spatk": 139,
+          "spdef": 125,
+          "spd": 239
+        },
+        "item": 27,
+        "ability": 14,
+        "move": [
+          60,
+          101,
+          59,
+          52
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 360,
+          "def": 125,
+          "spatk": 139,
+          "spdef": 125,
+          "spd": 218
+        },
+        "item": 38,
+        "ability": 14,
+        "move": [
+          60,
+          55,
+          89,
+          38
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ナマズン",
+    "type1": 2,
+    "type2": 8,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 393,
+          "atk": 144,
+          "def": 151,
+          "spatk": 242,
+          "spdef": 147,
+          "spd": 125
+        },
+        "item": 8,
+        "ability": 15,
+        "move": [
+          81,
+          68,
+          30,
+          2
+        ]
+      },
+      {
+        "status": {
+          "hp": 393,
+          "atk": 246,
+          "def": 151,
+          "spatk": 141,
+          "spdef": 147,
+          "spd": 125
+        },
+        "item": 39,
+        "ability": 15,
+        "move": [
+          36,
+          8,
+          54,
+          147
+        ]
+      },
+      {
+        "status": {
+          "hp": 393,
+          "atk": 144,
+          "def": 151,
+          "spatk": 242,
+          "spdef": 147,
+          "spd": 125
+        },
+        "item": 40,
+        "ability": 15,
+        "move": [
+          28,
+          68,
+          82,
+          88
+        ]
+      },
+      {
+        "status": {
+          "hp": 393,
+          "atk": 246,
+          "def": 151,
+          "spatk": 141,
+          "spdef": 147,
+          "spd": 125
+        },
+        "item": 26,
+        "ability": 15,
+        "move": [
+          8,
+          36,
+          38,
+          63
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ハリテヤマ",
+    "type1": 6,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 461,
+          "atk": 338,
+          "def": 125,
+          "spatk": 76,
+          "spdef": 125,
+          "spd": 105
+        },
+        "item": 39,
+        "ability": 16,
+        "move": [
+          148,
+          8,
+          106,
+          74
+        ]
+      },
+      {
+        "status": {
+          "hp": 461,
+          "atk": 338,
+          "def": 125,
+          "spatk": 76,
+          "spdef": 125,
+          "spd": 105
+        },
+        "item": 41,
+        "ability": 16,
+        "move": [
+          131,
+          109,
+          149,
+          74
+        ]
+      },
+      {
+        "status": {
+          "hp": 461,
+          "atk": 338,
+          "def": 125,
+          "spatk": 76,
+          "spdef": 125,
+          "spd": 105
+        },
+        "item": 9,
+        "ability": 16,
+        "move": [
+          127,
+          46,
+          47,
+          64
+        ]
+      },
+      {
+        "status": {
+          "hp": 461,
+          "atk": 338,
+          "def": 125,
+          "spatk": 76,
+          "spdef": 125,
+          "spd": 105
+        },
+        "item": 5,
+        "ability": 16,
+        "move": [
+          150,
+          8,
+          63,
+          95
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ビークイン",
+    "type1": 11,
+    "type2": 9,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 250,
+          "atk": 148,
+          "def": 272,
+          "spatk": 181,
+          "spdef": 272,
+          "spd": 85
+        },
+        "item": 5,
+        "ability": 17,
+        "move": [
+          151,
+          152,
+          153,
+          136
+        ]
+      },
+      {
+        "status": {
+          "hp": 292,
+          "atk": 165,
+          "def": 251,
+          "spatk": 148,
+          "spdef": 276,
+          "spd": 85
+        },
+        "item": 39,
+        "ability": 17,
+        "move": [
+          59,
+          41,
+          154,
+          155
+        ]
+      },
+      {
+        "status": {
+          "hp": 313,
+          "atk": 250,
+          "def": 209,
+          "spatk": 148,
+          "spdef": 209,
+          "spd": 85
+        },
+        "item": 26,
+        "ability": 17,
+        "move": [
+          59,
+          52,
+          156,
+          73
+        ]
+      },
+      {
+        "status": {
+          "hp": 313,
+          "atk": 250,
+          "def": 209,
+          "spatk": 148,
+          "spdef": 209,
+          "spd": 85
+        },
+        "item": 8,
+        "ability": 17,
+        "move": [
+          157,
+          158,
+          154,
+          122
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ライチュウ",
+    "type1": 3,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 230,
+          "atk": 272,
+          "def": 115,
+          "spatk": 166,
+          "spdef": 165,
+          "spd": 268
+        },
+        "item": 42,
+        "ability": 18,
+        "move": [
+          47,
+          92,
+          159,
+          49
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 248,
+          "def": 115,
+          "spatk": 166,
+          "spdef": 165,
+          "spd": 294
+        },
+        "item": 43,
+        "ability": 18,
+        "move": [
+          47,
+          33,
+          160,
+          105
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 166,
+          "def": 115,
+          "spatk": 248,
+          "spdef": 165,
+          "spd": 294
+        },
+        "item": 4,
+        "ability": 18,
+        "move": [
+          119,
+          26,
+          29,
+          161
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 272,
+          "def": 115,
+          "spatk": 166,
+          "spdef": 165,
+          "spd": 268
+        },
+        "item": 6,
+        "ability": 18,
+        "move": [
+          162,
+          104,
+          77,
+          105
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ジュゴン",
+    "type1": 2,
+    "type2": 5,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 290,
+          "atk": 208,
+          "def": 165,
+          "spatk": 130,
+          "spdef": 283,
+          "spd": 145
+        },
+        "item": 44,
+        "ability": 19,
+        "move": [
+          32,
+          37,
+          163,
+          74
+        ]
+      },
+      {
+        "status": {
+          "hp": 290,
+          "atk": 130,
+          "def": 165,
+          "spatk": 208,
+          "spdef": 283,
+          "spd": 145
+        },
+        "item": 45,
+        "ability": 19,
+        "move": [
+          40,
+          29,
+          164,
+          165
+        ]
+      },
+      {
+        "status": {
+          "hp": 332,
+          "atk": 130,
+          "def": 207,
+          "spatk": 145,
+          "spdef": 260,
+          "spd": 145
+        },
+        "item": 13,
+        "ability": 19,
+        "move": [
+          166,
+          167,
+          168,
+          169
+        ]
+      },
+      {
+        "status": {
+          "hp": 290,
+          "atk": 130,
+          "def": 165,
+          "spatk": 208,
+          "spdef": 283,
+          "spd": 145
+        },
+        "item": 31,
+        "ability": 19,
+        "move": [
+          81,
+          40,
+          29,
+          168
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ライボルト",
+    "type1": 3,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 250,
+          "atk": 239,
+          "def": 125,
+          "spatk": 193,
+          "spdef": 125,
+          "spd": 278
+        },
+        "item": 14,
+        "ability": 20,
+        "move": [
+          108,
+          23,
+          140,
+          105
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 139,
+          "def": 125,
+          "spatk": 305,
+          "spdef": 125,
+          "spd": 278
+        },
+        "item": 46,
+        "ability": 20,
+        "move": [
+          124,
+          12,
+          105,
+          125
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 239,
+          "def": 125,
+          "spatk": 193,
+          "spdef": 125,
+          "spd": 278
+        },
+        "item": 24,
+        "ability": 20,
+        "move": [
+          108,
+          107,
+          53,
+          170
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 139,
+          "def": 125,
+          "spatk": 278,
+          "spdef": 125,
+          "spd": 305
+        },
+        "item": 6,
+        "ability": 20,
+        "move": [
+          119,
+          14,
+          29,
+          171
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ムクホーク",
+    "type1": 0,
+    "type2": 9,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 280,
+          "atk": 308,
+          "def": 145,
+          "spatk": 94,
+          "spdef": 105,
+          "spd": 294
+        },
+        "item": 15,
+        "ability": 21,
+        "move": [
+          104,
+          52,
+          34,
+          142
+        ]
+      },
+      {
+        "status": {
+          "hp": 280,
+          "atk": 308,
+          "def": 145,
+          "spatk": 94,
+          "spdef": 105,
+          "spd": 294
+        },
+        "item": 15,
+        "ability": 21,
+        "move": [
+          172,
+          52,
+          51,
+          49
+        ]
+      },
+      {
+        "status": {
+          "hp": 280,
+          "atk": 338,
+          "def": 145,
+          "spatk": 94,
+          "spdef": 105,
+          "spd": 268
+        },
+        "item": 26,
+        "ability": 21,
+        "move": [
+          143,
+          104,
+          139,
+          156
+        ]
+      },
+      {
+        "status": {
+          "hp": 280,
+          "atk": 338,
+          "def": 145,
+          "spatk": 94,
+          "spdef": 105,
+          "spd": 268
+        },
+        "item": 38,
+        "ability": 21,
+        "move": [
+          143,
+          89,
+          72,
+          73
+        ]
+      }
+    ]
+  },
+  {
+    "name": "トリトドン",
+    "type1": 2,
+    "type2": 8,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 395,
+          "atk": 171,
+          "def": 141,
+          "spatk": 170,
+          "spdef": 255,
+          "spd": 83
+        },
+        "item": 35,
+        "ability": 22,
+        "move": [
+          32,
+          8,
+          97,
+          31
+        ]
+      },
+      {
+        "status": {
+          "hp": 332,
+          "atk": 171,
+          "def": 141,
+          "spatk": 252,
+          "spdef": 255,
+          "spd": 74
+        },
+        "item": 40,
+        "ability": 22,
+        "move": [
+          67,
+          173,
+          97,
+          103
+        ]
+      },
+      {
+        "status": {
+          "hp": 395,
+          "atk": 257,
+          "def": 141,
+          "spatk": 170,
+          "spdef": 169,
+          "spd": 83
+        },
+        "item": 8,
+        "ability": 22,
+        "move": [
+          32,
+          8,
+          63,
+          88
+        ]
+      },
+      {
+        "status": {
+          "hp": 395,
+          "atk": 153,
+          "def": 141,
+          "spatk": 277,
+          "spdef": 169,
+          "spd": 83
+        },
+        "item": 3,
+        "ability": 22,
+        "move": [
+          81,
+          68,
+          40,
+          1
+        ]
+      }
+    ]
+  },
+  {
+    "name": "スカタンク",
+    "type1": 7,
+    "type2": 15,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 379,
+          "atk": 279,
+          "def": 139,
+          "spatk": 132,
+          "spdef": 127,
+          "spd": 173
+        },
+        "item": 27,
+        "ability": 23,
+        "move": [
+          144,
+          95,
+          90,
+          58
+        ]
+      },
+      {
+        "status": {
+          "hp": 379,
+          "atk": 191,
+          "def": 139,
+          "spatk": 132,
+          "spdef": 127,
+          "spd": 259
+        },
+        "item": 31,
+        "ability": 23,
+        "move": [
+          23,
+          41,
+          136,
+          34
+        ]
+      },
+      {
+        "status": {
+          "hp": 316,
+          "atk": 171,
+          "def": 139,
+          "spatk": 210,
+          "spdef": 127,
+          "spd": 259
+        },
+        "item": 14,
+        "ability": 23,
+        "move": [
+          1,
+          174,
+          14,
+          99
+        ]
+      },
+      {
+        "status": {
+          "hp": 316,
+          "atk": 254,
+          "def": 139,
+          "spatk": 132,
+          "spdef": 127,
+          "spd": 259
+        },
+        "item": 26,
+        "ability": 23,
+        "move": [
+          95,
+          60,
+          23,
+          137
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ラフレシア",
+    "type1": 4,
+    "type2": 7,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 260,
+          "atk": 148,
+          "def": 238,
+          "spatk": 294,
+          "spdef": 185,
+          "spd": 105
+        },
+        "item": 1,
+        "ability": 24,
+        "move": [
+          4,
+          1,
+          3,
+          5
+        ]
+      },
+      {
+        "status": {
+          "hp": 302,
+          "atk": 148,
+          "def": 238,
+          "spatk": 205,
+          "spdef": 227,
+          "spd": 105
+        },
+        "item": 2,
+        "ability": 24,
+        "move": [
+          41,
+          70,
+          34,
+          123
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 250,
+          "def": 175,
+          "spatk": 184,
+          "spdef": 248,
+          "spd": 105
+        },
+        "item": 16,
+        "ability": 24,
+        "move": [
+          7,
+          94,
+          175,
+          176
+        ]
+      },
+      {
+        "status": {
+          "hp": 323,
+          "atk": 148,
+          "def": 175,
+          "spatk": 294,
+          "spdef": 185,
+          "spd": 105
+        },
+        "item": 3,
+        "ability": 24,
+        "move": [
+          1,
+          115,
+          12,
+          13
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ウツボット",
+    "type1": 4,
+    "type2": 7,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 333,
+          "atk": 193,
+          "def": 135,
+          "spatk": 294,
+          "spdef": 125,
+          "spd": 145
+        },
+        "item": 47,
+        "ability": 24,
+        "move": [
+          0,
+          1,
+          3,
+          177
+        ]
+      },
+      {
+        "status": {
+          "hp": 333,
+          "atk": 305,
+          "def": 135,
+          "spatk": 184,
+          "spdef": 125,
+          "spd": 145
+        },
+        "item": 2,
+        "ability": 24,
+        "move": [
+          7,
+          178,
+          179,
+          180
+        ]
+      },
+      {
+        "status": {
+          "hp": 333,
+          "atk": 193,
+          "def": 135,
+          "spatk": 294,
+          "spdef": 125,
+          "spd": 145
+        },
+        "item": 48,
+        "ability": 24,
+        "move": [
+          1,
+          19,
+          12,
+          13
+        ]
+      },
+      {
+        "status": {
+          "hp": 333,
+          "atk": 193,
+          "def": 135,
+          "spatk": 294,
+          "spdef": 125,
+          "spd": 145
+        },
+        "item": 43,
+        "ability": 24,
+        "move": [
+          19,
+          1,
+          43,
+          21
+        ]
+      }
+    ]
+  },
+  {
+    "name": "マルマイン",
+    "type1": 3,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 230,
+          "atk": 94,
+          "def": 145,
+          "spatk": 250,
+          "spdef": 165,
+          "spd": 348
+        },
+        "item": 31,
+        "ability": 25,
+        "move": [
+          119,
+          171,
+          105,
+          44
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 94,
+          "def": 145,
+          "spatk": 228,
+          "spdef": 165,
+          "spd": 382
+        },
+        "item": 6,
+        "ability": 25,
+        "move": [
+          120,
+          105,
+          181,
+          136
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 94,
+          "def": 145,
+          "spatk": 228,
+          "spdef": 165,
+          "spd": 382
+        },
+        "item": 46,
+        "ability": 25,
+        "move": [
+          124,
+          12,
+          182,
+          125
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 105,
+          "def": 145,
+          "spatk": 228,
+          "spdef": 165,
+          "spd": 348
+        },
+        "item": 35,
+        "ability": 25,
+        "move": [
+          119,
+          29,
+          137,
+          31
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ルンパッパ",
+    "type1": 2,
+    "type2": 4,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 270,
+          "atk": 228,
+          "def": 145,
+          "spatk": 166,
+          "spdef": 268,
+          "spd": 145
+        },
+        "item": 26,
+        "ability": 26,
+        "move": [
+          32,
+          183,
+          94,
+          176
+        ]
+      },
+      {
+        "status": {
+          "hp": 312,
+          "atk": 145,
+          "def": 205,
+          "spatk": 166,
+          "spdef": 247,
+          "spd": 145
+        },
+        "item": 18,
+        "ability": 26,
+        "move": [
+          6,
+          41,
+          34,
+          125
+        ]
+      },
+      {
+        "status": {
+          "hp": 333,
+          "atk": 130,
+          "def": 145,
+          "spatk": 272,
+          "spdef": 205,
+          "spd": 145
+        },
+        "item": 42,
+        "ability": 26,
+        "move": [
+          28,
+          70,
+          82,
+          26
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 130,
+          "def": 145,
+          "spatk": 272,
+          "spdef": 268,
+          "spd": 145
+        },
+        "item": 16,
+        "ability": 26,
+        "move": [
+          81,
+          4,
+          40,
+          125
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ダーテング",
+    "type1": 4,
+    "type2": 15,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 290,
+          "atk": 268,
+          "def": 125,
+          "spatk": 166,
+          "spdef": 125,
+          "spd": 250
+        },
+        "item": 39,
+        "ability": 27,
+        "move": [
+          7,
+          184,
+          59,
+          74
+        ]
+      },
+      {
+        "status": {
+          "hp": 332,
+          "atk": 184,
+          "def": 167,
+          "spatk": 185,
+          "spdef": 183,
+          "spd": 165
+        },
+        "item": 18,
+        "ability": 27,
+        "move": [
+          4,
+          6,
+          34,
+          13
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 184,
+          "def": 125,
+          "spatk": 272,
+          "spdef": 125,
+          "spd": 165
+        },
+        "item": 0,
+        "ability": 27,
+        "move": [
+          0,
+          174,
+          26,
+          99
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 294,
+          "def": 125,
+          "spatk": 166,
+          "spdef": 125,
+          "spd": 165
+        },
+        "item": 30,
+        "ability": 27,
+        "move": [
+          7,
+          144,
+          52,
+          137
+        ]
+      }
+    ]
+  },
+  {
+    "name": "バクオング",
+    "type1": 0,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 381,
+          "atk": 168,
+          "def": 131,
+          "spatk": 275,
+          "spdef": 131,
+          "spd": 141
+        },
+        "item": 37,
+        "ability": 28,
+        "move": [
+          185,
+          186,
+          187,
+          188
+        ]
+      },
+      {
+        "status": {
+          "hp": 381,
+          "atk": 275,
+          "def": 131,
+          "spatk": 168,
+          "spdef": 131,
+          "spd": 141
+        },
+        "item": 9,
+        "ability": 28,
+        "move": [
+          106,
+          46,
+          47,
+          64
+        ]
+      },
+      {
+        "status": {
+          "hp": 381,
+          "atk": 275,
+          "def": 131,
+          "spatk": 168,
+          "spdef": 131,
+          "spd": 141
+        },
+        "item": 9,
+        "ability": 28,
+        "move": [
+          106,
+          8,
+          37,
+          23
+        ]
+      },
+      {
+        "status": {
+          "hp": 381,
+          "atk": 168,
+          "def": 131,
+          "spatk": 275,
+          "spdef": 131,
+          "spd": 141
+        },
+        "item": 0,
+        "ability": 28,
+        "move": [
+          185,
+          18,
+          81,
+          40
+        ]
+      }
+    ]
+  },
+  {
+    "name": "オニゴーリ",
+    "type1": 5,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 312,
+          "atk": 181,
+          "def": 207,
+          "spatk": 165,
+          "spdef": 207,
+          "spd": 148
+        },
+        "item": 41,
+        "ability": 29,
+        "move": [
+          37,
+          109,
+          129,
+          189
+        ]
+      },
+      {
+        "status": {
+          "hp": 333,
+          "atk": 250,
+          "def": 165,
+          "spatk": 148,
+          "spdef": 165,
+          "spd": 165
+        },
+        "item": 16,
+        "ability": 29,
+        "move": [
+          53,
+          23,
+          8,
+          137
+        ]
+      },
+      {
+        "status": {
+          "hp": 333,
+          "atk": 148,
+          "def": 165,
+          "spatk": 250,
+          "spdef": 165,
+          "spd": 165
+        },
+        "item": 5,
+        "ability": 29,
+        "move": [
+          40,
+          99,
+          29,
+          187
+        ]
+      },
+      {
+        "status": {
+          "hp": 333,
+          "atk": 148,
+          "def": 165,
+          "spatk": 250,
+          "spdef": 165,
+          "spd": 165
+        },
+        "item": 12,
+        "ability": 29,
+        "move": [
+          82,
+          174,
+          166,
+          190
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ミミロップ",
+    "type1": 0,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 240,
+          "atk": 220,
+          "def": 173,
+          "spatk": 101,
+          "spdef": 197,
+          "spd": 305
+        },
+        "item": 43,
+        "ability": 30,
+        "move": [
+          104,
+          94,
+          191,
+          31
+        ]
+      },
+      {
+        "status": {
+          "hp": 303,
+          "atk": 157,
+          "def": 173,
+          "spatk": 101,
+          "spdef": 197,
+          "spd": 305
+        },
+        "item": 6,
+        "ability": 30,
+        "move": [
+          33,
+          160,
+          123,
+          105
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 141,
+          "def": 173,
+          "spatk": 193,
+          "spdef": 197,
+          "spd": 278
+        },
+        "item": 3,
+        "ability": 30,
+        "move": [
+          120,
+          40,
+          99,
+          26
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 220,
+          "def": 173,
+          "spatk": 101,
+          "spdef": 197,
+          "spd": 305
+        },
+        "item": 26,
+        "ability": 30,
+        "move": [
+          192,
+          46,
+          47,
+          64
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ユキメノコ",
+    "type1": 5,
+    "type2": 13,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 250,
+          "atk": 148,
+          "def": 145,
+          "spatk": 228,
+          "spdef": 145,
+          "spd": 316
+        },
+        "item": 30,
+        "ability": 31,
+        "move": [
+          40,
+          153,
+          122,
+          123
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 250,
+          "def": 145,
+          "spatk": 148,
+          "spdef": 145,
+          "spd": 288
+        },
+        "item": 43,
+        "ability": 31,
+        "move": [
+          64,
+          144,
+          136,
+          193
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 148,
+          "def": 145,
+          "spatk": 250,
+          "spdef": 145,
+          "spd": 288
+        },
+        "item": 21,
+        "ability": 31,
+        "move": [
+          40,
+          119,
+          29,
+          155
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 148,
+          "def": 145,
+          "spatk": 250,
+          "spdef": 145,
+          "spd": 288
+        },
+        "item": 12,
+        "ability": 31,
+        "move": [
+          82,
+          99,
+          98,
+          190
+        ]
+      }
+    ]
+  },
+  {
+    "name": "エテボース",
+    "type1": 0,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 260,
+          "atk": 268,
+          "def": 137,
+          "spatk": 112,
+          "spdef": 137,
+          "spd": 327
+        },
+        "item": 26,
+        "ability": 32,
+        "move": [
+          194,
+          48,
+          77,
+          78
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 268,
+          "def": 137,
+          "spatk": 112,
+          "spdef": 137,
+          "spd": 327
+        },
+        "item": 49,
+        "ability": 32,
+        "move": [
+          195,
+          105,
+          65,
+          74
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 294,
+          "def": 137,
+          "spatk": 112,
+          "spdef": 137,
+          "spd": 298
+        },
+        "item": 9,
+        "ability": 32,
+        "move": [
+          194,
+          75,
+          7,
+          52
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 294,
+          "def": 137,
+          "spatk": 112,
+          "spdef": 137,
+          "spd": 298
+        },
+        "item": 9,
+        "ability": 32,
+        "move": [
+          194,
+          46,
+          47,
+          64
+        ]
+      }
+    ]
+  },
+  {
+    "name": "スリーパー",
+    "type1": 10,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 280,
+          "atk": 235,
+          "def": 145,
+          "spatk": 151,
+          "spdef": 298,
+          "spd": 125
+        },
+        "item": 41,
+        "ability": 33,
+        "move": [
+          101,
+          149,
+          118,
+          196
+        ]
+      },
+      {
+        "status": {
+          "hp": 280,
+          "atk": 151,
+          "def": 145,
+          "spatk": 214,
+          "spdef": 298,
+          "spd": 139
+        },
+        "item": 39,
+        "ability": 33,
+        "move": [
+          112,
+          197,
+          94,
+          118
+        ]
+      },
+      {
+        "status": {
+          "hp": 280,
+          "atk": 235,
+          "def": 145,
+          "spatk": 135,
+          "spdef": 298,
+          "spd": 139
+        },
+        "item": 34,
+        "ability": 33,
+        "move": [
+          38,
+          46,
+          47,
+          64
+        ]
+      },
+      {
+        "status": {
+          "hp": 280,
+          "atk": 135,
+          "def": 145,
+          "spatk": 235,
+          "spdef": 298,
+          "spd": 139
+        },
+        "item": 32,
+        "ability": 33,
+        "move": [
+          98,
+          99,
+          29,
+          26
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ゴローニャ",
+    "type1": 12,
+    "type2": 8,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 270,
+          "atk": 288,
+          "def": 360,
+          "spatk": 103,
+          "spdef": 135,
+          "spd": 95
+        },
+        "item": 43,
+        "ability": 34,
+        "move": [
+          8,
+          54,
+          144,
+          87
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 316,
+          "def": 328,
+          "spatk": 103,
+          "spdef": 135,
+          "spd": 95
+        },
+        "item": 0,
+        "ability": 34,
+        "move": [
+          8,
+          55,
+          46,
+          47
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 316,
+          "def": 328,
+          "spatk": 115,
+          "spdef": 135,
+          "spd": 85
+        },
+        "item": 41,
+        "ability": 34,
+        "move": [
+          129,
+          8,
+          66,
+          149
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 316,
+          "def": 328,
+          "spatk": 115,
+          "spdef": 135,
+          "spd": 85
+        },
+        "item": 24,
+        "ability": 34,
+        "move": [
+          8,
+          63,
+          129,
+          137
+        ]
+      }
+    ]
+  },
+  {
+    "name": "サイドン",
+    "type1": 8,
+    "type2": 12,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 320,
+          "atk": 360,
+          "def": 308,
+          "spatk": 85,
+          "spdef": 95,
+          "spd": 85
+        },
+        "item": 20,
+        "ability": 35,
+        "move": [
+          8,
+          54,
+          23,
+          17
+        ]
+      },
+      {
+        "status": {
+          "hp": 320,
+          "atk": 360,
+          "def": 308,
+          "spatk": 85,
+          "spdef": 95,
+          "spd": 85
+        },
+        "item": 35,
+        "ability": 35,
+        "move": [
+          8,
+          46,
+          47,
+          64
+        ]
+      },
+      {
+        "status": {
+          "hp": 383,
+          "atk": 360,
+          "def": 245,
+          "spatk": 95,
+          "spdef": 95,
+          "spd": 76
+        },
+        "item": 39,
+        "ability": 35,
+        "move": [
+          9,
+          66,
+          48,
+          37
+        ]
+      },
+      {
+        "status": {
+          "hp": 383,
+          "atk": 360,
+          "def": 245,
+          "spatk": 85,
+          "spdef": 95,
+          "spd": 85
+        },
+        "item": 24,
+        "ability": 35,
+        "move": [
+          8,
+          63,
+          198,
+          167
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ヤドラン",
+    "type1": 2,
+    "type2": 10,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 300,
+          "atk": 139,
+          "def": 316,
+          "spatk": 268,
+          "spdef": 165,
+          "spd": 65
+        },
+        "item": 31,
+        "ability": 36,
+        "move": [
+          98,
+          81,
+          100,
+          103
+        ]
+      },
+      {
+        "status": {
+          "hp": 363,
+          "atk": 239,
+          "def": 225,
+          "spatk": 184,
+          "spdef": 165,
+          "spd": 65
+        },
+        "item": 21,
+        "ability": 36,
+        "move": [
+          38,
+          36,
+          8,
+          37
+        ]
+      },
+      {
+        "status": {
+          "hp": 363,
+          "atk": 139,
+          "def": 225,
+          "spatk": 294,
+          "spdef": 165,
+          "spd": 65
+        },
+        "item": 32,
+        "ability": 36,
+        "move": [
+          98,
+          14,
+          99,
+          29
+        ]
+      },
+      {
+        "status": {
+          "hp": 363,
+          "atk": 155,
+          "def": 225,
+          "spatk": 294,
+          "spdef": 165,
+          "spd": 58
+        },
+        "item": 18,
+        "ability": 36,
+        "move": [
+          98,
+          81,
+          40,
+          196
+        ]
+      }
+    ]
+  },
+  {
+    "name": "マタドガス",
+    "type1": 7,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 240,
+          "atk": 166,
+          "def": 338,
+          "spatk": 238,
+          "spdef": 145,
+          "spd": 125
+        },
+        "item": 47,
+        "ability": 37,
+        "move": [
+          1,
+          174,
+          199,
+          200
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 272,
+          "def": 308,
+          "spatk": 157,
+          "spdef": 145,
+          "spd": 125
+        },
+        "item": 34,
+        "ability": 37,
+        "move": [
+          194,
+          109,
+          41,
+          136
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 185,
+          "def": 245,
+          "spatk": 238,
+          "spdef": 228,
+          "spd": 112
+        },
+        "item": 12,
+        "ability": 37,
+        "move": [
+          1,
+          119,
+          174,
+          137
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 166,
+          "def": 308,
+          "spatk": 261,
+          "spdef": 145,
+          "spd": 125
+        },
+        "item": 24,
+        "ability": 37,
+        "move": [
+          1,
+          14,
+          99,
+          155
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ガルーラ",
+    "type1": 0,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 320,
+          "atk": 258,
+          "def": 165,
+          "spatk": 76,
+          "spdef": 165,
+          "spd": 272
+        },
+        "item": 13,
+        "ability": 38,
+        "move": [
+          138,
+          23,
+          50,
+          51
+        ]
+      },
+      {
+        "status": {
+          "hp": 383,
+          "atk": 283,
+          "def": 165,
+          "spatk": 76,
+          "spdef": 165,
+          "spd": 185
+        },
+        "item": 27,
+        "ability": 38,
+        "move": [
+          192,
+          46,
+          47,
+          64
+        ]
+      },
+      {
+        "status": {
+          "hp": 320,
+          "atk": 258,
+          "def": 165,
+          "spatk": 76,
+          "spdef": 165,
+          "spd": 272
+        },
+        "item": 9,
+        "ability": 38,
+        "move": [
+          194,
+          66,
+          48,
+          54
+        ]
+      },
+      {
+        "status": {
+          "hp": 383,
+          "atk": 283,
+          "def": 165,
+          "spatk": 76,
+          "spdef": 165,
+          "spd": 185
+        },
+        "item": 26,
+        "ability": 38,
+        "move": [
+          89,
+          8,
+          23,
+          9
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ケンタロス",
+    "type1": 0,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 260,
+          "atk": 268,
+          "def": 195,
+          "spatk": 76,
+          "spdef": 145,
+          "spd": 316
+        },
+        "item": 39,
+        "ability": 39,
+        "move": [
+          147,
+          38,
+          156,
+          17
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 294,
+          "def": 195,
+          "spatk": 76,
+          "spdef": 145,
+          "spd": 288
+        },
+        "item": 9,
+        "ability": 39,
+        "move": [
+          106,
+          8,
+          54,
+          109
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 268,
+          "def": 195,
+          "spatk": 76,
+          "spdef": 145,
+          "spd": 316
+        },
+        "item": 16,
+        "ability": 39,
+        "move": [
+          89,
+          8,
+          9,
+          92
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 294,
+          "def": 195,
+          "spatk": 76,
+          "spdef": 145,
+          "spd": 288
+        },
+        "item": 38,
+        "ability": 39,
+        "move": [
+          104,
+          8,
+          63,
+          38
+        ]
+      }
+    ]
+  },
+  {
+    "name": "フーディン",
+    "type1": 10,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 220,
+          "atk": 94,
+          "def": 95,
+          "spatk": 338,
+          "spdef": 175,
+          "spd": 338
+        },
+        "item": 6,
+        "ability": 40,
+        "move": [
+          98,
+          99,
+          100,
+          201
+        ]
+      },
+      {
+        "status": {
+          "hp": 220,
+          "atk": 94,
+          "def": 95,
+          "spatk": 371,
+          "spdef": 175,
+          "spd": 308
+        },
+        "item": 50,
+        "ability": 40,
+        "move": [
+          98,
+          26,
+          120,
+          97
+        ]
+      },
+      {
+        "status": {
+          "hp": 220,
+          "atk": 94,
+          "def": 95,
+          "spatk": 338,
+          "spdef": 175,
+          "spd": 338
+        },
+        "item": 3,
+        "ability": 40,
+        "move": [
+          98,
+          120,
+          29,
+          70
+        ]
+      },
+      {
+        "status": {
+          "hp": 220,
+          "atk": 94,
+          "def": 95,
+          "spatk": 371,
+          "spdef": 175,
+          "spd": 308
+        },
+        "item": 21,
+        "ability": 40,
+        "move": [
+          98,
+          99,
+          115,
+          26
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ヤドキング",
+    "type1": 2,
+    "type2": 10,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 342,
+          "atk": 155,
+          "def": 207,
+          "spatk": 225,
+          "spdef": 267,
+          "spd": 58
+        },
+        "item": 8,
+        "ability": 36,
+        "move": [
+          98,
+          202,
+          103,
+          196
+        ]
+      },
+      {
+        "status": {
+          "hp": 363,
+          "atk": 239,
+          "def": 165,
+          "spatk": 184,
+          "spdef": 225,
+          "spd": 65
+        },
+        "item": 24,
+        "ability": 36,
+        "move": [
+          38,
+          36,
+          8,
+          10
+        ]
+      },
+      {
+        "status": {
+          "hp": 300,
+          "atk": 139,
+          "def": 165,
+          "spatk": 294,
+          "spdef": 288,
+          "spd": 65
+        },
+        "item": 16,
+        "ability": 36,
+        "move": [
+          98,
+          99,
+          29,
+          26
+        ]
+      },
+      {
+        "status": {
+          "hp": 363,
+          "atk": 139,
+          "def": 165,
+          "spatk": 294,
+          "spdef": 225,
+          "spd": 65
+        },
+        "item": 3,
+        "ability": 36,
+        "move": [
+          98,
+          81,
+          40,
+          14
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ミルタンク",
+    "type1": 0,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 300,
+          "atk": 228,
+          "def": 305,
+          "spatk": 76,
+          "spdef": 145,
+          "spd": 205
+        },
+        "item": 30,
+        "ability": 41,
+        "move": [
+          104,
+          93,
+          105,
+          203
+        ]
+      },
+      {
+        "status": {
+          "hp": 300,
+          "atk": 250,
+          "def": 215,
+          "spatk": 76,
+          "spdef": 145,
+          "spd": 268
+        },
+        "item": 13,
+        "ability": 41,
+        "move": [
+          106,
+          38,
+          50,
+          51
+        ]
+      },
+      {
+        "status": {
+          "hp": 300,
+          "atk": 250,
+          "def": 278,
+          "spatk": 76,
+          "spdef": 145,
+          "spd": 205
+        },
+        "item": 5,
+        "ability": 41,
+        "move": [
+          192,
+          46,
+          47,
+          64
+        ]
+      },
+      {
+        "status": {
+          "hp": 300,
+          "atk": 250,
+          "def": 215,
+          "spatk": 76,
+          "spdef": 145,
+          "spd": 268
+        },
+        "item": 26,
+        "ability": 41,
+        "move": [
+          89,
+          8,
+          54,
+          38
+        ]
+      }
+    ]
+  },
+  {
+    "name": "チルタリス",
+    "type1": 14,
+    "type2": 9,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 260,
+          "atk": 208,
+          "def": 185,
+          "spatk": 130,
+          "spdef": 305,
+          "spd": 165
+        },
+        "item": 31,
+        "ability": 42,
+        "move": [
+          24,
+          52,
+          56,
+          168
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 130,
+          "def": 185,
+          "spatk": 228,
+          "spdef": 278,
+          "spd": 165
+        },
+        "item": 8,
+        "ability": 42,
+        "move": [
+          61,
+          153,
+          204,
+          113
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 228,
+          "def": 185,
+          "spatk": 130,
+          "spdef": 278,
+          "spd": 165
+        },
+        "item": 6,
+        "ability": 42,
+        "move": [
+          205,
+          206,
+          8,
+          56
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 130,
+          "def": 185,
+          "spatk": 228,
+          "spdef": 215,
+          "spd": 228
+        },
+        "item": 0,
+        "ability": 42,
+        "move": [
+          207,
+          152,
+          14,
+          40
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ドクロッグ",
+    "type1": 7,
+    "type2": 6,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 276,
+          "atk": 308,
+          "def": 135,
+          "spatk": 159,
+          "spdef": 135,
+          "spd": 238
+        },
+        "item": 2,
+        "ability": 43,
+        "move": [
+          95,
+          77,
+          59,
+          78
+        ]
+      },
+      {
+        "status": {
+          "hp": 276,
+          "atk": 308,
+          "def": 135,
+          "spatk": 159,
+          "spdef": 135,
+          "spd": 238
+        },
+        "item": 42,
+        "ability": 43,
+        "move": [
+          127,
+          95,
+          47,
+          64
+        ]
+      },
+      {
+        "status": {
+          "hp": 276,
+          "atk": 195,
+          "def": 135,
+          "spatk": 264,
+          "spdef": 135,
+          "spd": 238
+        },
+        "item": 3,
+        "ability": 43,
+        "move": [
+          1,
+          26,
+          99,
+          174
+        ]
+      },
+      {
+        "status": {
+          "hp": 276,
+          "atk": 308,
+          "def": 135,
+          "spatk": 159,
+          "spdef": 135,
+          "spd": 238
+        },
+        "item": 27,
+        "ability": 43,
+        "move": [
+          75,
+          150,
+          8,
+          63
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ユキノオー",
+    "type1": 4,
+    "type2": 5,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 353,
+          "atk": 170,
+          "def": 155,
+          "spatk": 252,
+          "spdef": 192,
+          "spd": 125
+        },
+        "item": 16,
+        "ability": 44,
+        "move": [
+          4,
+          40,
+          187,
+          208
+        ]
+      },
+      {
+        "status": {
+          "hp": 332,
+          "atk": 170,
+          "def": 216,
+          "spatk": 189,
+          "spdef": 217,
+          "spd": 125
+        },
+        "item": 1,
+        "ability": 44,
+        "move": [
+          4,
+          166,
+          5,
+          6
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 189,
+          "def": 155,
+          "spatk": 277,
+          "spdef": 175,
+          "spd": 112
+        },
+        "item": 19,
+        "ability": 44,
+        "move": [
+          115,
+          82,
+          99,
+          26
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 277,
+          "def": 155,
+          "spatk": 189,
+          "spdef": 175,
+          "spd": 112
+        },
+        "item": 8,
+        "ability": 44,
+        "move": [
+          71,
+          37,
+          8,
+          54
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ニドクイン",
+    "type1": 7,
+    "type2": 8,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 353,
+          "atk": 255,
+          "def": 179,
+          "spatk": 139,
+          "spdef": 175,
+          "spd": 157
+        },
+        "item": 47,
+        "ability": 45,
+        "move": [
+          8,
+          209,
+          52,
+          191
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 255,
+          "def": 179,
+          "spatk": 139,
+          "spdef": 175,
+          "spd": 157
+        },
+        "item": 5,
+        "ability": 45,
+        "move": [
+          95,
+          46,
+          47,
+          64
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 152,
+          "def": 179,
+          "spatk": 239,
+          "spdef": 175,
+          "spd": 157
+        },
+        "item": 2,
+        "ability": 45,
+        "move": [
+          1,
+          68,
+          14,
+          40
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 255,
+          "def": 179,
+          "spatk": 139,
+          "spdef": 175,
+          "spd": 157
+        },
+        "item": 27,
+        "ability": 45,
+        "move": [
+          8,
+          95,
+          55,
+          23
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ニドキング",
+    "type1": 7,
+    "type2": 8,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 335,
+          "atk": 252,
+          "def": 174,
+          "spatk": 157,
+          "spdef": 155,
+          "spd": 175
+        },
+        "item": 43,
+        "ability": 45,
+        "move": [
+          8,
+          95,
+          210,
+          69
+        ]
+      },
+      {
+        "status": {
+          "hp": 314,
+          "atk": 189,
+          "def": 201,
+          "spatk": 157,
+          "spdef": 216,
+          "spd": 175
+        },
+        "item": 6,
+        "ability": 45,
+        "move": [
+          33,
+          61,
+          167,
+          42
+        ]
+      },
+      {
+        "status": {
+          "hp": 272,
+          "atk": 170,
+          "def": 159,
+          "spatk": 261,
+          "spdef": 155,
+          "spd": 238
+        },
+        "item": 21,
+        "ability": 45,
+        "move": [
+          68,
+          1,
+          40,
+          99
+        ]
+      },
+      {
+        "status": {
+          "hp": 272,
+          "atk": 277,
+          "def": 159,
+          "spatk": 157,
+          "spdef": 155,
+          "spd": 238
+        },
+        "item": 26,
+        "ability": 45,
+        "move": [
+          8,
+          95,
+          198,
+          9
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ユレイドル",
+    "type1": 12,
+    "type2": 4,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 324,
+          "atk": 167,
+          "def": 265,
+          "spatk": 150,
+          "spdef": 261,
+          "spd": 91
+        },
+        "item": 27,
+        "ability": 46,
+        "move": [
+          27,
+          115,
+          122,
+          87
+        ]
+      },
+      {
+        "status": {
+          "hp": 324,
+          "atk": 167,
+          "def": 265,
+          "spatk": 150,
+          "spdef": 261,
+          "spd": 91
+        },
+        "item": 18,
+        "ability": 46,
+        "move": [
+          41,
+          180,
+          34,
+          5
+        ]
+      },
+      {
+        "status": {
+          "hp": 324,
+          "atk": 150,
+          "def": 241,
+          "spatk": 167,
+          "spdef": 287,
+          "spd": 91
+        },
+        "item": 1,
+        "ability": 46,
+        "move": [
+          4,
+          1,
+          97,
+          5
+        ]
+      },
+      {
+        "status": {
+          "hp": 324,
+          "atk": 150,
+          "def": 241,
+          "spatk": 167,
+          "spdef": 287,
+          "spd": 91
+        },
+        "item": 18,
+        "ability": 46,
+        "move": [
+          63,
+          7,
+          8,
+          31
+        ]
+      }
+    ]
+  },
+  {
+    "name": "アーマルド",
+    "type1": 12,
+    "type2": 11,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 260,
+          "atk": 349,
+          "def": 205,
+          "spatk": 130,
+          "spdef": 228,
+          "spd": 95
+        },
+        "item": 27,
+        "ability": 47,
+        "move": [
+          59,
+          54,
+          8,
+          211
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 349,
+          "def": 205,
+          "spatk": 130,
+          "spdef": 228,
+          "spd": 95
+        },
+        "item": 5,
+        "ability": 47,
+        "move": [
+          212,
+          36,
+          52,
+          136
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 349,
+          "def": 268,
+          "spatk": 130,
+          "spdef": 165,
+          "spd": 95
+        },
+        "item": 38,
+        "ability": 47,
+        "move": [
+          63,
+          55,
+          8,
+          89
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 349,
+          "def": 268,
+          "spatk": 130,
+          "spdef": 165,
+          "spd": 95
+        },
+        "item": 9,
+        "ability": 47,
+        "move": [
+          63,
+          59,
+          8,
+          213
+        ]
+      }
+    ]
+  },
+  {
+    "name": "トリデプス",
+    "type1": 12,
+    "type2": 16,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 230,
+          "atk": 109,
+          "def": 444,
+          "spatk": 89,
+          "spdef": 344,
+          "spd": 65
+        },
+        "item": 43,
+        "ability": 12,
+        "move": [
+          93,
+          63,
+          136,
+          145
+        ]
+      },
+      {
+        "status": {
+          "hp": 293,
+          "atk": 98,
+          "def": 341,
+          "spatk": 178,
+          "spdef": 281,
+          "spd": 65
+        },
+        "item": 39,
+        "ability": 12,
+        "move": [
+          27,
+          14,
+          119,
+          40
+        ]
+      },
+      {
+        "status": {
+          "hp": 293,
+          "atk": 109,
+          "def": 341,
+          "spatk": 89,
+          "spdef": 378,
+          "spd": 65
+        },
+        "item": 18,
+        "ability": 12,
+        "move": [
+          93,
+          88,
+          34,
+          211
+        ]
+      },
+      {
+        "status": {
+          "hp": 293,
+          "atk": 189,
+          "def": 341,
+          "spatk": 89,
+          "spdef": 281,
+          "spd": 65
+        },
+        "item": 35,
+        "ability": 12,
+        "move": [
+          214,
+          63,
+          37,
+          10
+        ]
+      }
+    ]
+  },
+  {
+    "name": "フローゼル",
+    "type1": 2,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 280,
+          "atk": 278,
+          "def": 115,
+          "spatk": 157,
+          "spdef": 105,
+          "spd": 327
+        },
+        "item": 34,
+        "ability": 48,
+        "move": [
+          32,
+          64,
+          49,
+          125
+        ]
+      },
+      {
+        "status": {
+          "hp": 280,
+          "atk": 278,
+          "def": 115,
+          "spatk": 157,
+          "spdef": 105,
+          "spd": 327
+        },
+        "item": 31,
+        "ability": 48,
+        "move": [
+          32,
+          33,
+          34,
+          123
+        ]
+      },
+      {
+        "status": {
+          "hp": 280,
+          "atk": 193,
+          "def": 115,
+          "spatk": 261,
+          "spdef": 105,
+          "spd": 298
+        },
+        "item": 51,
+        "ability": 48,
+        "move": [
+          81,
+          40,
+          26,
+          125
+        ]
+      },
+      {
+        "status": {
+          "hp": 280,
+          "atk": 305,
+          "def": 115,
+          "spatk": 157,
+          "spdef": 105,
+          "spd": 298
+        },
+        "item": 44,
+        "ability": 48,
+        "move": [
+          36,
+          53,
+          23,
+          77
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ムウマージ",
+    "type1": 13,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 230,
+          "atk": 112,
+          "def": 125,
+          "spatk": 305,
+          "spdef": 215,
+          "spd": 278
+        },
+        "item": 33,
+        "ability": 37,
+        "move": [
+          99,
+          215,
+          216,
+          217
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 112,
+          "def": 125,
+          "spatk": 305,
+          "spdef": 278,
+          "spd": 215
+        },
+        "item": 16,
+        "ability": 37,
+        "move": [
+          99,
+          122,
+          113,
+          114
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 112,
+          "def": 125,
+          "spatk": 278,
+          "spdef": 215,
+          "spd": 305
+        },
+        "item": 3,
+        "ability": 37,
+        "move": [
+          99,
+          115,
+          30,
+          155
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 112,
+          "def": 125,
+          "spatk": 278,
+          "spdef": 215,
+          "spd": 305
+        },
+        "item": 35,
+        "ability": 37,
+        "move": [
+          99,
+          98,
+          119,
+          155
+        ]
+      }
+    ]
+  },
+  {
+    "name": "フワライド",
+    "type1": 13,
+    "type2": 9,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 473,
+          "atk": 148,
+          "def": 93,
+          "spatk": 272,
+          "spdef": 113,
+          "spd": 165
+        },
+        "item": 13,
+        "ability": 49,
+        "move": [
+          153,
+          152,
+          218,
+          51
+        ]
+      },
+      {
+        "status": {
+          "hp": 473,
+          "atk": 250,
+          "def": 93,
+          "spatk": 166,
+          "spdef": 113,
+          "spd": 165
+        },
+        "item": 2,
+        "ability": 49,
+        "move": [
+          109,
+          106,
+          20,
+          219
+        ]
+      },
+      {
+        "status": {
+          "hp": 473,
+          "atk": 148,
+          "def": 93,
+          "spatk": 272,
+          "spdef": 113,
+          "spd": 165
+        },
+        "item": 3,
+        "ability": 49,
+        "move": [
+          98,
+          119,
+          30,
+          155
+        ]
+      },
+      {
+        "status": {
+          "hp": 473,
+          "atk": 228,
+          "def": 93,
+          "spatk": 185,
+          "spdef": 113,
+          "spd": 165
+        },
+        "item": 12,
+        "ability": 49,
+        "move": [
+          99,
+          152,
+          151,
+          137
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ゴルダック",
+    "type1": 2,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 333,
+          "atk": 152,
+          "def": 161,
+          "spatk": 283,
+          "spdef": 165,
+          "spd": 175
+        },
+        "item": 22,
+        "ability": 50,
+        "move": [
+          81,
+          98,
+          122,
+          100
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 255,
+          "def": 161,
+          "spatk": 175,
+          "spdef": 165,
+          "spd": 238
+        },
+        "item": 8,
+        "ability": 50,
+        "move": [
+          32,
+          173,
+          48,
+          52
+        ]
+      },
+      {
+        "status": {
+          "hp": 333,
+          "atk": 255,
+          "def": 161,
+          "spatk": 175,
+          "spdef": 165,
+          "spd": 175
+        },
+        "item": 5,
+        "ability": 50,
+        "move": [
+          36,
+          150,
+          64,
+          38
+        ]
+      },
+      {
+        "status": {
+          "hp": 333,
+          "atk": 152,
+          "def": 161,
+          "spatk": 283,
+          "spdef": 165,
+          "spd": 175
+        },
+        "item": 45,
+        "ability": 50,
+        "move": [
+          28,
+          98,
+          40,
+          29
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ニョロボン",
+    "type1": 2,
+    "type2": 6,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 353,
+          "atk": 157,
+          "def": 195,
+          "spatk": 228,
+          "spdef": 185,
+          "spd": 145
+        },
+        "item": 22,
+        "ability": 51,
+        "move": [
+          81,
+          220,
+          98,
+          34
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 261,
+          "def": 195,
+          "spatk": 130,
+          "spdef": 185,
+          "spd": 145
+        },
+        "item": 12,
+        "ability": 51,
+        "move": [
+          32,
+          127,
+          95,
+          221
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 157,
+          "def": 195,
+          "spatk": 228,
+          "spdef": 185,
+          "spd": 145
+        },
+        "item": 42,
+        "ability": 51,
+        "move": [
+          28,
+          26,
+          82,
+          173
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 261,
+          "def": 195,
+          "spatk": 130,
+          "spdef": 185,
+          "spd": 145
+        },
+        "item": 21,
+        "ability": 51,
+        "move": [
+          32,
+          33,
+          8,
+          118
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ギャロップ",
+    "type1": 1,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 240,
+          "atk": 184,
+          "def": 145,
+          "spatk": 250,
+          "spdef": 165,
+          "spd": 278
+        },
+        "item": 31,
+        "ability": 52,
+        "move": [
+          222,
+          19,
+          21,
+          168
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 184,
+          "def": 145,
+          "spatk": 250,
+          "spdef": 165,
+          "spd": 278
+        },
+        "item": 0,
+        "ability": 52,
+        "move": [
+          18,
+          19,
+          171,
+          21
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 294,
+          "def": 145,
+          "spatk": 148,
+          "spdef": 165,
+          "spd": 278
+        },
+        "item": 6,
+        "ability": 52,
+        "move": [
+          22,
+          95,
+          92,
+          167
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 268,
+          "def": 145,
+          "spatk": 148,
+          "spdef": 165,
+          "spd": 305
+        },
+        "item": 31,
+        "ability": 52,
+        "move": [
+          22,
+          198,
+          138,
+          118
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ベトベトン",
+    "type1": 7,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 383,
+          "atk": 305,
+          "def": 155,
+          "spatk": 121,
+          "spdef": 205,
+          "spd": 105
+        },
+        "item": 2,
+        "ability": 53,
+        "move": [
+          95,
+          223,
+          224,
+          225
+        ]
+      },
+      {
+        "status": {
+          "hp": 383,
+          "atk": 305,
+          "def": 155,
+          "spatk": 121,
+          "spdef": 205,
+          "spd": 105
+        },
+        "item": 21,
+        "ability": 53,
+        "move": [
+          95,
+          46,
+          47,
+          64
+        ]
+      },
+      {
+        "status": {
+          "hp": 383,
+          "atk": 305,
+          "def": 155,
+          "spatk": 135,
+          "spdef": 205,
+          "spd": 94
+        },
+        "item": 40,
+        "ability": 53,
+        "move": [
+          75,
+          109,
+          223,
+          10
+        ]
+      },
+      {
+        "status": {
+          "hp": 383,
+          "atk": 305,
+          "def": 155,
+          "spatk": 121,
+          "spdef": 205,
+          "spd": 105
+        },
+        "item": 24,
+        "ability": 53,
+        "move": [
+          75,
+          223,
+          77,
+          137
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ゲンガー",
+    "type1": 13,
+    "type2": 7,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 230,
+          "atk": 121,
+          "def": 125,
+          "spatk": 328,
+          "spdef": 155,
+          "spd": 316
+        },
+        "item": 47,
+        "ability": 37,
+        "move": [
+          99,
+          1,
+          226,
+          122
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 121,
+          "def": 125,
+          "spatk": 360,
+          "spdef": 155,
+          "spd": 288
+        },
+        "item": 9,
+        "ability": 37,
+        "move": [
+          99,
+          112,
+          118,
+          42
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 121,
+          "def": 125,
+          "spatk": 360,
+          "spdef": 155,
+          "spd": 288
+        },
+        "item": 5,
+        "ability": 37,
+        "move": [
+          98,
+          115,
+          26,
+          122
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 121,
+          "def": 125,
+          "spatk": 360,
+          "spdef": 155,
+          "spd": 288
+        },
+        "item": 16,
+        "ability": 37,
+        "move": [
+          99,
+          1,
+          119,
+          155
+        ]
+      }
+    ]
+  },
+  {
+    "name": "デンリュウ",
+    "type1": 3,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 290,
+          "atk": 139,
+          "def": 155,
+          "spatk": 327,
+          "spdef": 248,
+          "spd": 115
+        },
+        "item": 14,
+        "ability": 18,
+        "move": [
+          119,
+          215,
+          44,
+          105
+        ]
+      },
+      {
+        "status": {
+          "hp": 290,
+          "atk": 218,
+          "def": 155,
+          "spatk": 211,
+          "spdef": 272,
+          "spd": 115
+        },
+        "item": 30,
+        "ability": 18,
+        "move": [
+          47,
+          46,
+          33,
+          105
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 139,
+          "def": 155,
+          "spatk": 327,
+          "spdef": 185,
+          "spd": 115
+        },
+        "item": 31,
+        "ability": 18,
+        "move": [
+          120,
+          12,
+          105,
+          168
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 155,
+          "def": 155,
+          "spatk": 327,
+          "spdef": 185,
+          "spd": 103
+        },
+        "item": 40,
+        "ability": 18,
+        "move": [
+          124,
+          26,
+          29,
+          215
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ニョロトノ",
+    "type1": 2,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 290,
+          "atk": 139,
+          "def": 155,
+          "spatk": 248,
+          "spdef": 294,
+          "spd": 145
+        },
+        "item": 12,
+        "ability": 51,
+        "move": [
+          81,
+          185,
+          173,
+          136
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 218,
+          "def": 170,
+          "spatk": 166,
+          "spdef": 205,
+          "spd": 145
+        },
+        "item": 31,
+        "ability": 51,
+        "move": [
+          102,
+          77,
+          118,
+          113
+        ]
+      },
+      {
+        "status": {
+          "hp": 290,
+          "atk": 218,
+          "def": 155,
+          "spatk": 166,
+          "spdef": 294,
+          "spd": 145
+        },
+        "item": 31,
+        "ability": 51,
+        "move": [
+          32,
+          8,
+          227,
+          168
+        ]
+      },
+      {
+        "status": {
+          "hp": 290,
+          "atk": 139,
+          "def": 155,
+          "spatk": 272,
+          "spdef": 268,
+          "spd": 145
+        },
+        "item": 45,
+        "ability": 51,
+        "move": [
+          28,
+          40,
+          98,
+          118
+        ]
+      }
+    ]
+  },
+  {
+    "name": "カイロス",
+    "type1": 11,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 240,
+          "atk": 349,
+          "def": 268,
+          "spatk": 103,
+          "spdef": 145,
+          "spd": 175
+        },
+        "item": 25,
+        "ability": 54,
+        "move": [
+          59,
+          8,
+          54,
+          176
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 318,
+          "def": 205,
+          "spatk": 103,
+          "spdef": 145,
+          "spd": 261
+        },
+        "item": 13,
+        "ability": 54,
+        "move": [
+          59,
+          131,
+          228,
+          51
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 349,
+          "def": 268,
+          "spatk": 103,
+          "spdef": 145,
+          "spd": 175
+        },
+        "item": 12,
+        "ability": 54,
+        "move": [
+          59,
+          55,
+          63,
+          89
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 349,
+          "def": 268,
+          "spatk": 103,
+          "spdef": 145,
+          "spd": 175
+        },
+        "item": 5,
+        "ability": 54,
+        "move": [
+          59,
+          8,
+          72,
+          229
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ハッサム",
+    "type1": 11,
+    "type2": 16,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 250,
+          "atk": 328,
+          "def": 294,
+          "spatk": 103,
+          "spdef": 165,
+          "spd": 135
+        },
+        "item": 6,
+        "ability": 55,
+        "move": [
+          59,
+          230,
+          176,
+          218
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 328,
+          "def": 205,
+          "spatk": 103,
+          "spdef": 250,
+          "spd": 135
+        },
+        "item": 34,
+        "ability": 55,
+        "move": [
+          76,
+          60,
+          211,
+          142
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 328,
+          "def": 205,
+          "spatk": 103,
+          "spdef": 165,
+          "spd": 217
+        },
+        "item": 13,
+        "ability": 55,
+        "move": [
+          59,
+          49,
+          50,
+          51
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 360,
+          "def": 268,
+          "spatk": 103,
+          "spdef": 165,
+          "spd": 135
+        },
+        "item": 19,
+        "ability": 55,
+        "move": [
+          59,
+          93,
+          52,
+          60
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ヘラクロス",
+    "type1": 11,
+    "type2": 6,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 270,
+          "atk": 318,
+          "def": 155,
+          "spatk": 76,
+          "spdef": 195,
+          "spd": 261
+        },
+        "item": 43,
+        "ability": 56,
+        "move": [
+          198,
+          33,
+          136,
+          123
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 349,
+          "def": 155,
+          "spatk": 76,
+          "spdef": 258,
+          "spd": 175
+        },
+        "item": 5,
+        "ability": 56,
+        "move": [
+          72,
+          52,
+          60,
+          221
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 349,
+          "def": 155,
+          "spatk": 76,
+          "spdef": 195,
+          "spd": 238
+        },
+        "item": 25,
+        "ability": 56,
+        "move": [
+          198,
+          63,
+          106,
+          48
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 318,
+          "def": 155,
+          "spatk": 76,
+          "spdef": 195,
+          "spd": 261
+        },
+        "item": 13,
+        "ability": 56,
+        "move": [
+          198,
+          8,
+          50,
+          51
+        ]
+      }
+    ]
+  },
+  {
+    "name": "リングマ",
+    "type1": 0,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 353,
+          "atk": 360,
+          "def": 155,
+          "spatk": 155,
+          "spdef": 155,
+          "spd": 103
+        },
+        "item": 35,
+        "ability": 57,
+        "move": [
+          90,
+          109,
+          37,
+          69
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 360,
+          "def": 155,
+          "spatk": 139,
+          "spdef": 155,
+          "spd": 115
+        },
+        "item": 9,
+        "ability": 57,
+        "move": [
+          66,
+          46,
+          47,
+          64
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 360,
+          "def": 155,
+          "spatk": 139,
+          "spdef": 155,
+          "spd": 115
+        },
+        "item": 36,
+        "ability": 57,
+        "move": [
+          106,
+          55,
+          23,
+          65
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 360,
+          "def": 155,
+          "spatk": 139,
+          "spdef": 155,
+          "spd": 115
+        },
+        "item": 24,
+        "ability": 57,
+        "move": [
+          104,
+          150,
+          8,
+          52
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ヘルガー",
+    "type1": 15,
+    "type2": 1,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 260,
+          "atk": 248,
+          "def": 105,
+          "spatk": 202,
+          "spdef": 165,
+          "spd": 283
+        },
+        "item": 35,
+        "ability": 58,
+        "move": [
+          107,
+          23,
+          140,
+          69
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 248,
+          "def": 105,
+          "spatk": 202,
+          "spdef": 165,
+          "spd": 283
+        },
+        "item": 35,
+        "ability": 58,
+        "move": [
+          107,
+          108,
+          50,
+          51
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 166,
+          "def": 105,
+          "spatk": 316,
+          "spdef": 165,
+          "spd": 258
+        },
+        "item": 20,
+        "ability": 58,
+        "move": [
+          14,
+          99,
+          1,
+          20
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 166,
+          "def": 105,
+          "spatk": 288,
+          "spdef": 165,
+          "spd": 283
+        },
+        "item": 0,
+        "ability": 58,
+        "move": [
+          18,
+          174,
+          19,
+          21
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ドンファン",
+    "type1": 8,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 290,
+          "atk": 308,
+          "def": 338,
+          "spatk": 112,
+          "spdef": 125,
+          "spd": 105
+        },
+        "item": 27,
+        "ability": 12,
+        "move": [
+          8,
+          54,
+          95,
+          87
+        ]
+      },
+      {
+        "status": {
+          "hp": 290,
+          "atk": 338,
+          "def": 308,
+          "spatk": 112,
+          "spdef": 125,
+          "spd": 105
+        },
+        "item": 0,
+        "ability": 12,
+        "move": [
+          8,
+          55,
+          75,
+          69
+        ]
+      },
+      {
+        "status": {
+          "hp": 290,
+          "atk": 338,
+          "def": 308,
+          "spatk": 125,
+          "spdef": 125,
+          "spd": 94
+        },
+        "item": 12,
+        "ability": 12,
+        "move": [
+          8,
+          129,
+          107,
+          108
+        ]
+      },
+      {
+        "status": {
+          "hp": 290,
+          "atk": 338,
+          "def": 308,
+          "spatk": 112,
+          "spdef": 125,
+          "spd": 105
+        },
+        "item": 24,
+        "ability": 12,
+        "move": [
+          8,
+          63,
+          7,
+          88
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ホエルオー",
+    "type1": 2,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 513,
+          "atk": 166,
+          "def": 95,
+          "spatk": 272,
+          "spdef": 95,
+          "spd": 125
+        },
+        "item": 34,
+        "ability": 59,
+        "move": [
+          81,
+          40,
+          123,
+          34
+        ]
+      },
+      {
+        "status": {
+          "hp": 492,
+          "atk": 185,
+          "def": 150,
+          "spatk": 166,
+          "spdef": 137,
+          "spd": 125
+        },
+        "item": 31,
+        "ability": 59,
+        "move": [
+          231,
+          41,
+          2,
+          168
+        ]
+      },
+      {
+        "status": {
+          "hp": 513,
+          "atk": 272,
+          "def": 95,
+          "spatk": 166,
+          "spdef": 95,
+          "spd": 125
+        },
+        "item": 18,
+        "ability": 59,
+        "move": [
+          32,
+          37,
+          8,
+          10
+        ]
+      },
+      {
+        "status": {
+          "hp": 513,
+          "atk": 166,
+          "def": 95,
+          "spatk": 272,
+          "spdef": 95,
+          "spd": 125
+        },
+        "item": 24,
+        "ability": 59,
+        "move": [
+          28,
+          82,
+          12,
+          88
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ネンドール",
+    "type1": 8,
+    "type2": 10,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 230,
+          "atk": 159,
+          "def": 278,
+          "spatk": 145,
+          "spdef": 308,
+          "spd": 139
+        },
+        "item": 33,
+        "ability": 37,
+        "move": [
+          8,
+          38,
+          70,
+          196
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 130,
+          "def": 278,
+          "spatk": 228,
+          "spdef": 245,
+          "spd": 155
+        },
+        "item": 22,
+        "ability": 37,
+        "move": [
+          68,
+          27,
+          29,
+          99
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 130,
+          "def": 215,
+          "spatk": 228,
+          "spdef": 308,
+          "spd": 155
+        },
+        "item": 3,
+        "ability": 37,
+        "move": [
+          68,
+          98,
+          120,
+          40
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 228,
+          "def": 215,
+          "spatk": 130,
+          "spdef": 308,
+          "spd": 155
+        },
+        "item": 12,
+        "ability": 37,
+        "move": [
+          8,
+          38,
+          54,
+          137
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ラムパルド",
+    "type1": 12,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 367,
+          "atk": 437,
+          "def": 125,
+          "spatk": 121,
+          "spdef": 105,
+          "spd": 121
+        },
+        "item": 36,
+        "ability": 60,
+        "move": [
+          54,
+          106,
+          23,
+          58
+        ]
+      },
+      {
+        "status": {
+          "hp": 367,
+          "atk": 437,
+          "def": 125,
+          "spatk": 135,
+          "spdef": 105,
+          "spd": 108
+        },
+        "item": 41,
+        "ability": 60,
+        "move": [
+          63,
+          109,
+          37,
+          149
+        ]
+      },
+      {
+        "status": {
+          "hp": 367,
+          "atk": 437,
+          "def": 125,
+          "spatk": 121,
+          "spdef": 105,
+          "spd": 121
+        },
+        "item": 9,
+        "ability": 60,
+        "move": [
+          232,
+          38,
+          46,
+          47
+        ]
+      },
+      {
+        "status": {
+          "hp": 304,
+          "atk": 398,
+          "def": 125,
+          "spatk": 121,
+          "spdef": 105,
+          "spd": 202
+        },
+        "item": 52,
+        "ability": 60,
+        "move": [
+          232,
+          8,
+          89,
+          55
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ドータクン",
+    "type1": 16,
+    "type2": 10,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 244,
+          "atk": 183,
+          "def": 330,
+          "spatk": 146,
+          "spdef": 300,
+          "spd": 71
+        },
+        "item": 15,
+        "ability": 61,
+        "move": [
+          186,
+          93,
+          54,
+          196
+        ]
+      },
+      {
+        "status": {
+          "hp": 244,
+          "atk": 164,
+          "def": 300,
+          "spatk": 163,
+          "spdef": 330,
+          "spd": 71
+        },
+        "item": 16,
+        "ability": 61,
+        "move": [
+          112,
+          118,
+          29,
+          196
+        ]
+      },
+      {
+        "status": {
+          "hp": 307,
+          "atk": 164,
+          "def": 237,
+          "spatk": 248,
+          "spdef": 237,
+          "spd": 71
+        },
+        "item": 18,
+        "ability": 61,
+        "move": [
+          98,
+          99,
+          120,
+          29
+        ]
+      },
+      {
+        "status": {
+          "hp": 307,
+          "atk": 270,
+          "def": 237,
+          "spatk": 146,
+          "spdef": 237,
+          "spd": 71
+        },
+        "item": 24,
+        "ability": 61,
+        "move": [
+          38,
+          93,
+          8,
+          137
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ドラピオン",
+    "type1": 7,
+    "type2": 15,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 250,
+          "atk": 272,
+          "def": 288,
+          "spatk": 112,
+          "spdef": 155,
+          "spd": 195
+        },
+        "item": 16,
+        "ability": 62,
+        "move": [
+          95,
+          23,
+          36,
+          233
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 272,
+          "def": 288,
+          "spatk": 112,
+          "spdef": 155,
+          "spd": 195
+        },
+        "item": 41,
+        "ability": 62,
+        "move": [
+          109,
+          95,
+          149,
+          78
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 248,
+          "def": 225,
+          "spatk": 112,
+          "spdef": 155,
+          "spd": 283
+        },
+        "item": 5,
+        "ability": 62,
+        "move": [
+          213,
+          107,
+          108,
+          53
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 272,
+          "def": 225,
+          "spatk": 112,
+          "spdef": 155,
+          "spd": 258
+        },
+        "item": 27,
+        "ability": 62,
+        "move": [
+          213,
+          60,
+          8,
+          52
+        ]
+      }
+    ]
+  },
+  {
+    "name": "レントラー",
+    "type1": 3,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 333,
+          "atk": 338,
+          "def": 163,
+          "spatk": 175,
+          "spdef": 163,
+          "spd": 145
+        },
+        "item": 27,
+        "ability": 63,
+        "move": [
+          108,
+          23,
+          234,
+          235
+        ]
+      },
+      {
+        "status": {
+          "hp": 333,
+          "atk": 220,
+          "def": 163,
+          "spatk": 283,
+          "spdef": 163,
+          "spd": 145
+        },
+        "item": 3,
+        "ability": 63,
+        "move": [
+          119,
+          29,
+          105,
+          182
+        ]
+      },
+      {
+        "status": {
+          "hp": 333,
+          "atk": 338,
+          "def": 163,
+          "spatk": 175,
+          "spdef": 163,
+          "spd": 145
+        },
+        "item": 0,
+        "ability": 63,
+        "move": [
+          108,
+          53,
+          55,
+          105
+        ]
+      },
+      {
+        "status": {
+          "hp": 333,
+          "atk": 338,
+          "def": 163,
+          "spatk": 175,
+          "spdef": 163,
+          "spd": 145
+        },
+        "item": 26,
+        "ability": 63,
+        "move": [
+          108,
+          53,
+          23,
+          105
+        ]
+      }
+    ]
+  },
+  {
+    "name": "キュウコン",
+    "type1": 1,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 256,
+          "atk": 141,
+          "def": 155,
+          "spatk": 230,
+          "spdef": 205,
+          "spd": 294
+        },
+        "item": 6,
+        "ability": 64,
+        "move": [
+          222,
+          19,
+          123,
+          21
+        ]
+      },
+      {
+        "status": {
+          "hp": 256,
+          "atk": 141,
+          "def": 155,
+          "spatk": 230,
+          "spdef": 205,
+          "spd": 294
+        },
+        "item": 0,
+        "ability": 64,
+        "move": [
+          18,
+          174,
+          161,
+          122
+        ]
+      },
+      {
+        "status": {
+          "hp": 256,
+          "atk": 141,
+          "def": 155,
+          "spatk": 167,
+          "spdef": 268,
+          "spd": 294
+        },
+        "item": 42,
+        "ability": 64,
+        "move": [
+          236,
+          153,
+          112,
+          118
+        ]
+      },
+      {
+        "status": {
+          "hp": 256,
+          "atk": 141,
+          "def": 155,
+          "spatk": 253,
+          "spdef": 205,
+          "spd": 268
+        },
+        "item": 20,
+        "ability": 64,
+        "move": [
+          14,
+          186,
+          115,
+          100
+        ]
+      }
+    ]
+  },
+  {
+    "name": "カイリキー",
+    "type1": 6,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 353,
+          "atk": 360,
+          "def": 165,
+          "spatk": 121,
+          "spdef": 175,
+          "spd": 115
+        },
+        "item": 5,
+        "ability": 65,
+        "move": [
+          150,
+          8,
+          230,
+          237
+        ]
+      },
+      {
+        "status": {
+          "hp": 290,
+          "atk": 291,
+          "def": 228,
+          "spatk": 121,
+          "spdef": 238,
+          "spd": 115
+        },
+        "item": 35,
+        "ability": 65,
+        "move": [
+          131,
+          8,
+          109,
+          69
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 360,
+          "def": 165,
+          "spatk": 121,
+          "spdef": 175,
+          "spd": 115
+        },
+        "item": 24,
+        "ability": 65,
+        "move": [
+          127,
+          8,
+          63,
+          64
+        ]
+      },
+      {
+        "status": {
+          "hp": 353,
+          "atk": 360,
+          "def": 165,
+          "spatk": 121,
+          "spdef": 175,
+          "spd": 115
+        },
+        "item": 24,
+        "ability": 65,
+        "move": [
+          150,
+          8,
+          47,
+          46
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ツボツボ",
+    "type1": 11,
+    "type2": 12,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 192,
+          "atk": 25,
+          "def": 557,
+          "spatk": 22,
+          "spdef": 507,
+          "spd": 15
+        },
+        "item": 12,
+        "ability": 66,
+        "move": [
+          63,
+          130,
+          136,
+          238
+        ]
+      },
+      {
+        "status": {
+          "hp": 192,
+          "atk": 25,
+          "def": 507,
+          "spatk": 22,
+          "spdef": 557,
+          "spd": 15
+        },
+        "item": 28,
+        "ability": 66,
+        "move": [
+          239,
+          136,
+          123,
+          41
+        ]
+      },
+      {
+        "status": {
+          "hp": 192,
+          "atk": 25,
+          "def": 557,
+          "spatk": 22,
+          "spdef": 507,
+          "spd": 15
+        },
+        "item": 12,
+        "ability": 66,
+        "move": [
+          129,
+          42,
+          34,
+          238
+        ]
+      },
+      {
+        "status": {
+          "hp": 192,
+          "atk": 22,
+          "def": 507,
+          "spatk": 25,
+          "spdef": 557,
+          "spd": 15
+        },
+        "item": 18,
+        "ability": 66,
+        "move": [
+          41,
+          42,
+          34,
+          87
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ロズレイド",
+    "type1": 4,
+    "type2": 7,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 230,
+          "atk": 130,
+          "def": 115,
+          "spatk": 318,
+          "spdef": 305,
+          "spd": 185
+        },
+        "item": 25,
+        "ability": 67,
+        "move": [
+          1,
+          216,
+          240,
+          241
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 130,
+          "def": 115,
+          "spatk": 318,
+          "spdef": 305,
+          "spd": 185
+        },
+        "item": 1,
+        "ability": 67,
+        "move": [
+          4,
+          6,
+          5,
+          13
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 130,
+          "def": 115,
+          "spatk": 349,
+          "spdef": 215,
+          "spd": 248
+        },
+        "item": 0,
+        "ability": 67,
+        "move": [
+          0,
+          1,
+          12,
+          208
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 130,
+          "def": 115,
+          "spatk": 349,
+          "spdef": 215,
+          "spd": 248
+        },
+        "item": 0,
+        "ability": 67,
+        "move": [
+          0,
+          1,
+          99,
+          242
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ドンカラス",
+    "type1": 15,
+    "type2": 9,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 373,
+          "atk": 349,
+          "def": 109,
+          "spatk": 193,
+          "spdef": 109,
+          "spd": 147
+        },
+        "item": 45,
+        "ability": 68,
+        "move": [
+          60,
+          52,
+          188,
+          145
+        ]
+      },
+      {
+        "status": {
+          "hp": 373,
+          "atk": 349,
+          "def": 109,
+          "spatk": 193,
+          "spdef": 109,
+          "spd": 147
+        },
+        "item": 0,
+        "ability": 68,
+        "move": [
+          55,
+          243,
+          122,
+          105
+        ]
+      },
+      {
+        "status": {
+          "hp": 373,
+          "atk": 229,
+          "def": 109,
+          "spatk": 305,
+          "spdef": 109,
+          "spd": 147
+        },
+        "item": 9,
+        "ability": 68,
+        "move": [
+          174,
+          152,
+          98,
+          99
+        ]
+      },
+      {
+        "status": {
+          "hp": 373,
+          "atk": 349,
+          "def": 109,
+          "spatk": 193,
+          "spdef": 109,
+          "spd": 147
+        },
+        "item": 5,
+        "ability": 68,
+        "move": [
+          60,
+          79,
+          144,
+          139
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ハガネール",
+    "type1": 16,
+    "type2": 8,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 260,
+          "atk": 238,
+          "def": 514,
+          "spatk": 103,
+          "spdef": 135,
+          "spd": 65
+        },
+        "item": 20,
+        "ability": 34,
+        "move": [
+          8,
+          93,
+          23,
+          87
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 261,
+          "def": 468,
+          "spatk": 103,
+          "spdef": 135,
+          "spd": 65
+        },
+        "item": 14,
+        "ability": 34,
+        "move": [
+          8,
+          107,
+          108,
+          53
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 238,
+          "def": 514,
+          "spatk": 115,
+          "spdef": 135,
+          "spd": 58
+        },
+        "item": 41,
+        "ability": 34,
+        "move": [
+          129,
+          109,
+          136,
+          10
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 261,
+          "def": 468,
+          "spatk": 115,
+          "spdef": 135,
+          "spd": 58
+        },
+        "item": 24,
+        "ability": 34,
+        "move": [
+          129,
+          8,
+          63,
+          137
+        ]
+      }
+    ]
+  },
+  {
+    "name": "マニューラ",
+    "type1": 15,
+    "type2": 5,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 250,
+          "atk": 338,
+          "def": 135,
+          "spatk": 85,
+          "spdef": 175,
+          "spd": 318
+        },
+        "item": 37,
+        "ability": 17,
+        "move": [
+          60,
+          64,
+          58,
+          74
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 308,
+          "def": 135,
+          "spatk": 85,
+          "spdef": 175,
+          "spd": 349
+        },
+        "item": 6,
+        "ability": 17,
+        "move": [
+          60,
+          123,
+          34,
+          190
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 338,
+          "def": 135,
+          "spatk": 85,
+          "spdef": 175,
+          "spd": 318
+        },
+        "item": 35,
+        "ability": 17,
+        "move": [
+          60,
+          59,
+          76,
+          69
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 308,
+          "def": 135,
+          "spatk": 85,
+          "spdef": 175,
+          "spd": 349
+        },
+        "item": 27,
+        "ability": 17,
+        "move": [
+          60,
+          64,
+          52,
+          77
+        ]
+      }
+    ]
+  },
+  {
+    "name": "グライオン",
+    "type1": 8,
+    "type2": 9,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 260,
+          "atk": 283,
+          "def": 318,
+          "spatk": 85,
+          "spdef": 155,
+          "spd": 195
+        },
+        "item": 23,
+        "ability": 69,
+        "move": [
+          8,
+          52,
+          176,
+          218
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 258,
+          "def": 255,
+          "spatk": 85,
+          "spdef": 155,
+          "spd": 283
+        },
+        "item": 44,
+        "ability": 69,
+        "move": [
+          8,
+          107,
+          108,
+          53
+        ]
+      },
+      {
+        "status": {
+          "hp": 323,
+          "atk": 195,
+          "def": 255,
+          "spatk": 85,
+          "spdef": 155,
+          "spd": 283
+        },
+        "item": 35,
+        "ability": 69,
+        "move": [
+          229,
+          8,
+          73,
+          69
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 283,
+          "def": 318,
+          "spatk": 85,
+          "spdef": 155,
+          "spd": 195
+        },
+        "item": 21,
+        "ability": 69,
+        "move": [
+          8,
+          52,
+          59,
+          63
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ドククラゲ",
+    "type1": 2,
+    "type2": 7,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 270,
+          "atk": 130,
+          "def": 135,
+          "spatk": 228,
+          "spdef": 245,
+          "spd": 294
+        },
+        "item": 45,
+        "ability": 70,
+        "move": [
+          81,
+          1,
+          30,
+          244
+        ]
+      },
+      {
+        "status": {
+          "hp": 333,
+          "atk": 130,
+          "def": 135,
+          "spatk": 165,
+          "spdef": 338,
+          "spd": 205
+        },
+        "item": 2,
+        "ability": 70,
+        "move": [
+          41,
+          4,
+          123,
+          122
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 130,
+          "def": 135,
+          "spatk": 250,
+          "spdef": 308,
+          "spd": 205
+        },
+        "item": 35,
+        "ability": 70,
+        "move": [
+          81,
+          1,
+          4,
+          31
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 130,
+          "def": 135,
+          "spatk": 228,
+          "spdef": 245,
+          "spd": 294
+        },
+        "item": 5,
+        "ability": 70,
+        "move": [
+          28,
+          1,
+          40,
+          43
+        ]
+      }
+    ]
+  },
+  {
+    "name": "プテラ",
+    "type1": 12,
+    "type2": 9,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 270,
+          "atk": 278,
+          "def": 135,
+          "spatk": 112,
+          "spdef": 155,
+          "spd": 360
+        },
+        "item": 15,
+        "ability": 71,
+        "move": [
+          54,
+          52,
+          188,
+          145
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 278,
+          "def": 135,
+          "spatk": 112,
+          "spdef": 155,
+          "spd": 360
+        },
+        "item": 44,
+        "ability": 71,
+        "move": [
+          170,
+          107,
+          108,
+          53
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 305,
+          "def": 135,
+          "spatk": 112,
+          "spdef": 155,
+          "spd": 328
+        },
+        "item": 23,
+        "ability": 71,
+        "move": [
+          89,
+          8,
+          54,
+          23
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 305,
+          "def": 135,
+          "spatk": 112,
+          "spdef": 155,
+          "spd": 328
+        },
+        "item": 38,
+        "ability": 71,
+        "move": [
+          63,
+          52,
+          8,
+          24
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ポリゴン2",
+    "type1": 0,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 343,
+          "atk": 148,
+          "def": 185,
+          "spatk": 305,
+          "spdef": 195,
+          "spd": 125
+        },
+        "item": 30,
+        "ability": 72,
+        "move": [
+          86,
+          120,
+          105,
+          245
+        ]
+      },
+      {
+        "status": {
+          "hp": 343,
+          "atk": 165,
+          "def": 185,
+          "spatk": 305,
+          "spdef": 195,
+          "spd": 112
+        },
+        "item": 41,
+        "ability": 72,
+        "move": [
+          86,
+          119,
+          97,
+          196
+        ]
+      },
+      {
+        "status": {
+          "hp": 343,
+          "atk": 148,
+          "def": 185,
+          "spatk": 305,
+          "spdef": 195,
+          "spd": 125
+        },
+        "item": 3,
+        "ability": 72,
+        "move": [
+          86,
+          119,
+          98,
+          40
+        ]
+      },
+      {
+        "status": {
+          "hp": 343,
+          "atk": 148,
+          "def": 185,
+          "spatk": 305,
+          "spdef": 195,
+          "spd": 125
+        },
+        "item": 16,
+        "ability": 72,
+        "move": [
+          86,
+          29,
+          99,
+          40
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ベロベルト",
+    "type1": 0,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 393,
+          "atk": 238,
+          "def": 195,
+          "spatk": 148,
+          "spdef": 214,
+          "spd": 105
+        },
+        "item": 31,
+        "ability": 73,
+        "move": [
+          104,
+          8,
+          227,
+          168
+        ]
+      },
+      {
+        "status": {
+          "hp": 393,
+          "atk": 157,
+          "def": 195,
+          "spatk": 250,
+          "spdef": 195,
+          "spd": 105
+        },
+        "item": 21,
+        "ability": 73,
+        "move": [
+          81,
+          40,
+          119,
+          99
+        ]
+      },
+      {
+        "status": {
+          "hp": 393,
+          "atk": 261,
+          "def": 195,
+          "spatk": 165,
+          "spdef": 195,
+          "spd": 94
+        },
+        "item": 16,
+        "ability": 73,
+        "move": [
+          104,
+          129,
+          10,
+          168
+        ]
+      },
+      {
+        "status": {
+          "hp": 393,
+          "atk": 261,
+          "def": 195,
+          "spatk": 148,
+          "spdef": 195,
+          "spd": 105
+        },
+        "item": 12,
+        "ability": 73,
+        "move": [
+          246,
+          247,
+          8,
+          137
+        ]
+      }
+    ]
+  },
+  {
+    "name": "メガヤンマ",
+    "type1": 11,
+    "type2": 9,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 282,
+          "atk": 141,
+          "def": 177,
+          "spatk": 300,
+          "spdef": 117,
+          "spd": 283
+        },
+        "item": 25,
+        "ability": 74,
+        "move": [
+          29,
+          152,
+          96,
+          34
+        ]
+      },
+      {
+        "status": {
+          "hp": 282,
+          "atk": 242,
+          "def": 177,
+          "spatk": 213,
+          "spdef": 117,
+          "spd": 258
+        },
+        "item": 26,
+        "ability": 74,
+        "move": [
+          52,
+          73,
+          60,
+          139
+        ]
+      },
+      {
+        "status": {
+          "hp": 282,
+          "atk": 141,
+          "def": 177,
+          "spatk": 330,
+          "spdef": 117,
+          "spd": 258
+        },
+        "item": 16,
+        "ability": 74,
+        "move": [
+          151,
+          27,
+          153,
+          4
+        ]
+      },
+      {
+        "status": {
+          "hp": 282,
+          "atk": 141,
+          "def": 177,
+          "spatk": 330,
+          "spdef": 117,
+          "spd": 258
+        },
+        "item": 3,
+        "ability": 74,
+        "move": [
+          248,
+          15,
+          98,
+          99
+        ]
+      }
+    ]
+  },
+  {
+    "name": "サーナイト",
+    "type1": 10,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 246,
+          "atk": 121,
+          "def": 135,
+          "spatk": 318,
+          "spdef": 327,
+          "spd": 165
+        },
+        "item": 16,
+        "ability": 75,
+        "move": [
+          98,
+          99,
+          105,
+          122
+        ]
+      },
+      {
+        "status": {
+          "hp": 246,
+          "atk": 121,
+          "def": 135,
+          "spatk": 349,
+          "spdef": 298,
+          "spd": 165
+        },
+        "item": 31,
+        "ability": 75,
+        "move": [
+          98,
+          119,
+          100,
+          168
+        ]
+      },
+      {
+        "status": {
+          "hp": 246,
+          "atk": 121,
+          "def": 135,
+          "spatk": 349,
+          "spdef": 298,
+          "spd": 165
+        },
+        "item": 6,
+        "ability": 75,
+        "move": [
+          98,
+          120,
+          115,
+          26
+        ]
+      },
+      {
+        "status": {
+          "hp": 246,
+          "atk": 121,
+          "def": 135,
+          "spatk": 318,
+          "spdef": 235,
+          "spd": 250
+        },
+        "item": 3,
+        "ability": 75,
+        "move": [
+          98,
+          119,
+          99,
+          155
+        ]
+      }
+    ]
+  },
+  {
+    "name": "エルレイド",
+    "type1": 10,
+    "type2": 6,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 246,
+          "atk": 318,
+          "def": 135,
+          "spatk": 121,
+          "spdef": 327,
+          "spd": 165
+        },
+        "item": 33,
+        "ability": 76,
+        "move": [
+          38,
+          77,
+          105,
+          122
+        ]
+      },
+      {
+        "status": {
+          "hp": 246,
+          "atk": 318,
+          "def": 135,
+          "spatk": 121,
+          "spdef": 235,
+          "spd": 250
+        },
+        "item": 6,
+        "ability": 76,
+        "move": [
+          94,
+          46,
+          47,
+          64
+        ]
+      },
+      {
+        "status": {
+          "hp": 246,
+          "atk": 349,
+          "def": 135,
+          "spatk": 121,
+          "spdef": 298,
+          "spd": 165
+        },
+        "item": 5,
+        "ability": 76,
+        "move": [
+          101,
+          63,
+          52,
+          59
+        ]
+      },
+      {
+        "status": {
+          "hp": 246,
+          "atk": 349,
+          "def": 135,
+          "spatk": 121,
+          "spdef": 298,
+          "spd": 165
+        },
+        "item": 5,
+        "ability": 76,
+        "move": [
+          101,
+          72,
+          57,
+          60
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ナッシー",
+    "type1": 4,
+    "type2": 10,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 363,
+          "atk": 175,
+          "def": 175,
+          "spatk": 349,
+          "spdef": 135,
+          "spd": 115
+        },
+        "item": 6,
+        "ability": 24,
+        "move": [
+          19,
+          98,
+          13,
+          21
+        ]
+      },
+      {
+        "status": {
+          "hp": 363,
+          "atk": 175,
+          "def": 175,
+          "spatk": 349,
+          "spdef": 135,
+          "spd": 115
+        },
+        "item": 16,
+        "ability": 24,
+        "move": [
+          112,
+          118,
+          6,
+          5
+        ]
+      },
+      {
+        "status": {
+          "hp": 363,
+          "atk": 283,
+          "def": 175,
+          "spatk": 255,
+          "spdef": 135,
+          "spd": 103
+        },
+        "item": 35,
+        "ability": 24,
+        "move": [
+          71,
+          38,
+          196,
+          137
+        ]
+      },
+      {
+        "status": {
+          "hp": 363,
+          "atk": 175,
+          "def": 175,
+          "spatk": 349,
+          "spdef": 135,
+          "spd": 115
+        },
+        "item": 21,
+        "ability": 24,
+        "move": [
+          0,
+          98,
+          1,
+          27
+        ]
+      }
+    ]
+  },
+  {
+    "name": "スターミー",
+    "type1": 2,
+    "type2": 10,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 230,
+          "atk": 139,
+          "def": 175,
+          "spatk": 268,
+          "spdef": 175,
+          "spd": 327
+        },
+        "item": 16,
+        "ability": 77,
+        "move": [
+          81,
+          98,
+          122,
+          105
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 139,
+          "def": 175,
+          "spatk": 268,
+          "spdef": 175,
+          "spd": 327
+        },
+        "item": 42,
+        "ability": 77,
+        "move": [
+          28,
+          82,
+          124,
+          97
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 139,
+          "def": 175,
+          "spatk": 294,
+          "spdef": 175,
+          "spd": 298
+        },
+        "item": 3,
+        "ability": 77,
+        "move": [
+          81,
+          98,
+          215,
+          29
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 139,
+          "def": 175,
+          "spatk": 294,
+          "spdef": 175,
+          "spd": 298
+        },
+        "item": 21,
+        "ability": 77,
+        "move": [
+          81,
+          98,
+          119,
+          40
+        ]
+      }
+    ]
+  },
+  {
+    "name": "フライゴン",
+    "type1": 8,
+    "type2": 14,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 270,
+          "atk": 294,
+          "def": 165,
+          "spatk": 148,
+          "spdef": 165,
+          "spd": 268
+        },
+        "item": 23,
+        "ability": 37,
+        "move": [
+          8,
+          24,
+          142,
+          87
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 268,
+          "def": 165,
+          "spatk": 148,
+          "spdef": 165,
+          "spd": 294
+        },
+        "item": 44,
+        "ability": 37,
+        "move": [
+          88,
+          46,
+          47,
+          52
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 184,
+          "def": 165,
+          "spatk": 228,
+          "spdef": 165,
+          "spd": 294
+        },
+        "item": 0,
+        "ability": 37,
+        "move": [
+          207,
+          68,
+          14,
+          4
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 294,
+          "def": 165,
+          "spatk": 148,
+          "spdef": 165,
+          "spd": 268
+        },
+        "item": 16,
+        "ability": 37,
+        "move": [
+          8,
+          9,
+          23,
+          63
+        ]
+      }
+    ]
+  },
+  {
+    "name": "シャワーズ",
+    "type1": 2,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 433,
+          "atk": 121,
+          "def": 125,
+          "spatk": 316,
+          "spdef": 195,
+          "spd": 135
+        },
+        "item": 6,
+        "ability": 78,
+        "move": [
+          81,
+          40,
+          225,
+          218
+        ]
+      },
+      {
+        "status": {
+          "hp": 433,
+          "atk": 121,
+          "def": 125,
+          "spatk": 316,
+          "spdef": 195,
+          "spd": 135
+        },
+        "item": 46,
+        "ability": 78,
+        "move": [
+          28,
+          40,
+          225,
+          125
+        ]
+      },
+      {
+        "status": {
+          "hp": 433,
+          "atk": 121,
+          "def": 125,
+          "spatk": 316,
+          "spdef": 195,
+          "spd": 135
+        },
+        "item": 18,
+        "ability": 78,
+        "move": [
+          67,
+          82,
+          35,
+          103
+        ]
+      },
+      {
+        "status": {
+          "hp": 433,
+          "atk": 121,
+          "def": 125,
+          "spatk": 316,
+          "spdef": 195,
+          "spd": 135
+        },
+        "item": 21,
+        "ability": 78,
+        "move": [
+          81,
+          40,
+          99,
+          29
+        ]
+      }
+    ]
+  },
+  {
+    "name": "サンダース",
+    "type1": 3,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 240,
+          "atk": 121,
+          "def": 125,
+          "spatk": 288,
+          "spdef": 195,
+          "spd": 360
+        },
+        "item": 35,
+        "ability": 79,
+        "move": [
+          119,
+          105,
+          249,
+          218
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 198,
+          "def": 125,
+          "spatk": 288,
+          "spdef": 195,
+          "spd": 265
+        },
+        "item": 27,
+        "ability": 79,
+        "move": [
+          121,
+          210,
+          135,
+          105
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 121,
+          "def": 125,
+          "spatk": 288,
+          "spdef": 195,
+          "spd": 360
+        },
+        "item": 12,
+        "ability": 79,
+        "move": [
+          124,
+          99,
+          125,
+          103
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 121,
+          "def": 125,
+          "spatk": 316,
+          "spdef": 195,
+          "spd": 328
+        },
+        "item": 44,
+        "ability": 79,
+        "move": [
+          119,
+          12,
+          99,
+          29
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ブースター",
+    "type1": 1,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 240,
+          "atk": 360,
+          "def": 125,
+          "spatk": 175,
+          "spdef": 288,
+          "spd": 135
+        },
+        "item": 24,
+        "ability": 64,
+        "move": [
+          107,
+          55,
+          10,
+          218
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 328,
+          "def": 125,
+          "spatk": 175,
+          "spdef": 225,
+          "spd": 217
+        },
+        "item": 13,
+        "ability": 64,
+        "move": [
+          107,
+          228,
+          51,
+          250
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 238,
+          "def": 125,
+          "spatk": 283,
+          "spdef": 288,
+          "spd": 135
+        },
+        "item": 0,
+        "ability": 64,
+        "move": [
+          18,
+          99,
+          241,
+          20
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 360,
+          "def": 125,
+          "spatk": 175,
+          "spdef": 288,
+          "spd": 135
+        },
+        "item": 0,
+        "ability": 64,
+        "move": [
+          107,
+          89,
+          55,
+          170
+        ]
+      }
+    ]
+  },
+  {
+    "name": "エーフィ",
+    "type1": 10,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 240,
+          "atk": 121,
+          "def": 125,
+          "spatk": 328,
+          "spdef": 195,
+          "spd": 316
+        },
+        "item": 16,
+        "ability": 80,
+        "move": [
+          98,
+          45,
+          100,
+          218
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 121,
+          "def": 125,
+          "spatk": 328,
+          "spdef": 195,
+          "spd": 316
+        },
+        "item": 6,
+        "ability": 80,
+        "move": [
+          98,
+          171,
+          191,
+          123
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 121,
+          "def": 125,
+          "spatk": 360,
+          "spdef": 195,
+          "spd": 288
+        },
+        "item": 16,
+        "ability": 80,
+        "move": [
+          98,
+          99,
+          12,
+          70
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 121,
+          "def": 125,
+          "spatk": 360,
+          "spdef": 195,
+          "spd": 288
+        },
+        "item": 3,
+        "ability": 80,
+        "move": [
+          98,
+          99,
+          29,
+          251
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ブラッキー",
+    "type1": 15,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 300,
+          "atk": 135,
+          "def": 288,
+          "spatk": 112,
+          "spdef": 360,
+          "spd": 135
+        },
+        "item": 18,
+        "ability": 80,
+        "move": [
+          109,
+          122,
+          10,
+          218
+        ]
+      },
+      {
+        "status": {
+          "hp": 300,
+          "atk": 135,
+          "def": 316,
+          "spatk": 112,
+          "spdef": 328,
+          "spd": 135
+        },
+        "item": 18,
+        "ability": 80,
+        "move": [
+          41,
+          114,
+          34,
+          122
+        ]
+      },
+      {
+        "status": {
+          "hp": 363,
+          "atk": 135,
+          "def": 316,
+          "spatk": 112,
+          "spdef": 265,
+          "spd": 135
+        },
+        "item": 12,
+        "ability": 80,
+        "move": [
+          184,
+          136,
+          193,
+          58
+        ]
+      },
+      {
+        "status": {
+          "hp": 300,
+          "atk": 135,
+          "def": 316,
+          "spatk": 112,
+          "spdef": 328,
+          "spd": 135
+        },
+        "item": 6,
+        "ability": 80,
+        "move": [
+          109,
+          252,
+          10,
+          253
+        ]
+      }
+    ]
+  },
+  {
+    "name": "リーフィア",
+    "type1": 4,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 240,
+          "atk": 288,
+          "def": 265,
+          "spatk": 112,
+          "spdef": 135,
+          "spd": 283
+        },
+        "item": 5,
+        "ability": 81,
+        "move": [
+          57,
+          52,
+          34,
+          218
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 288,
+          "def": 265,
+          "spatk": 112,
+          "spdef": 135,
+          "spd": 283
+        },
+        "item": 6,
+        "ability": 81,
+        "move": [
+          57,
+          195,
+          10,
+          208
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 316,
+          "def": 328,
+          "spatk": 112,
+          "spdef": 135,
+          "spd": 195
+        },
+        "item": 10,
+        "ability": 81,
+        "move": [
+          57,
+          59,
+          13,
+          21
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 316,
+          "def": 328,
+          "spatk": 112,
+          "spdef": 135,
+          "spd": 195
+        },
+        "item": 24,
+        "ability": 81,
+        "move": [
+          57,
+          59,
+          52,
+          170
+        ]
+      }
+    ]
+  },
+  {
+    "name": "グレイシア",
+    "type1": 5,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 240,
+          "atk": 112,
+          "def": 225,
+          "spatk": 328,
+          "spdef": 283,
+          "spd": 135
+        },
+        "item": 12,
+        "ability": 31,
+        "move": [
+          40,
+          187,
+          34,
+          218
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 112,
+          "def": 225,
+          "spatk": 328,
+          "spdef": 283,
+          "spd": 135
+        },
+        "item": 18,
+        "ability": 31,
+        "move": [
+          40,
+          34,
+          103,
+          190
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 112,
+          "def": 288,
+          "spatk": 360,
+          "spdef": 195,
+          "spd": 135
+        },
+        "item": 35,
+        "ability": 31,
+        "move": [
+          82,
+          12,
+          190,
+          31
+        ]
+      },
+      {
+        "status": {
+          "hp": 240,
+          "atk": 112,
+          "def": 288,
+          "spatk": 360,
+          "spdef": 195,
+          "spd": 135
+        },
+        "item": 3,
+        "ability": 31,
+        "move": [
+          40,
+          99,
+          29,
+          187
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ルカリオ",
+    "type1": 6,
+    "type2": 16,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 250,
+          "atk": 202,
+          "def": 145,
+          "spatk": 327,
+          "spdef": 145,
+          "spd": 248
+        },
+        "item": 6,
+        "ability": 82,
+        "move": [
+          254,
+          83,
+          187,
+          140
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 316,
+          "def": 145,
+          "spatk": 211,
+          "spdef": 145,
+          "spd": 248
+        },
+        "item": 5,
+        "ability": 82,
+        "move": [
+          150,
+          63,
+          47,
+          64
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 316,
+          "def": 145,
+          "spatk": 211,
+          "spdef": 145,
+          "spd": 248
+        },
+        "item": 26,
+        "ability": 82,
+        "move": [
+          72,
+          8,
+          62,
+          48
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 202,
+          "def": 145,
+          "spatk": 327,
+          "spdef": 145,
+          "spd": 248
+        },
+        "item": 21,
+        "ability": 82,
+        "move": [
+          254,
+          98,
+          99,
+          61
+        ]
+      }
+    ]
+  },
+  {
+    "name": "カバルドン",
+    "type1": 8,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 326,
+          "atk": 292,
+          "def": 334,
+          "spatk": 126,
+          "spdef": 149,
+          "spd": 99
+        },
+        "item": 39,
+        "ability": 83,
+        "move": [
+          8,
+          23,
+          255,
+          10
+        ]
+      },
+      {
+        "status": {
+          "hp": 326,
+          "atk": 292,
+          "def": 334,
+          "spatk": 126,
+          "spdef": 149,
+          "spd": 99
+        },
+        "item": 34,
+        "ability": 83,
+        "move": [
+          8,
+          136,
+          85,
+          103
+        ]
+      },
+      {
+        "status": {
+          "hp": 389,
+          "atk": 321,
+          "def": 241,
+          "spatk": 126,
+          "spdef": 149,
+          "spd": 99
+        },
+        "item": 0,
+        "ability": 83,
+        "move": [
+          55,
+          107,
+          53,
+          88
+        ]
+      },
+      {
+        "status": {
+          "hp": 389,
+          "atk": 321,
+          "def": 241,
+          "spatk": 126,
+          "spdef": 149,
+          "spd": 99
+        },
+        "item": 24,
+        "ability": 83,
+        "move": [
+          8,
+          63,
+          23,
+          108
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ダイノーズ",
+    "type1": 12,
+    "type2": 16,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 230,
+          "atk": 195,
+          "def": 295,
+          "spatk": 218,
+          "spdef": 305,
+          "spd": 76
+        },
+        "item": 30,
+        "ability": 84,
+        "move": [
+          27,
+          256,
+          105,
+          65
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 195,
+          "def": 295,
+          "spatk": 139,
+          "spdef": 368,
+          "spd": 85
+        },
+        "item": 37,
+        "ability": 84,
+        "move": [
+          93,
+          46,
+          47,
+          64
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 195,
+          "def": 358,
+          "spatk": 139,
+          "spdef": 305,
+          "spd": 85
+        },
+        "item": 5,
+        "ability": 84,
+        "move": [
+          63,
+          93,
+          8,
+          137
+        ]
+      },
+      {
+        "status": {
+          "hp": 230,
+          "atk": 103,
+          "def": 295,
+          "spatk": 239,
+          "spdef": 368,
+          "spd": 85
+        },
+        "item": 9,
+        "ability": 84,
+        "move": [
+          83,
+          215,
+          68,
+          119
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ヨノワール",
+    "type1": 13,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 200,
+          "atk": 294,
+          "def": 338,
+          "spatk": 135,
+          "spdef": 275,
+          "spd": 85
+        },
+        "item": 41,
+        "ability": 17,
+        "move": [
+          257,
+          149,
+          20,
+          196
+        ]
+      },
+      {
+        "status": {
+          "hp": 200,
+          "atk": 205,
+          "def": 338,
+          "spatk": 121,
+          "spdef": 371,
+          "spd": 95
+        },
+        "item": 18,
+        "ability": 17,
+        "move": [
+          10,
+          258,
+          122,
+          123
+        ]
+      },
+      {
+        "status": {
+          "hp": 200,
+          "atk": 294,
+          "def": 275,
+          "spatk": 121,
+          "spdef": 338,
+          "spd": 95
+        },
+        "item": 5,
+        "ability": 17,
+        "move": [
+          257,
+          46,
+          47,
+          64
+        ]
+      },
+      {
+        "status": {
+          "hp": 200,
+          "atk": 225,
+          "def": 338,
+          "spatk": 121,
+          "spdef": 338,
+          "spd": 95
+        },
+        "item": 26,
+        "ability": 17,
+        "move": [
+          257,
+          8,
+          77,
+          54
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ボスゴドラ",
+    "type1": 16,
+    "type2": 12,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 250,
+          "atk": 316,
+          "def": 428,
+          "spatk": 112,
+          "spdef": 125,
+          "spd": 105
+        },
+        "item": 24,
+        "ability": 85,
+        "move": [
+          93,
+          54,
+          87,
+          58
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 316,
+          "def": 428,
+          "spatk": 112,
+          "spdef": 125,
+          "spd": 105
+        },
+        "item": 24,
+        "ability": 85,
+        "move": [
+          76,
+          46,
+          47,
+          64
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 316,
+          "def": 428,
+          "spatk": 112,
+          "spdef": 125,
+          "spd": 105
+        },
+        "item": 26,
+        "ability": 85,
+        "move": [
+          92,
+          205,
+          37,
+          52
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 316,
+          "def": 428,
+          "spatk": 112,
+          "spdef": 125,
+          "spd": 105
+        },
+        "item": 35,
+        "ability": 85,
+        "move": [
+          214,
+          63,
+          8,
+          48
+        ]
+      }
+    ]
+  },
+  {
+    "name": "トドゼルガ",
+    "type1": 5,
+    "type2": 2,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 393,
+          "atk": 250,
+          "def": 185,
+          "spatk": 175,
+          "spdef": 185,
+          "spd": 135
+        },
+        "item": 37,
+        "ability": 86,
+        "move": [
+          53,
+          36,
+          136,
+          164
+        ]
+      },
+      {
+        "status": {
+          "hp": 393,
+          "atk": 250,
+          "def": 185,
+          "spatk": 195,
+          "spdef": 185,
+          "spd": 121
+        },
+        "item": 9,
+        "ability": 86,
+        "move": [
+          37,
+          8,
+          23,
+          10
+        ]
+      },
+      {
+        "status": {
+          "hp": 330,
+          "atk": 148,
+          "def": 272,
+          "spatk": 195,
+          "spdef": 248,
+          "spd": 135
+        },
+        "item": 12,
+        "ability": 86,
+        "move": [
+          166,
+          88,
+          168,
+          169
+        ]
+      },
+      {
+        "status": {
+          "hp": 393,
+          "atk": 148,
+          "def": 185,
+          "spatk": 283,
+          "spdef": 185,
+          "spd": 135
+        },
+        "item": 18,
+        "ability": 86,
+        "move": [
+          81,
+          40,
+          29,
+          190
+        ]
+      }
+    ]
+  },
+  {
+    "name": "マンムー",
+    "type1": 5,
+    "type2": 8,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 393,
+          "atk": 360,
+          "def": 165,
+          "spatk": 130,
+          "spdef": 125,
+          "spd": 165
+        },
+        "item": 53,
+        "ability": 87,
+        "move": [
+          8,
+          53,
+          259,
+          190
+        ]
+      },
+      {
+        "status": {
+          "hp": 393,
+          "atk": 360,
+          "def": 165,
+          "spatk": 130,
+          "spdef": 125,
+          "spd": 165
+        },
+        "item": 34,
+        "ability": 87,
+        "move": [
+          37,
+          8,
+          93,
+          10
+        ]
+      },
+      {
+        "status": {
+          "hp": 393,
+          "atk": 360,
+          "def": 165,
+          "spatk": 130,
+          "spdef": 125,
+          "spd": 165
+        },
+        "item": 12,
+        "ability": 87,
+        "move": [
+          8,
+          55,
+          88,
+          190
+        ]
+      },
+      {
+        "status": {
+          "hp": 393,
+          "atk": 360,
+          "def": 165,
+          "spatk": 130,
+          "spdef": 125,
+          "spd": 165
+        },
+        "item": 9,
+        "ability": 87,
+        "move": [
+          8,
+          53,
+          63,
+          138
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ラプラス",
+    "type1": 2,
+    "type2": 5,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 433,
+          "atk": 261,
+          "def": 165,
+          "spatk": 157,
+          "spdef": 195,
+          "spd": 125
+        },
+        "item": 18,
+        "ability": 88,
+        "move": [
+          36,
+          37,
+          189,
+          10
+        ]
+      },
+      {
+        "status": {
+          "hp": 370,
+          "atk": 175,
+          "def": 250,
+          "spatk": 157,
+          "spdef": 258,
+          "spd": 125
+        },
+        "item": 24,
+        "ability": 88,
+        "move": [
+          166,
+          113,
+          204,
+          122
+        ]
+      },
+      {
+        "status": {
+          "hp": 433,
+          "atk": 261,
+          "def": 165,
+          "spatk": 157,
+          "spdef": 195,
+          "spd": 125
+        },
+        "item": 16,
+        "ability": 88,
+        "move": [
+          32,
+          9,
+          38,
+          56
+        ]
+      },
+      {
+        "status": {
+          "hp": 433,
+          "atk": 157,
+          "def": 165,
+          "spatk": 261,
+          "spdef": 195,
+          "spd": 125
+        },
+        "item": 6,
+        "ability": 88,
+        "move": [
+          81,
+          40,
+          98,
+          119
+        ]
+      }
+    ]
+  },
+  {
+    "name": "クロバット",
+    "type1": 7,
+    "type2": 9,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 280,
+          "atk": 248,
+          "def": 165,
+          "spatk": 130,
+          "spdef": 165,
+          "spd": 360
+        },
+        "item": 47,
+        "ability": 89,
+        "move": [
+          213,
+          52,
+          142,
+          118
+        ]
+      },
+      {
+        "status": {
+          "hp": 280,
+          "atk": 248,
+          "def": 165,
+          "spatk": 145,
+          "spdef": 165,
+          "spd": 328
+        },
+        "item": 44,
+        "ability": 89,
+        "move": [
+          15,
+          38,
+          170,
+          260
+        ]
+      },
+      {
+        "status": {
+          "hp": 280,
+          "atk": 166,
+          "def": 165,
+          "spatk": 228,
+          "spdef": 165,
+          "spd": 328
+        },
+        "item": 15,
+        "ability": 89,
+        "move": [
+          15,
+          1,
+          236,
+          174
+        ]
+      },
+      {
+        "status": {
+          "hp": 280,
+          "atk": 272,
+          "def": 165,
+          "spatk": 130,
+          "spdef": 165,
+          "spd": 328
+        },
+        "item": 27,
+        "ability": 89,
+        "move": [
+          213,
+          143,
+          59,
+          38
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ジバコイル",
+    "type1": 3,
+    "type2": 16,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 250,
+          "atk": 130,
+          "def": 327,
+          "spatk": 328,
+          "spdef": 185,
+          "spd": 125
+        },
+        "item": 11,
+        "ability": 90,
+        "move": [
+          119,
+          261,
+          44,
+          45
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 208,
+          "def": 327,
+          "spatk": 238,
+          "spdef": 185,
+          "spd": 125
+        },
+        "item": 16,
+        "ability": 90,
+        "move": [
+          93,
+          137,
+          136,
+          193
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 130,
+          "def": 298,
+          "spatk": 360,
+          "spdef": 185,
+          "spd": 125
+        },
+        "item": 31,
+        "ability": 90,
+        "move": [
+          120,
+          83,
+          182,
+          105
+        ]
+      },
+      {
+        "status": {
+          "hp": 250,
+          "atk": 130,
+          "def": 298,
+          "spatk": 360,
+          "spdef": 185,
+          "spd": 125
+        },
+        "item": 6,
+        "ability": 90,
+        "move": [
+          119,
+          83,
+          86,
+          29
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ドサイドン",
+    "type1": 8,
+    "type2": 12,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 340,
+          "atk": 382,
+          "def": 328,
+          "spatk": 103,
+          "spdef": 115,
+          "spd": 85
+        },
+        "item": 43,
+        "ability": 91,
+        "move": [
+          262,
+          8,
+          23,
+          140
+        ]
+      },
+      {
+        "status": {
+          "hp": 340,
+          "atk": 382,
+          "def": 328,
+          "spatk": 103,
+          "spdef": 115,
+          "spd": 85
+        },
+        "item": 21,
+        "ability": 91,
+        "move": [
+          46,
+          47,
+          64,
+          36
+        ]
+      },
+      {
+        "status": {
+          "hp": 403,
+          "atk": 285,
+          "def": 360,
+          "spatk": 103,
+          "spdef": 115,
+          "spd": 85
+        },
+        "item": 35,
+        "ability": 91,
+        "move": [
+          167,
+          37,
+          109,
+          69
+        ]
+      },
+      {
+        "status": {
+          "hp": 403,
+          "atk": 382,
+          "def": 265,
+          "spatk": 103,
+          "spdef": 115,
+          "spd": 85
+        },
+        "item": 38,
+        "ability": 91,
+        "move": [
+          262,
+          8,
+          66,
+          198
+        ]
+      }
+    ]
+  },
+  {
+    "name": "モジャンボ",
+    "type1": 4,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 310,
+          "atk": 184,
+          "def": 318,
+          "spatk": 316,
+          "spdef": 105,
+          "spd": 105
+        },
+        "item": 25,
+        "ability": 92,
+        "move": [
+          115,
+          1,
+          26,
+          3
+        ]
+      },
+      {
+        "status": {
+          "hp": 352,
+          "atk": 184,
+          "def": 326,
+          "spatk": 267,
+          "spdef": 105,
+          "spd": 105
+        },
+        "item": 1,
+        "ability": 92,
+        "move": [
+          4,
+          6,
+          41,
+          34
+        ]
+      },
+      {
+        "status": {
+          "hp": 310,
+          "atk": 184,
+          "def": 318,
+          "spatk": 316,
+          "spdef": 105,
+          "spd": 105
+        },
+        "item": 10,
+        "ability": 92,
+        "move": [
+          19,
+          43,
+          13,
+          21
+        ]
+      },
+      {
+        "status": {
+          "hp": 310,
+          "atk": 294,
+          "def": 318,
+          "spatk": 202,
+          "spdef": 105,
+          "spd": 105
+        },
+        "item": 12,
+        "ability": 92,
+        "move": [
+          247,
+          8,
+          52,
+          77
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ポリゴンZ",
+    "type1": 0,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 343,
+          "atk": 148,
+          "def": 145,
+          "spatk": 371,
+          "spdef": 155,
+          "spd": 185
+        },
+        "item": 34,
+        "ability": 93,
+        "move": [
+          86,
+          99,
+          245,
+          263
+        ]
+      },
+      {
+        "status": {
+          "hp": 280,
+          "atk": 148,
+          "def": 145,
+          "spatk": 338,
+          "spdef": 155,
+          "spd": 272
+        },
+        "item": 52,
+        "ability": 93,
+        "move": [
+          86,
+          105,
+          97,
+          219
+        ]
+      },
+      {
+        "status": {
+          "hp": 343,
+          "atk": 148,
+          "def": 145,
+          "spatk": 371,
+          "spdef": 155,
+          "spd": 185
+        },
+        "item": 3,
+        "ability": 93,
+        "move": [
+          98,
+          40,
+          29,
+          120
+        ]
+      },
+      {
+        "status": {
+          "hp": 280,
+          "atk": 148,
+          "def": 145,
+          "spatk": 371,
+          "spdef": 155,
+          "spd": 248
+        },
+        "item": 21,
+        "ability": 93,
+        "move": [
+          86,
+          99,
+          119,
+          97
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ギャラドス",
+    "type1": 2,
+    "type2": 9,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 300,
+          "atk": 318,
+          "def": 163,
+          "spatk": 112,
+          "spdef": 294,
+          "spd": 167
+        },
+        "item": 44,
+        "ability": 21,
+        "move": [
+          36,
+          53,
+          170,
+          125
+        ]
+      },
+      {
+        "status": {
+          "hp": 300,
+          "atk": 318,
+          "def": 163,
+          "spatk": 112,
+          "spdef": 205,
+          "spd": 253
+        },
+        "item": 16,
+        "ability": 21,
+        "move": [
+          32,
+          53,
+          93,
+          56
+        ]
+      },
+      {
+        "status": {
+          "hp": 300,
+          "atk": 349,
+          "def": 163,
+          "spatk": 112,
+          "spdef": 268,
+          "spd": 167
+        },
+        "item": 39,
+        "ability": 21,
+        "move": [
+          9,
+          32,
+          63,
+          89
+        ]
+      },
+      {
+        "status": {
+          "hp": 300,
+          "atk": 349,
+          "def": 163,
+          "spatk": 112,
+          "spdef": 205,
+          "spd": 230
+        },
+        "item": 31,
+        "ability": 21,
+        "move": [
+          32,
+          8,
+          168,
+          56
+        ]
+      }
+    ]
+  },
+  {
+    "name": "カビゴン",
+    "type1": 0,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 493,
+          "atk": 316,
+          "def": 135,
+          "spatk": 121,
+          "spdef": 225,
+          "spd": 65
+        },
+        "item": 18,
+        "ability": 94,
+        "move": [
+          104,
+          54,
+          10,
+          103
+        ]
+      },
+      {
+        "status": {
+          "hp": 430,
+          "atk": 316,
+          "def": 135,
+          "spatk": 121,
+          "spdef": 288,
+          "spd": 65
+        },
+        "item": 31,
+        "ability": 94,
+        "move": [
+          46,
+          47,
+          64,
+          168
+        ]
+      },
+      {
+        "status": {
+          "hp": 430,
+          "atk": 316,
+          "def": 135,
+          "spatk": 121,
+          "spdef": 288,
+          "spd": 65
+        },
+        "item": 0,
+        "ability": 94,
+        "move": [
+          9,
+          55,
+          75,
+          7
+        ]
+      },
+      {
+        "status": {
+          "hp": 493,
+          "atk": 316,
+          "def": 135,
+          "spatk": 121,
+          "spdef": 225,
+          "spd": 65
+        },
+        "item": 9,
+        "ability": 94,
+        "move": [
+          138,
+          8,
+          38,
+          23
+        ]
+      }
+    ]
+  },
+  {
+    "name": "キングドラ",
+    "type1": 2,
+    "type2": 14,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 260,
+          "atk": 175,
+          "def": 195,
+          "spatk": 258,
+          "spdef": 195,
+          "spd": 261
+        },
+        "item": 44,
+        "ability": 95,
+        "move": [
+          81,
+          61,
+          16,
+          125
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 175,
+          "def": 195,
+          "spatk": 258,
+          "spdef": 195,
+          "spd": 261
+        },
+        "item": 8,
+        "ability": 95,
+        "move": [
+          202,
+          40,
+          260,
+          103
+        ]
+      },
+      {
+        "status": {
+          "hp": 323,
+          "atk": 283,
+          "def": 195,
+          "spatk": 175,
+          "spdef": 195,
+          "spd": 175
+        },
+        "item": 16,
+        "ability": 95,
+        "move": [
+          32,
+          9,
+          93,
+          56
+        ]
+      },
+      {
+        "status": {
+          "hp": 323,
+          "atk": 175,
+          "def": 195,
+          "spatk": 283,
+          "spdef": 195,
+          "spd": 175
+        },
+        "item": 42,
+        "ability": 95,
+        "move": [
+          28,
+          207,
+          82,
+          29
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ハピナス",
+    "type1": 0,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 683,
+          "atk": 22,
+          "def": 25,
+          "spatk": 239,
+          "spdef": 275,
+          "spd": 115
+        },
+        "item": 37,
+        "ability": 96,
+        "move": [
+          12,
+          99,
+          187,
+          204
+        ]
+      },
+      {
+        "status": {
+          "hp": 683,
+          "atk": 22,
+          "def": 25,
+          "spatk": 155,
+          "spdef": 371,
+          "spd": 115
+        },
+        "item": 31,
+        "ability": 96,
+        "move": [
+          41,
+          34,
+          264,
+          69
+        ]
+      },
+      {
+        "status": {
+          "hp": 683,
+          "atk": 22,
+          "def": 25,
+          "spatk": 239,
+          "spdef": 275,
+          "spd": 115
+        },
+        "item": 6,
+        "ability": 96,
+        "move": [
+          14,
+          119,
+          40,
+          100
+        ]
+      },
+      {
+        "status": {
+          "hp": 683,
+          "atk": 22,
+          "def": 25,
+          "spatk": 155,
+          "spdef": 371,
+          "spd": 115
+        },
+        "item": 18,
+        "ability": 96,
+        "move": [
+          112,
+          204,
+          264,
+          69
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ミロカロス",
+    "type1": 2,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 363,
+          "atk": 112,
+          "def": 163,
+          "spatk": 294,
+          "spdef": 255,
+          "spd": 167
+        },
+        "item": 8,
+        "ability": 97,
+        "move": [
+          81,
+          40,
+          123,
+          118
+        ]
+      },
+      {
+        "status": {
+          "hp": 363,
+          "atk": 125,
+          "def": 248,
+          "spatk": 184,
+          "spdef": 255,
+          "spd": 167
+        },
+        "item": 18,
+        "ability": 97,
+        "move": [
+          41,
+          122,
+          34,
+          35
+        ]
+      },
+      {
+        "status": {
+          "hp": 300,
+          "atk": 112,
+          "def": 163,
+          "spatk": 268,
+          "spdef": 349,
+          "spd": 167
+        },
+        "item": 42,
+        "ability": 97,
+        "move": [
+          28,
+          82,
+          31,
+          97
+        ]
+      },
+      {
+        "status": {
+          "hp": 363,
+          "atk": 112,
+          "def": 163,
+          "spatk": 294,
+          "spdef": 255,
+          "spd": 167
+        },
+        "item": 16,
+        "ability": 97,
+        "move": [
+          81,
+          40,
+          61,
+          97
+        ]
+      }
+    ]
+  },
+  {
+    "name": "エレキブル",
+    "type1": 3,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 260,
+          "atk": 314,
+          "def": 139,
+          "spatk": 175,
+          "spdef": 175,
+          "spd": 283
+        },
+        "item": 5,
+        "ability": 98,
+        "move": [
+          47,
+          150,
+          105,
+          58
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 314,
+          "def": 139,
+          "spatk": 258,
+          "spdef": 175,
+          "spd": 195
+        },
+        "item": 42,
+        "ability": 98,
+        "move": [
+          124,
+          127,
+          54,
+          92
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 225,
+          "def": 139,
+          "spatk": 283,
+          "spdef": 175,
+          "spd": 258
+        },
+        "item": 3,
+        "ability": 98,
+        "move": [
+          119,
+          98,
+          26,
+          29
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 345,
+          "def": 139,
+          "spatk": 175,
+          "spdef": 175,
+          "spd": 258
+        },
+        "item": 14,
+        "ability": 98,
+        "move": [
+          47,
+          46,
+          64,
+          8
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ブーバーン",
+    "type1": 1,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 260,
+          "atk": 175,
+          "def": 139,
+          "spatk": 349,
+          "spdef": 195,
+          "spd": 234
+        },
+        "item": 10,
+        "ability": 99,
+        "move": [
+          222,
+          26,
+          20,
+          21
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 283,
+          "def": 139,
+          "spatk": 229,
+          "spdef": 195,
+          "spd": 234
+        },
+        "item": 14,
+        "ability": 99,
+        "move": [
+          46,
+          33,
+          122,
+          16
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 283,
+          "def": 139,
+          "spatk": 229,
+          "spdef": 195,
+          "spd": 234
+        },
+        "item": 20,
+        "ability": 99,
+        "move": [
+          22,
+          47,
+          8,
+          77
+        ]
+      },
+      {
+        "status": {
+          "hp": 260,
+          "atk": 175,
+          "def": 139,
+          "spatk": 349,
+          "spdef": 195,
+          "spd": 234
+        },
+        "item": 0,
+        "ability": 99,
+        "move": [
+          18,
+          98,
+          26,
+          122
+        ]
+      }
+    ]
+  },
+  {
+    "name": "トゲキッス",
+    "type1": 0,
+    "type2": 9,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 280,
+          "atk": 184,
+          "def": 195,
+          "spatk": 220,
+          "spdef": 298,
+          "spd": 165
+        },
+        "item": 48,
+        "ability": 100,
+        "move": [
+          206,
+          265,
+          94,
+          142
+        ]
+      },
+      {
+        "status": {
+          "hp": 343,
+          "atk": 94,
+          "def": 195,
+          "spatk": 338,
+          "spdef": 235,
+          "spd": 165
+        },
+        "item": 5,
+        "ability": 100,
+        "move": [
+          15,
+          153,
+          151,
+          27
+        ]
+      },
+      {
+        "status": {
+          "hp": 280,
+          "atk": 94,
+          "def": 195,
+          "spatk": 338,
+          "spdef": 235,
+          "spd": 228
+        },
+        "item": 3,
+        "ability": 100,
+        "move": [
+          15,
+          236,
+          29,
+          216
+        ]
+      },
+      {
+        "status": {
+          "hp": 280,
+          "atk": 94,
+          "def": 195,
+          "spatk": 338,
+          "spdef": 235,
+          "spd": 228
+        },
+        "item": 21,
+        "ability": 100,
+        "move": [
+          12,
+          15,
+          254,
+          98
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ウインディ",
+    "type1": 1,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 290,
+          "atk": 288,
+          "def": 165,
+          "spatk": 184,
+          "spdef": 165,
+          "spd": 283
+        },
+        "item": 16,
+        "ability": 101,
+        "move": [
+          107,
+          265,
+          23,
+          20
+        ]
+      },
+      {
+        "status": {
+          "hp": 290,
+          "atk": 288,
+          "def": 165,
+          "spatk": 184,
+          "spdef": 165,
+          "spd": 283
+        },
+        "item": 13,
+        "ability": 101,
+        "move": [
+          22,
+          108,
+          50,
+          51
+        ]
+      },
+      {
+        "status": {
+          "hp": 290,
+          "atk": 202,
+          "def": 165,
+          "spatk": 294,
+          "spdef": 165,
+          "spd": 258
+        },
+        "item": 0,
+        "ability": 101,
+        "move": [
+          18,
+          19,
+          61,
+          21
+        ]
+      },
+      {
+        "status": {
+          "hp": 290,
+          "atk": 316,
+          "def": 165,
+          "spatk": 184,
+          "spdef": 165,
+          "spd": 258
+        },
+        "item": 43,
+        "ability": 101,
+        "move": [
+          22,
+          265,
+          23,
+          108
+        ]
+      }
+    ]
+  },
+  {
+    "name": "カイリュー",
+    "type1": 14,
+    "type2": 9,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 292,
+          "atk": 369,
+          "def": 195,
+          "spatk": 184,
+          "spdef": 268,
+          "spd": 165
+        },
+        "item": 16,
+        "ability": 89,
+        "move": [
+          24,
+          52,
+          105,
+          56
+        ]
+      },
+      {
+        "status": {
+          "hp": 292,
+          "atk": 369,
+          "def": 258,
+          "spatk": 184,
+          "spdef": 205,
+          "spd": 165
+        },
+        "item": 27,
+        "ability": 89,
+        "move": [
+          205,
+          46,
+          47,
+          64
+        ]
+      },
+      {
+        "status": {
+          "hp": 292,
+          "atk": 245,
+          "def": 258,
+          "spatk": 294,
+          "spdef": 205,
+          "spd": 165
+        },
+        "item": 21,
+        "ability": 89,
+        "move": [
+          207,
+          14,
+          119,
+          81
+        ]
+      },
+      {
+        "status": {
+          "hp": 292,
+          "atk": 369,
+          "def": 195,
+          "spatk": 184,
+          "spdef": 268,
+          "spd": 165
+        },
+        "item": 38,
+        "ability": 89,
+        "move": [
+          9,
+          89,
+          8,
+          55
+        ]
+      }
+    ]
+  },
+  {
+    "name": "バンギラス",
+    "type1": 12,
+    "type2": 15,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 310,
+          "atk": 369,
+          "def": 225,
+          "spatk": 195,
+          "spdef": 268,
+          "spd": 114
+        },
+        "item": 43,
+        "ability": 83,
+        "move": [
+          54,
+          109,
+          37,
+          10
+        ]
+      },
+      {
+        "status": {
+          "hp": 310,
+          "atk": 336,
+          "def": 225,
+          "spatk": 175,
+          "spdef": 205,
+          "spd": 209
+        },
+        "item": 52,
+        "ability": 83,
+        "move": [
+          46,
+          47,
+          64,
+          52
+        ]
+      },
+      {
+        "status": {
+          "hp": 310,
+          "atk": 369,
+          "def": 288,
+          "spatk": 175,
+          "spdef": 205,
+          "spd": 127
+        },
+        "item": 0,
+        "ability": 83,
+        "move": [
+          55,
+          24,
+          48,
+          36
+        ]
+      },
+      {
+        "status": {
+          "hp": 373,
+          "atk": 369,
+          "def": 225,
+          "spatk": 175,
+          "spdef": 205,
+          "spd": 127
+        },
+        "item": 37,
+        "ability": 83,
+        "move": [
+          63,
+          23,
+          8,
+          56
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ボーマンダ",
+    "type1": 14,
+    "type2": 9,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 300,
+          "atk": 371,
+          "def": 165,
+          "spatk": 202,
+          "spdef": 165,
+          "spd": 268
+        },
+        "item": 30,
+        "ability": 21,
+        "move": [
+          24,
+          52,
+          36,
+          17
+        ]
+      },
+      {
+        "status": {
+          "hp": 300,
+          "atk": 338,
+          "def": 165,
+          "spatk": 202,
+          "spdef": 165,
+          "spd": 294
+        },
+        "item": 44,
+        "ability": 21,
+        "move": [
+          24,
+          107,
+          108,
+          56
+        ]
+      },
+      {
+        "status": {
+          "hp": 300,
+          "atk": 247,
+          "def": 165,
+          "spatk": 316,
+          "spdef": 165,
+          "spd": 268
+        },
+        "item": 3,
+        "ability": 21,
+        "move": [
+          207,
+          28,
+          14,
+          153
+        ]
+      },
+      {
+        "status": {
+          "hp": 300,
+          "atk": 371,
+          "def": 165,
+          "spatk": 202,
+          "spdef": 165,
+          "spd": 268
+        },
+        "item": 16,
+        "ability": 21,
+        "move": [
+          9,
+          23,
+          8,
+          38
+        ]
+      }
+    ]
+  },
+  {
+    "name": "メタグロス",
+    "type1": 16,
+    "type2": 10,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 270,
+          "atk": 371,
+          "def": 328,
+          "spatk": 175,
+          "spdef": 185,
+          "spd": 145
+        },
+        "item": 6,
+        "ability": 102,
+        "move": [
+          38,
+          230,
+          106,
+          44
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 247,
+          "def": 328,
+          "spatk": 283,
+          "spdef": 185,
+          "spd": 145
+        },
+        "item": 3,
+        "ability": 102,
+        "move": [
+          98,
+          83,
+          99,
+          1
+        ]
+      },
+      {
+        "status": {
+          "hp": 270,
+          "atk": 371,
+          "def": 328,
+          "spatk": 175,
+          "spdef": 185,
+          "spd": 145
+        },
+        "item": 19,
+        "ability": 102,
+        "move": [
+          66,
+          47,
+          64,
+          52
+        ]
+      },
+      {
+        "status": {
+          "hp": 333,
+          "atk": 371,
+          "def": 265,
+          "spatk": 175,
+          "spdef": 185,
+          "spd": 145
+        },
+        "item": 24,
+        "ability": 102,
+        "move": [
+          266,
+          38,
+          8,
+          137
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ガブリアス",
+    "type1": 14,
+    "type2": 8,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 326,
+          "atk": 328,
+          "def": 195,
+          "spatk": 148,
+          "spdef": 175,
+          "spd": 299
+        },
+        "item": 6,
+        "ability": 103,
+        "move": [
+          24,
+          8,
+          34,
+          87
+        ]
+      },
+      {
+        "status": {
+          "hp": 326,
+          "atk": 238,
+          "def": 195,
+          "spatk": 250,
+          "spdef": 175,
+          "spd": 272
+        },
+        "item": 0,
+        "ability": 103,
+        "move": [
+          207,
+          68,
+          14,
+          81
+        ]
+      },
+      {
+        "status": {
+          "hp": 326,
+          "atk": 360,
+          "def": 195,
+          "spatk": 148,
+          "spdef": 175,
+          "spd": 272
+        },
+        "item": 35,
+        "ability": 103,
+        "move": [
+          205,
+          63,
+          36,
+          52
+        ]
+      },
+      {
+        "status": {
+          "hp": 326,
+          "atk": 360,
+          "def": 195,
+          "spatk": 148,
+          "spdef": 175,
+          "spd": 272
+        },
+        "item": 39,
+        "ability": 103,
+        "move": [
+          9,
+          8,
+          23,
+          107
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ケッキング",
+    "type1": 0,
+    "type2": null,
+    "indivisual": [
+      {
+        "status": {
+          "hp": 473,
+          "atk": 325,
+          "def": 294,
+          "spatk": 175,
+          "spdef": 135,
+          "spd": 205
+        },
+        "item": 12,
+        "ability": 104,
+        "move": [
+          106,
+          48,
+          255,
+          103
+        ]
+      },
+      {
+        "status": {
+          "hp": 410,
+          "atk": 426,
+          "def": 268,
+          "spatk": 175,
+          "spdef": 135,
+          "spd": 205
+        },
+        "item": 16,
+        "ability": 104,
+        "move": [
+          212,
+          46,
+          47,
+          64
+        ]
+      },
+      {
+        "status": {
+          "hp": 410,
+          "atk": 388,
+          "def": 205,
+          "spatk": 175,
+          "spdef": 135,
+          "spd": 294
+        },
+        "item": 9,
+        "ability": 104,
+        "move": [
+          104,
+          60,
+          75,
+          52
+        ]
+      },
+      {
+        "status": {
+          "hp": 473,
+          "atk": 426,
+          "def": 205,
+          "spatk": 175,
+          "spdef": 135,
+          "spd": 205
+        },
+        "item": 26,
+        "ability": 104,
+        "move": [
+          89,
+          8,
+          66,
+          48
+        ]
+      }
+    ]
+  }
+]
