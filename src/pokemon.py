@@ -13,11 +13,14 @@ class PokemonStatus:
 
 
 @dataclass
-class PokemonSet:
-    status: PokemonStatus
-    item: int
-    ability: int
-    move: List[int]
+class Move:
+    id: int
+    name: str
+    type: str
+    category: str
+    power: int
+    pp: int
+    hitrate: int
 
 
 @dataclass
@@ -25,4 +28,7 @@ class Pokemon:
     name: str
     type1: int
     type2: Optional[int]
-    indivisual: List[PokemonSet]
+    status: PokemonStatus
+    item: int
+    ability: int
+    moves: List[Move]
