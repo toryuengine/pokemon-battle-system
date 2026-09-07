@@ -1,11 +1,8 @@
-from pathlib import Path
-
-from readpokemondata import load_pokemons
+from pokemon import Pokemon
 
 
 def main():
-    data_dir = Path(__file__).resolve().parent.parent / "data"
-    pokemon = load_pokemons(data_dir / "pokemon.json", data_dir / "move.json")[1]
+    pokemon = Pokemon(1, 2)
 
     move_names = []
     for move in pokemon.moves:
