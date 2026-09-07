@@ -5,6 +5,8 @@
 *.obj
 *.pdb
 *.ilk
+__pycache__/
+*.pyc
 
 # Editor / IDE
 .vscode/
