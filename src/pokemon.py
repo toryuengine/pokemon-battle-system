@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
-from readpokemondata import load_move_data, load_pokemon_data
+from move.base_move import BaseMove
+from move.factory import create_move
+from readpokemondata import load_pokemon_data
 
 
 @dataclass
@@ -14,21 +16,9 @@ class PokemonStatus:
     spd: int
 
 
-@dataclass
-class Move:
-    id: int
-    name: str
-    type: str
-    category: str
-    power: int
-    pp: int
-    hitrate: int
-
-
 class Pokemon:
     def __init__(self, pokemon_id: int, indivisual_id: int):
         pokemon_data = load_pokemon_data()
-        move_data = load_move_data()
 
         entry = pokemon_data[pokemon_id]
         set_data = entry["indivisual"][indivisual_id]
@@ -40,9 +30,9 @@ class Pokemon:
         self.status: PokemonStatus = _parse_status(set_data["status"])
         self.item: int = set_data["item"]
 
-        self.moves: List[Move] = []
+        self.moves: List[BaseMove] = []
         for move_id in set_data["move"]:
-            self.moves.append(_parse_move(move_id, move_data[str(move_id)]))
+            self.moves.append(create_move(move_id))
 
     def __repr__(self):
         return (
@@ -60,16 +50,4 @@ def _parse_status(status_data) -> PokemonStatus:
         spatk=status_data["spatk"],
         spdef=status_data["spdef"],
         spd=status_data["spd"],
-    )
-
-
-def _parse_move(move_id: int, move_data) -> Move:
-    return Move(
-        id=move_id,
-        name=move_data["name"],
-        type=move_data["type"],
-        category=move_data["category"],
-        power=move_data["power"],
-        pp=move_data["pp"],
-        hitrate=move_data["hitrate"],
     )
