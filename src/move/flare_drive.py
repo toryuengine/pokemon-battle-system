@@ -1,6 +1,7 @@
 from move.base_move import BaseMove
 
 
+# フレアドライブ
 class FlareDrive(BaseMove):
     def __init__(self):
         super().__init__(id=22)
