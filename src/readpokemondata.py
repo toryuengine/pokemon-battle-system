@@ -11,16 +11,23 @@ def load_pokemons(pokemon_path, move_path) -> List[Pokemon]:
     with open(move_path, encoding="utf-8") as f:
         move_data = json.load(f)
 
-    moves = {int(move_id): _parse_move(int(move_id), data) for move_id, data in move_data.items()}
+    moves = {}
+    for move_id, data in move_data.items():
+        moves[int(move_id)] = _parse_move(int(move_id), data)
 
-    return [
-        _parse_pokemon(entry, set_data, moves)
-        for entry in pokemon_data
-        for set_data in entry["indivisual"]
-    ]
+    pokemons = []
+    for entry in pokemon_data:
+        for set_data in entry["indivisual"]:
+            pokemons.append(_parse_pokemon(entry, set_data, moves))
+
+    return pokemons
 
 
 def _parse_pokemon(entry, set_data, moves: Dict[int, Move]) -> Pokemon:
+    pokemon_moves = []
+    for move_id in set_data["move"]:
+        pokemon_moves.append(moves[move_id])
+
     return Pokemon(
         name=entry["name"],
         type1=entry["type1"],
@@ -28,7 +35,7 @@ def _parse_pokemon(entry, set_data, moves: Dict[int, Move]) -> Pokemon:
         status=_parse_status(set_data["status"]),
         item=set_data["item"],
         ability=set_data["ability"],
-        moves=[moves[move_id] for move_id in set_data["move"]],
+        moves=pokemon_moves,
     )
 
 
@@ -61,4 +68,7 @@ if __name__ == "__main__":
 
     print(f"{len(pokemons)}体読み込みました")
     for pokemon in pokemons:
-        print(pokemon.name, [move.name for move in pokemon.moves])
+        move_names = []
+        for move in pokemon.moves:
+            move_names.append(move.name)
+        print(pokemon.name, move_names)

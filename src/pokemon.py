@@ -30,5 +30,5 @@ class Pokemon:
     type2: Optional[int]
     status: PokemonStatus
     item: int
-    ability: int
+    ability: List[int]
     moves: List[Move]
