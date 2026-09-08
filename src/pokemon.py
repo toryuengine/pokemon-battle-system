@@ -1,3 +1,4 @@
+import random
 from dataclasses import dataclass
 from typing import List, Optional
 
@@ -26,7 +27,8 @@ class Pokemon:
         self.name: str = entry["name"]
         self.type1: int = entry["type1"]
         self.type2: Optional[int] = entry["type2"]
-        self.ability: List[int] = entry["ability"]
+        # 種族が持ちうる特性の中からこの個体の特性をランダムに1つ選ぶ
+        self.ability: int = random.choice(entry["ability"])
         self.status: PokemonStatus = _parse_status(set_data["status"])
         self.item: int = set_data["item"]
 
