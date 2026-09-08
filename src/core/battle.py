@@ -8,11 +8,11 @@ from pokemon import Pokemon
 
 
 class Battle:
+    # 現在HPはBattleではなくPokemon側(current_status.current_hp)で管理する
+    # (交代しても引き継がれる状態のため)
     def __init__(self, pokemon1: Pokemon, pokemon2: Pokemon):
         self.pokemon1 = pokemon1
         self.pokemon2 = pokemon2
-        self.current_hp1 = pokemon1.status.hp
-        self.current_hp2 = pokemon2.status.hp
 
     #バトルスタート
     def start_battle(self):
@@ -46,20 +46,15 @@ class Battle:
 
     # targetがpokemon1/pokemon2のどちらかを見て、対応する残りHPを返す
     def get_current_hp(self, target: Pokemon) -> int:
-        if target is self.pokemon1:
-            return self.current_hp1
-        if target is self.pokemon2:
-            return self.current_hp2
-        raise ValueError("target is not part of this battle")
+        if target is not self.pokemon1 and target is not self.pokemon2:
+            raise ValueError("target is not part of this battle")
+        return target.current_status.current_hp
 
     # targetの残りHPからdamage分を引く（0未満にはならない）
     def apply_damage(self, target: Pokemon, damage: int):
-        if target is self.pokemon1:
-            self.current_hp1 = max(0, self.current_hp1 - damage)
-        elif target is self.pokemon2:
-            self.current_hp2 = max(0, self.current_hp2 - damage)
-        else:
+        if target is not self.pokemon1 and target is not self.pokemon2:
             raise ValueError("target is not part of this battle")
+        target.current_status.current_hp = max(0, target.current_status.current_hp - damage)
 
     # 残りHPが0以下なら瀕死
     def is_fainted(self, target: Pokemon) -> bool:

@@ -17,6 +17,13 @@ class PokemonStatus:
     spd: int
 
 
+# 交代しても引き継がれる、対戦中に変化する状態（現在HP・状態異常など）
+@dataclass
+class CurrentStatus:
+    current_hp: int
+    status_condition: Optional[str] = None
+
+
 class Pokemon:
     def __init__(self, pokemon_id: int, indivisual_id: int):
         pokemon_data = load_pokemon_data()
@@ -30,6 +37,7 @@ class Pokemon:
         # 種族が持ちうる特性の中からこの個体の特性をランダムに1つ選ぶ
         self.ability: int = random.choice(entry["ability"])
         self.status: PokemonStatus = _parse_status(set_data["status"])
+        self.current_status: CurrentStatus = CurrentStatus(current_hp=self.status.hp)
         self.item: int = set_data["item"]
 
         self.moves: List[BaseMove] = []
