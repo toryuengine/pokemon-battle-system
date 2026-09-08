@@ -18,9 +18,18 @@ class Battle:
     def start_battle(self):
         while True:
             move1 = self.select_move(self.pokemon1)
-            move2 = self.select_move(self.pokemon2)         
-            atacker, defender = self.get_attacker_and_defender(move1, move2)#先行後攻を取得
+            move2 = self.select_move(self.pokemon2)
+            attacker, defender = self.get_attacker_and_defender(move1, move2)  # 先行後攻を取得
+            attacker_move = move1 if attacker is self.pokemon1 else move2
+            defender_move = move2 if attacker is self.pokemon1 else move1
 
+            self.use_move(attacker, defender, attacker_move)
+            if self.get_winner() is not None:
+                break
+
+            self.use_move(defender, attacker, defender_move)
+            if self.get_winner() is not None:
+                break
 
     # ここ
     # attackerが持つ技の中からランダムに1つ選ぶ
