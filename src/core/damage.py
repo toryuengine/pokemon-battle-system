@@ -3,8 +3,8 @@ import random
 from core.type_chart import get_effectiveness, resolve_type_id
 
 # jsonの実数値にレベルが織り込まれておらず、データ上レベルを特定できないため
-# 便宜上レベル50固定で計算する（両者同条件なので相対的なダメージ比較には影響しない）
-LEVEL = 50
+# 便宜上レベル100固定で計算する（両者同条件なので相対的なダメージ比較には影響しない）
+LEVEL = 100
 
 
 def calculate_damage(attacker, defender, move) -> int:
