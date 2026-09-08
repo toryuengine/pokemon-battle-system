@@ -14,16 +14,26 @@ class Battle:
         self.current_hp1 = pokemon1.status.hp
         self.current_hp2 = pokemon2.status.hp
 
+    #バトルスタート
     def start_battle(self):
+        while True:
+            move1 = self.select_move(self.pokemon1)
+            move2 = self.select_move(self.pokemon2)         
+            atacker, defender = self.get_attacker_and_defender(move1, move2)#先行後攻を取得
 
-        atacker, defender = self.get_attacker_and_defender()#先行こうこを取得
 
-    def get_attacker_and_defender(self, move1: BaseMove, move2: BaseMove):
-        pass
-
+    # ここ
     # attackerが持つ技の中からランダムに1つ選ぶ
     def select_move(self, attacker: Pokemon) -> BaseMove:
         return random.choice(attacker.moves)
+
+    # 素早さを比較して先攻・後攻を決める（同速なら五分五分でランダム）
+    def get_attacker_and_defender(self, move1: BaseMove, move2: BaseMove):
+        if self.pokemon1.status.spd > self.pokemon2.status.spd:
+            return self.pokemon1, self.pokemon2
+        if self.pokemon2.status.spd > self.pokemon1.status.spd:
+            return self.pokemon2, self.pokemon1
+        return random.sample([self.pokemon1, self.pokemon2], 2)
 
     # targetがpokemon1/pokemon2のどちらかを見て、対応する残りHPを返す
     def get_current_hp(self, target: Pokemon) -> int:
