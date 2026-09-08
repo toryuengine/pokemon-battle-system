@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import List, Optional
 
 from move.base_move import BaseMove
-from move.factory import create_move
+from move.movefactory import create_move
 from readpokemondata import load_pokemon_data
 
 
