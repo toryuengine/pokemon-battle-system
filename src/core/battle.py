@@ -12,6 +12,11 @@ class Battle:
         self.current_hp1 = pokemon1.status.hp
         self.current_hp2 = pokemon2.status.hp
 
+    def start_battle(self):
+        while self.get_winner() is None:
+        pokemon1_turn = True
+        while self.get_winner() is None:
+
     # targetがpokemon1/pokemon2のどちらかを見て、対応する残りHPを返す
     def get_current_hp(self, target: Pokemon) -> int:
         if target is self.pokemon1:
