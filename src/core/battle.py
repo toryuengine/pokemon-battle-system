@@ -1,3 +1,5 @@
+import random
+
 from core.accuracy import check_hit
 from core.damage import calculate_damage
 from core.type_chart import get_effectiveness
@@ -13,9 +15,15 @@ class Battle:
         self.current_hp2 = pokemon2.status.hp
 
     def start_battle(self):
-        while self.get_winner() is None:
-        pokemon1_turn = True
-        while self.get_winner() is None:
+
+        atacker, defender = self.get_attacker_and_defender()#先行こうこを取得
+
+    def get_attacker_and_defender(self, move1: BaseMove, move2: BaseMove):
+        pass
+
+    # attackerが持つ技の中からランダムに1つ選ぶ
+    def select_move(self, attacker: Pokemon) -> BaseMove:
+        return random.choice(attacker.moves)
 
     # targetがpokemon1/pokemon2のどちらかを見て、対応する残りHPを返す
     def get_current_hp(self, target: Pokemon) -> int:
