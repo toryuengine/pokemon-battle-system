@@ -1,6 +1,7 @@
 import random
 
 from battlelogic.type_chart import get_effectiveness, resolve_type_id
+from move.base_move import CATEGORY_PHYSICAL, CATEGORY_STATUS
 
 # jsonの実数値にレベルが織り込まれておらず、データ上レベルを特定できないため
 # 便宜上レベル100固定で計算する（両者同条件なので相対的なダメージ比較には影響しない）
@@ -8,10 +9,12 @@ LEVEL = 100
 
 
 def calculate_damage(attacker, defender, move) -> int:
-    if move.category == "変化":
+    # 変化技(CATEGORY_STATUS)はダメージを与えない
+    if move.category == CATEGORY_STATUS:
         return 0
 
-    if move.category == "物理":
+    # 物理技(CATEGORY_PHYSICAL)はatk/defense、それ以外(特殊)はspatk/spdefを使う
+    if move.category == CATEGORY_PHYSICAL:
         attack_stat = attacker.status.atk
         defense_stat = defender.status.defense
     else:

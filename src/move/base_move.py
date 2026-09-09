@@ -1,5 +1,10 @@
 from readpokemondata import load_move_data
 
+# move.jsonのcategoryの数値表現（物理=0, 特殊=1, 変化=2）
+CATEGORY_PHYSICAL = 0
+CATEGORY_SPECIAL = 1
+CATEGORY_STATUS = 2
+
 
 class BaseMove:
     def __init__(self, id: int):

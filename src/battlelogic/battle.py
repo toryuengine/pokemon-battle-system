@@ -4,7 +4,7 @@ from battlelogic.accuracy import check_hit
 from battlelogic.damage import calculate_damage
 from battlelogic.stat_stage import StatStages
 from battlelogic.type_chart import get_effectiveness
-from move.base_move import BaseMove
+from move.base_move import CATEGORY_STATUS, BaseMove
 from pokemon import Pokemon
 
 
@@ -73,7 +73,8 @@ class Battle:
 
         result["hit"] = True
 
-        if move.category != "変化":
+        # 変化技(CATEGORY_STATUS)はダメージを与えないので、物理・特殊技の時だけダメージ計算する
+        if move.category != CATEGORY_STATUS:
             damage = calculate_damage(attacker, defender, move)
             self.apply_damage(defender, damage)
             result["damage"] = damage

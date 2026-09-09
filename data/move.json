@@ -3,7 +3,7 @@
     "name": "リーフストーム",
     "type": "くさ",
     "pp": 5,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 90,
     "power": 140
   },
@@ -11,7 +11,7 @@
     "name": "ヘドロばくだん",
     "type": "どく",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 90
   },
@@ -19,7 +19,7 @@
     "name": "ドわすれ",
     "type": "エスパー",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -27,7 +27,7 @@
     "name": "ねむりごな",
     "type": "くさ",
     "pp": 15,
-    "category": "変化",
+    "category": 2,
     "hitrate": 75,
     "power": 0
   },
@@ -35,7 +35,7 @@
     "name": "ギガドレイン",
     "type": "くさ",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 60
   },
@@ -43,7 +43,7 @@
     "name": "ねをはる",
     "type": "くさ",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -51,7 +51,7 @@
     "name": "やどりぎのタネ",
     "type": "くさ",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 90,
     "power": 0
   },
@@ -59,7 +59,7 @@
     "name": "タネばくだん",
     "type": "くさ",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 80
   },
@@ -67,7 +67,7 @@
     "name": "じしん",
     "type": "じめん",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 100
   },
@@ -75,7 +75,7 @@
     "name": "げきりん",
     "type": "ドラゴン",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 120
   },
@@ -83,7 +83,7 @@
     "name": "のろい",
     "type": "???",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -91,7 +91,7 @@
     "name": "ハードプラント",
     "type": "くさ",
     "pp": 5,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 90,
     "power": 150
   },
@@ -99,7 +99,7 @@
     "name": "はかいこうせん",
     "type": "ノーマル",
     "pp": 5,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 90,
     "power": 150
   },
@@ -107,7 +107,7 @@
     "name": "こうごうせい",
     "type": "くさ",
     "pp": 5,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -115,7 +115,7 @@
     "name": "かえんほうしゃ",
     "type": "ほのお",
     "pp": 15,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 95
   },
@@ -123,7 +123,7 @@
     "name": "エアスラッシュ",
     "type": "ひこう",
     "pp": 20,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 95,
     "power": 75
   },
@@ -131,7 +131,7 @@
     "name": "えんまく",
     "type": "ノーマル",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 100,
     "power": 0
   },
@@ -139,7 +139,7 @@
     "name": "こわいかお",
     "type": "ノーマル",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 90,
     "power": 0
   },
@@ -147,7 +147,7 @@
     "name": "オーバーヒート",
     "type": "ほのお",
     "pp": 5,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 90,
     "power": 140
   },
@@ -155,7 +155,7 @@
     "name": "ソーラービーム",
     "type": "くさ",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 120
   },
@@ -163,7 +163,7 @@
     "name": "おにび",
     "type": "ほのお",
     "pp": 15,
-    "category": "変化",
+    "category": 2,
     "hitrate": 75,
     "power": 0
   },
@@ -171,7 +171,7 @@
     "name": "にほんばれ",
     "type": "ほのお",
     "pp": 5,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -179,7 +179,7 @@
     "name": "フレアドライブ",
     "type": "ほのお",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 120
   },
@@ -187,7 +187,7 @@
     "name": "かみくだく",
     "type": "あく",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 80
   },
@@ -195,7 +195,7 @@
     "name": "ドラゴンクロー",
     "type": "ドラゴン",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 80
   },
@@ -203,7 +203,7 @@
     "name": "ブラストバーン",
     "type": "ほのお",
     "pp": 5,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 90,
     "power": 150
   },
@@ -211,7 +211,7 @@
     "name": "きあいだま",
     "type": "かくとう",
     "pp": 5,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 70,
     "power": 120
   },
@@ -219,7 +219,7 @@
     "name": "げんしのちから",
     "type": "いわ",
     "pp": 5,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 60
   },
@@ -227,7 +227,7 @@
     "name": "ハイドロポンプ",
     "type": "みず",
     "pp": 5,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 80,
     "power": 120
   },
@@ -235,7 +235,7 @@
     "name": "シグナルビーム",
     "type": "むし",
     "pp": 15,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 75
   },
@@ -243,7 +243,7 @@
     "name": "こごえるかぜ",
     "type": "こおり",
     "pp": 15,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 95,
     "power": 55
   },
@@ -251,7 +251,7 @@
     "name": "ミラーコート",
     "type": "エスパー",
     "pp": 20,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 1
   },
@@ -259,7 +259,7 @@
     "name": "たきのぼり",
     "type": "みず",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 80
   },
@@ -267,7 +267,7 @@
     "name": "きあいパンチ",
     "type": "かくとう",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 150
   },
@@ -275,7 +275,7 @@
     "name": "かげぶんしん",
     "type": "ノーマル",
     "pp": 15,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -283,7 +283,7 @@
     "name": "アクアリング",
     "type": "みず",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -291,7 +291,7 @@
     "name": "アクアテール",
     "type": "みず",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 90,
     "power": 90
   },
@@ -299,7 +299,7 @@
     "name": "ゆきなだれ",
     "type": "こおり",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 60
   },
@@ -307,7 +307,7 @@
     "name": "しねんのずつき",
     "type": "エスパー",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 90,
     "power": 80
   },
@@ -315,7 +315,7 @@
     "name": "ハイドロカノン",
     "type": "みず",
     "pp": 5,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 90,
     "power": 150
   },
@@ -323,7 +323,7 @@
     "name": "れいとうビーム",
     "type": "こおり",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 95
   },
@@ -331,7 +331,7 @@
     "name": "どくどく",
     "type": "どく",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 85,
     "power": 0
   },
@@ -339,7 +339,7 @@
     "name": "みがわり",
     "type": "ノーマル",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -347,7 +347,7 @@
     "name": "しぼりとる",
     "type": "ノーマル",
     "pp": 5,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 1
   },
@@ -355,7 +355,7 @@
     "name": "ひかりのかべ",
     "type": "エスパー",
     "pp": 30,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -363,7 +363,7 @@
     "name": "リフレクター",
     "type": "エスパー",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -371,7 +371,7 @@
     "name": "ほのおのパンチ",
     "type": "ほのお",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 75
   },
@@ -379,7 +379,7 @@
     "name": "かみなりパンチ",
     "type": "でんき",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 75
   },
@@ -387,7 +387,7 @@
     "name": "シャドークロー",
     "type": "ゴースト",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 70
   },
@@ -395,7 +395,7 @@
     "name": "でんこうせっか",
     "type": "ノーマル",
     "pp": 30,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 40
   },
@@ -403,7 +403,7 @@
     "name": "きしかいせい",
     "type": "かくとう",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 1
   },
@@ -411,7 +411,7 @@
     "name": "こらえる",
     "type": "ノーマル",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -419,7 +419,7 @@
     "name": "つばめがえし",
     "type": "ひこう",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 0,
     "power": 60
   },
@@ -427,7 +427,7 @@
     "name": "こおりのキバ",
     "type": "こおり",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 95,
     "power": 65
   },
@@ -435,7 +435,7 @@
     "name": "いわなだれ",
     "type": "いわ",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 90,
     "power": 75
   },
@@ -443,7 +443,7 @@
     "name": "ばかぢから",
     "type": "かくとう",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 120
   },
@@ -451,7 +451,7 @@
     "name": "りゅうのまい",
     "type": "ドラゴン",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -459,7 +459,7 @@
     "name": "リーフブレード",
     "type": "くさ",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 90
   },
@@ -467,7 +467,7 @@
     "name": "いやなおと",
     "type": "ノーマル",
     "pp": 40,
-    "category": "変化",
+    "category": 2,
     "hitrate": 85,
     "power": 0
   },
@@ -475,7 +475,7 @@
     "name": "シザークロス",
     "type": "むし",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 80
   },
@@ -483,7 +483,7 @@
     "name": "つじぎり",
     "type": "あく",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 70
   },
@@ -491,7 +491,7 @@
     "name": "りゅうのはどう",
     "type": "ドラゴン",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 90
   },
@@ -499,7 +499,7 @@
     "name": "ブレイズキック",
     "type": "ほのお",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 90,
     "power": 85
   },
@@ -507,7 +507,7 @@
     "name": "ストーンエッジ",
     "type": "いわ",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 80,
     "power": 100
   },
@@ -515,7 +515,7 @@
     "name": "れいとうパンチ",
     "type": "こおり",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 75
   },
@@ -523,7 +523,7 @@
     "name": "まもる",
     "type": "ノーマル",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -531,7 +531,7 @@
     "name": "アームハンマー",
     "type": "かくとう",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 90,
     "power": 100
   },
@@ -539,7 +539,7 @@
     "name": "だくりゅう",
     "type": "みず",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 85,
     "power": 95
   },
@@ -547,7 +547,7 @@
     "name": "だいちのちから",
     "type": "じめん",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 90
   },
@@ -555,7 +555,7 @@
     "name": "カウンター",
     "type": "かくとう",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 1
   },
@@ -563,7 +563,7 @@
     "name": "くさむすび",
     "type": "くさ",
     "pp": 20,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 1
   },
@@ -571,7 +571,7 @@
     "name": "ウッドハンマー",
     "type": "くさ",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 120
   },
@@ -579,7 +579,7 @@
     "name": "インファイト",
     "type": "かくとう",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 120
   },
@@ -587,7 +587,7 @@
     "name": "とんぼがえり",
     "type": "むし",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 70
   },
@@ -595,7 +595,7 @@
     "name": "ねこだまし",
     "type": "ノーマル",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 40
   },
@@ -603,7 +603,7 @@
     "name": "ダストシュート",
     "type": "どく",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 70,
     "power": 120
   },
@@ -611,7 +611,7 @@
     "name": "メタルクロー",
     "type": "はがね",
     "pp": 35,
-    "category": "物理",
+    "category": 0,
     "hitrate": 95,
     "power": 50
   },
@@ -619,7 +619,7 @@
     "name": "かわらわり",
     "type": "かくとう",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 75
   },
@@ -627,7 +627,7 @@
     "name": "はたきおとす",
     "type": "あく",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 20
   },
@@ -635,7 +635,7 @@
     "name": "ドリルくちばし",
     "type": "ひこう",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 80
   },
@@ -643,7 +643,7 @@
     "name": "アクアジェット",
     "type": "みず",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 40
   },
@@ -651,7 +651,7 @@
     "name": "なみのり",
     "type": "みず",
     "pp": 15,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 95
   },
@@ -659,7 +659,7 @@
     "name": "ふぶき",
     "type": "こおり",
     "pp": 5,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 70,
     "power": 120
   },
@@ -667,7 +667,7 @@
     "name": "ラスターカノン",
     "type": "はがね",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 80
   },
@@ -675,7 +675,7 @@
     "name": "おどろかす",
     "type": "ゴースト",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 30
   },
@@ -683,7 +683,7 @@
     "name": "すなじごく",
     "type": "じめん",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 70,
     "power": 15
   },
@@ -691,7 +691,7 @@
     "name": "トライアタック",
     "type": "ノーマル",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 80
   },
@@ -699,7 +699,7 @@
     "name": "すなあらし",
     "type": "いわ",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -707,7 +707,7 @@
     "name": "じわれ",
     "type": "じめん",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 30,
     "power": 1
   },
@@ -715,7 +715,7 @@
     "name": "ギガインパクト",
     "type": "ノーマル",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 90,
     "power": 150
   },
@@ -723,7 +723,7 @@
     "name": "きりさく",
     "type": "ノーマル",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 70
   },
@@ -731,7 +731,7 @@
     "name": "ボーンラッシュ",
     "type": "じめん",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 80,
     "power": 25
   },
@@ -739,7 +739,7 @@
     "name": "アイアンテール",
     "type": "はがね",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 75,
     "power": 100
   },
@@ -747,7 +747,7 @@
     "name": "アイアンヘッド",
     "type": "はがね",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 80
   },
@@ -755,7 +755,7 @@
     "name": "ドレインパンチ",
     "type": "かくとう",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 60
   },
@@ -763,7 +763,7 @@
     "name": "どくづき",
     "type": "どく",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 80
   },
@@ -771,7 +771,7 @@
     "name": "みきり",
     "type": "かくとう",
     "pp": 5,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -779,7 +779,7 @@
     "name": "じこさいせい",
     "type": "ノーマル",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -787,7 +787,7 @@
     "name": "サイコキネシス",
     "type": "エスパー",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 90
   },
@@ -795,7 +795,7 @@
     "name": "シャドーボール",
     "type": "ゴースト",
     "pp": 15,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 80
   },
@@ -803,7 +803,7 @@
     "name": "めいそう",
     "type": "エスパー",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -811,7 +811,7 @@
     "name": "サイコカッター",
     "type": "エスパー",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 70
   },
@@ -819,7 +819,7 @@
     "name": "ダイビング",
     "type": "みず",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 80
   },
@@ -827,7 +827,7 @@
     "name": "あくび",
     "type": "ノーマル",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -835,7 +835,7 @@
     "name": "おんがえし",
     "type": "ノーマル",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 102
   },
@@ -843,7 +843,7 @@
     "name": "でんじは",
     "type": "でんき",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 100,
     "power": 0
   },
@@ -851,7 +851,7 @@
     "name": "からげんき",
     "type": "ノーマル",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 70
   },
@@ -859,7 +859,7 @@
     "name": "ほのおのキバ",
     "type": "ほのお",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 95,
     "power": 65
   },
@@ -867,7 +867,7 @@
     "name": "かみなりのキバ",
     "type": "でんき",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 95,
     "power": 65
   },
@@ -875,7 +875,7 @@
     "name": "しっぺがえし",
     "type": "あく",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 50
   },
@@ -883,7 +883,7 @@
     "name": "あくまのキッス",
     "type": "ノーマル",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 75,
     "power": 0
   },
@@ -891,7 +891,7 @@
     "name": "うそなき",
     "type": "あく",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 100,
     "power": 0
   },
@@ -899,7 +899,7 @@
     "name": "ゆめくい",
     "type": "エスパー",
     "pp": 15,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 100
   },
@@ -907,7 +907,7 @@
     "name": "ほろびのうた",
     "type": "ノーマル",
     "pp": 5,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -915,7 +915,7 @@
     "name": "くろいまなざし",
     "type": "ノーマル",
     "pp": 5,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -923,7 +923,7 @@
     "name": "エナジーボール",
     "type": "くさ",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 80
   },
@@ -931,7 +931,7 @@
     "name": "まねっこ",
     "type": "ノーマル",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -939,7 +939,7 @@
     "name": "ものまね",
     "type": "ノーマル",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -947,7 +947,7 @@
     "name": "さいみんじゅつ",
     "type": "エスパー",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 60,
     "power": 0
   },
@@ -955,7 +955,7 @@
     "name": "10まんボルト",
     "type": "でんき",
     "pp": 15,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 95
   },
@@ -963,7 +963,7 @@
     "name": "チャージビーム",
     "type": "でんき",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 90,
     "power": 50
   },
@@ -971,7 +971,7 @@
     "name": "ほうでん",
     "type": "でんき",
     "pp": 15,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 80
   },
@@ -979,7 +979,7 @@
     "name": "あやしいひかり",
     "type": "ゴースト",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 100,
     "power": 0
   },
@@ -987,7 +987,7 @@
     "name": "メロメロ",
     "type": "ノーマル",
     "pp": 15,
-    "category": "変化",
+    "category": 2,
     "hitrate": 100,
     "power": 0
   },
@@ -995,7 +995,7 @@
     "name": "かみなり",
     "type": "でんき",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 70,
     "power": 120
   },
@@ -1003,7 +1003,7 @@
     "name": "あまごい",
     "type": "みず",
     "pp": 5,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1011,7 +1011,7 @@
     "name": "スカイアッパー",
     "type": "かくとう",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 90,
     "power": 85
   },
@@ -1019,7 +1019,7 @@
     "name": "ばくれつパンチ",
     "type": "かくとう",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 50,
     "power": 100
   },
@@ -1027,7 +1027,7 @@
     "name": "キノコのほうし",
     "type": "くさ",
     "pp": 15,
-    "category": "変化",
+    "category": 2,
     "hitrate": 100,
     "power": 0
   },
@@ -1035,7 +1035,7 @@
     "name": "ジャイロボール",
     "type": "はがね",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 1
   },
@@ -1043,7 +1043,7 @@
     "name": "むしくい",
     "type": "むし",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 60
   },
@@ -1051,7 +1051,7 @@
     "name": "リベンジ",
     "type": "かくとう",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 60
   },
@@ -1059,7 +1059,7 @@
     "name": "ステルスロック",
     "type": "いわ",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1067,7 +1067,7 @@
     "name": "どくびし",
     "type": "どく",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1075,7 +1075,7 @@
     "name": "まきびし",
     "type": "じめん",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1083,7 +1083,7 @@
     "name": "あなをほる",
     "type": "じめん",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 80
   },
@@ -1091,7 +1091,7 @@
     "name": "いばる",
     "type": "ノーマル",
     "pp": 15,
-    "category": "変化",
+    "category": 2,
     "hitrate": 90,
     "power": 0
   },
@@ -1099,7 +1099,7 @@
     "name": "だいばくはつ",
     "type": "ノーマル",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 250
   },
@@ -1107,7 +1107,7 @@
     "name": "すてみタックル",
     "type": "ノーマル",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 120
   },
@@ -1115,7 +1115,7 @@
     "name": "はがねのつばさ",
     "type": "はがね",
     "pp": 25,
-    "category": "物理",
+    "category": 0,
     "hitrate": 90,
     "power": 70
   },
@@ -1123,7 +1123,7 @@
     "name": "ほえる",
     "type": "ノーマル",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 100,
     "power": 0
   },
@@ -1131,7 +1131,7 @@
     "name": "そらをとぶ",
     "type": "ひこう",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 95,
     "power": 90
   },
@@ -1139,7 +1139,7 @@
     "name": "はねやすめ",
     "type": "ひこう",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1147,7 +1147,7 @@
     "name": "ブレイブバード",
     "type": "ひこう",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 120
   },
@@ -1155,7 +1155,7 @@
     "name": "ふいうち",
     "type": "あく",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 80
   },
@@ -1163,7 +1163,7 @@
     "name": "ちょうはつ",
     "type": "あく",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 100,
     "power": 0
   },
@@ -1171,7 +1171,7 @@
     "name": "おしおき",
     "type": "あく",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 1
   },
@@ -1179,7 +1179,7 @@
     "name": "あばれる",
     "type": "ノーマル",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 90
   },
@@ -1187,7 +1187,7 @@
     "name": "つっぱり",
     "type": "かくとう",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 15
   },
@@ -1195,7 +1195,7 @@
     "name": "なげつける",
     "type": "あく",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 1
   },
@@ -1203,7 +1203,7 @@
     "name": "クロスチョップ",
     "type": "かくとう",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 80,
     "power": 100
   },
@@ -1211,7 +1211,7 @@
     "name": "ぎんいろのかぜ",
     "type": "むし",
     "pp": 5,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 60
   },
@@ -1219,7 +1219,7 @@
     "name": "エアカッター",
     "type": "ひこう",
     "pp": 25,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 95,
     "power": 55
   },
@@ -1227,7 +1227,7 @@
     "name": "あやしいかぜ",
     "type": "ゴースト",
     "pp": 5,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 60
   },
@@ -1235,7 +1235,7 @@
     "name": "かいふくしれい",
     "type": "むし",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1243,7 +1243,7 @@
     "name": "みちづれ",
     "type": "ゴースト",
     "pp": 5,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1251,7 +1251,7 @@
     "name": "おいうち",
     "type": "あく",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 40
   },
@@ -1259,7 +1259,7 @@
     "name": "こうげきしれい",
     "type": "むし",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 90
   },
@@ -1267,7 +1267,7 @@
     "name": "ぼうぎょしれい",
     "type": "むし",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1275,7 +1275,7 @@
     "name": "たたきつける",
     "type": "ノーマル",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 75,
     "power": 80
   },
@@ -1283,7 +1283,7 @@
     "name": "てんしのキッス",
     "type": "ノーマル",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 75,
     "power": 0
   },
@@ -1291,7 +1291,7 @@
     "name": "わるだくみ",
     "type": "あく",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1299,7 +1299,7 @@
     "name": "ボルテッカー",
     "type": "でんき",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 120
   },
@@ -1307,7 +1307,7 @@
     "name": "ずつき",
     "type": "ノーマル",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 70
   },
@@ -1315,7 +1315,7 @@
     "name": "アンコール",
     "type": "ノーマル",
     "pp": 5,
-    "category": "変化",
+    "category": 2,
     "hitrate": 100,
     "power": 0
   },
@@ -1323,7 +1323,7 @@
     "name": "かなしばり",
     "type": "ノーマル",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 80,
     "power": 0
   },
@@ -1331,7 +1331,7 @@
     "name": "ぜったいれいど",
     "type": "こおり",
     "pp": 5,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 30,
     "power": 1
   },
@@ -1339,7 +1339,7 @@
     "name": "つのドリル",
     "type": "ノーマル",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 30,
     "power": 1
   },
@@ -1347,7 +1347,7 @@
     "name": "ねむる",
     "type": "エスパー",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1355,7 +1355,7 @@
     "name": "ねごと",
     "type": "ノーマル",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1363,7 +1363,7 @@
     "name": "かみつく",
     "type": "あく",
     "pp": 25,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 60
   },
@@ -1371,7 +1371,7 @@
     "name": "スピードスター",
     "type": "ノーマル",
     "pp": 20,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 0,
     "power": 60
   },
@@ -1379,7 +1379,7 @@
     "name": "がむしゃら",
     "type": "ノーマル",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 1
   },
@@ -1387,7 +1387,7 @@
     "name": "どろばくだん",
     "type": "じめん",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 85,
     "power": 65
   },
@@ -1395,7 +1395,7 @@
     "name": "あくのはどう",
     "type": "あく",
     "pp": 15,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 80
   },
@@ -1403,7 +1403,7 @@
     "name": "やつあたり",
     "type": "ノーマル",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 102
   },
@@ -1411,7 +1411,7 @@
     "name": "つるぎのまい",
     "type": "ノーマル",
     "pp": 30,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1419,7 +1419,7 @@
     "name": "いえき",
     "type": "どく",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 100,
     "power": 0
   },
@@ -1427,7 +1427,7 @@
     "name": "はきだす",
     "type": "ノーマル",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 1
   },
@@ -1435,7 +1435,7 @@
     "name": "のみこむ",
     "type": "ノーマル",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1443,7 +1443,7 @@
     "name": "たくわえる",
     "type": "ノーマル",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1451,7 +1451,7 @@
     "name": "フラッシュ",
     "type": "ノーマル",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 100,
     "power": 0
   },
@@ -1459,7 +1459,7 @@
     "name": "でんじふゆう",
     "type": "でんき",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1467,7 +1467,7 @@
     "name": "はっぱカッター",
     "type": "くさ",
     "pp": 25,
-    "category": "物理",
+    "category": 0,
     "hitrate": 95,
     "power": 55
   },
@@ -1475,7 +1475,7 @@
     "name": "だましうち",
     "type": "あく",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 0,
     "power": 60
   },
@@ -1483,7 +1483,7 @@
     "name": "ハイパーボイス",
     "type": "ノーマル",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 90
   },
@@ -1491,7 +1491,7 @@
     "name": "じんつうりき",
     "type": "エスパー",
     "pp": 30,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 80
   },
@@ -1499,7 +1499,7 @@
     "name": "みずのはどう",
     "type": "みず",
     "pp": 20,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 60
   },
@@ -1507,7 +1507,7 @@
     "name": "いちゃもん",
     "type": "あく",
     "pp": 15,
-    "category": "変化",
+    "category": 2,
     "hitrate": 100,
     "power": 0
   },
@@ -1515,7 +1515,7 @@
     "name": "こおりのつぶて",
     "type": "こおり",
     "pp": 30,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 40
   },
@@ -1523,7 +1523,7 @@
     "name": "あられ",
     "type": "こおり",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1531,7 +1531,7 @@
     "name": "あまえる",
     "type": "ノーマル",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 100,
     "power": 0
   },
@@ -1539,7 +1539,7 @@
     "name": "ピヨピヨパンチ",
     "type": "ノーマル",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 70
   },
@@ -1547,7 +1547,7 @@
     "name": "じこあんじ",
     "type": "ノーマル",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1555,7 +1555,7 @@
     "name": "ダブルアタック",
     "type": "ノーマル",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 90,
     "power": 35
   },
@@ -1563,7 +1563,7 @@
     "name": "とっておき",
     "type": "ノーマル",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 130
   },
@@ -1571,7 +1571,7 @@
     "name": "トリックルーム",
     "type": "エスパー",
     "pp": 5,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1579,7 +1579,7 @@
     "name": "あくむ",
     "type": "ゴースト",
     "pp": 15,
-    "category": "変化",
+    "category": 2,
     "hitrate": 100,
     "power": 0
   },
@@ -1587,7 +1587,7 @@
     "name": "メガホーン",
     "type": "むし",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 85,
     "power": 120
   },
@@ -1595,7 +1595,7 @@
     "name": "でんげきは",
     "type": "でんき",
     "pp": 20,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 0,
     "power": 60
   },
@@ -1603,7 +1603,7 @@
     "name": "おんねん",
     "type": "ゴースト",
     "pp": 5,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1611,7 +1611,7 @@
     "name": "みらいよち",
     "type": "エスパー",
     "pp": 15,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 90,
     "power": 80
   },
@@ -1619,7 +1619,7 @@
     "name": "しおみず",
     "type": "みず",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 65
   },
@@ -1627,7 +1627,7 @@
     "name": "ミルクのみ",
     "type": "ノーマル",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1635,7 +1635,7 @@
     "name": "うたう",
     "type": "ノーマル",
     "pp": 15,
-    "category": "変化",
+    "category": 2,
     "hitrate": 55,
     "power": 0
   },
@@ -1643,7 +1643,7 @@
     "name": "ドラゴンダイブ",
     "type": "ドラゴン",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 75,
     "power": 100
   },
@@ -1651,7 +1651,7 @@
     "name": "ゴッドバード",
     "type": "ひこう",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 90,
     "power": 140
   },
@@ -1659,7 +1659,7 @@
     "name": "りゅうせいぐん",
     "type": "ドラゴン",
     "pp": 5,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 90,
     "power": 140
   },
@@ -1667,7 +1667,7 @@
     "name": "くさぶえ",
     "type": "くさ",
     "pp": 15,
-    "category": "変化",
+    "category": 2,
     "hitrate": 55,
     "power": 0
   },
@@ -1675,7 +1675,7 @@
     "name": "どくどくのキバ",
     "type": "どく",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 50
   },
@@ -1683,7 +1683,7 @@
     "name": "にどげり",
     "type": "かくとう",
     "pp": 30,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 30
   },
@@ -1691,7 +1691,7 @@
     "name": "てっぺき",
     "type": "はがね",
     "pp": 15,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1699,7 +1699,7 @@
     "name": "ブレイククロー",
     "type": "ノーマル",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 95,
     "power": 75
   },
@@ -1707,7 +1707,7 @@
     "name": "クロスポイズン",
     "type": "どく",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 70
   },
@@ -1715,7 +1715,7 @@
     "name": "メタルバースト",
     "type": "はがね",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 1
   },
@@ -1723,7 +1723,7 @@
     "name": "パワージェム",
     "type": "いわ",
     "pp": 20,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 70
   },
@@ -1731,7 +1731,7 @@
     "name": "マジカルリーフ",
     "type": "くさ",
     "pp": 20,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 0,
     "power": 60
   },
@@ -1739,7 +1739,7 @@
     "name": "おきみやげ",
     "type": "あく",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 100,
     "power": 0
   },
@@ -1747,7 +1747,7 @@
     "name": "バトンタッチ",
     "type": "ノーマル",
     "pp": 40,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1755,7 +1755,7 @@
     "name": "トリック",
     "type": "エスパー",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 100,
     "power": 0
   },
@@ -1763,7 +1763,7 @@
     "name": "しんくうは",
     "type": "かくとう",
     "pp": 30,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 40
   },
@@ -1771,7 +1771,7 @@
     "name": "ビルドアップ",
     "type": "かくとう",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1779,7 +1779,7 @@
     "name": "だいもんじ",
     "type": "ほのお",
     "pp": 5,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 85,
     "power": 120
   },
@@ -1787,7 +1787,7 @@
     "name": "かげうち",
     "type": "ゴースト",
     "pp": 30,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 40
   },
@@ -1795,7 +1795,7 @@
     "name": "ちいさくなる",
     "type": "ノーマル",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1803,7 +1803,7 @@
     "name": "とける",
     "type": "どく",
     "pp": 40,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1811,7 +1811,7 @@
     "name": "うらみ",
     "type": "ゴースト",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 100,
     "power": 0
   },
@@ -1819,7 +1819,7 @@
     "name": "はらだいこ",
     "type": "ノーマル",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1827,7 +1827,7 @@
     "name": "じたばた",
     "type": "ノーマル",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 1
   },
@@ -1835,7 +1835,7 @@
     "name": "ハサミギロチン",
     "type": "ノーマル",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 30,
     "power": 1
   },
@@ -1843,7 +1843,7 @@
     "name": "バレットパンチ",
     "type": "はがね",
     "pp": 30,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 40
   },
@@ -1851,7 +1851,7 @@
     "name": "うずしお",
     "type": "みず",
     "pp": 15,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 70,
     "power": 15
   },
@@ -1859,7 +1859,7 @@
     "name": "もろはのずつき",
     "type": "いわ",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 80,
     "power": 150
   },
@@ -1867,7 +1867,7 @@
     "name": "つぼをつく",
     "type": "ノーマル",
     "pp": 30,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1875,7 +1875,7 @@
     "name": "とおぼえ",
     "type": "ノーマル",
     "pp": 40,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1883,7 +1883,7 @@
     "name": "じゅうでん",
     "type": "でんき",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1891,7 +1891,7 @@
     "name": "ねっぷう",
     "type": "ほのお",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 90,
     "power": 100
   },
@@ -1899,7 +1899,7 @@
     "name": "みやぶる",
     "type": "ノーマル",
     "pp": 40,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1907,7 +1907,7 @@
     "name": "パワートリック",
     "type": "エスパー",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1915,7 +1915,7 @@
     "name": "まきつく",
     "type": "ノーマル",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 85,
     "power": 15
   },
@@ -1923,7 +1923,7 @@
     "name": "しびれごな",
     "type": "くさ",
     "pp": 30,
-    "category": "変化",
+    "category": 2,
     "hitrate": 75,
     "power": 0
   },
@@ -1931,7 +1931,7 @@
     "name": "どろかけ",
     "type": "じめん",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 20
   },
@@ -1939,7 +1939,7 @@
     "name": "ウェザーボール",
     "type": "ノーマル",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 50
   },
@@ -1947,7 +1947,7 @@
     "name": "ついばむ",
     "type": "ひこう",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 60
   },
@@ -1955,7 +1955,7 @@
     "name": "バリアー",
     "type": "エスパー",
     "pp": 30,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1963,7 +1963,7 @@
     "name": "リサイクル",
     "type": "ノーマル",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -1971,7 +1971,7 @@
     "name": "のしかかり",
     "type": "ノーマル",
     "pp": 15,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 85
   },
@@ -1979,7 +1979,7 @@
     "name": "パワーウィップ",
     "type": "くさ",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 85,
     "power": 120
   },
@@ -1987,7 +1987,7 @@
     "name": "むしのさざめき",
     "type": "むし",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 90
   },
@@ -1995,7 +1995,7 @@
     "name": "こうそくいどう",
     "type": "エスパー",
     "pp": 30,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -2003,7 +2003,7 @@
     "name": "すなかけ",
     "type": "じめん",
     "pp": 15,
-    "category": "変化",
+    "category": 2,
     "hitrate": 100,
     "power": 0
   },
@@ -2011,7 +2011,7 @@
     "name": "あさのひざし",
     "type": "ノーマル",
     "pp": 5,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -2019,7 +2019,7 @@
     "name": "きりふだ",
     "type": "ノーマル",
     "pp": 5,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 0,
     "power": 1
   },
@@ -2027,7 +2027,7 @@
     "name": "つきのひかり",
     "type": "ノーマル",
     "pp": 5,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -2035,7 +2035,7 @@
     "name": "はどうだん",
     "type": "かくとう",
     "pp": 20,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 0,
     "power": 90
   },
@@ -2043,7 +2043,7 @@
     "name": "なまける",
     "type": "ノーマル",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -2051,7 +2051,7 @@
     "name": "マグネットボム",
     "type": "はがね",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 0,
     "power": 60
   },
@@ -2059,7 +2059,7 @@
     "name": "シャドーパンチ",
     "type": "ゴースト",
     "pp": 20,
-    "category": "物理",
+    "category": 0,
     "hitrate": 0,
     "power": 60
   },
@@ -2067,7 +2067,7 @@
     "name": "いたみわけ",
     "type": "ノーマル",
     "pp": 20,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -2075,7 +2075,7 @@
     "name": "つつく",
     "type": "ひこう",
     "pp": 35,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 35
   },
@@ -2083,7 +2083,7 @@
     "name": "たつまき",
     "type": "ドラゴン",
     "pp": 20,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 100,
     "power": 40
   },
@@ -2091,7 +2091,7 @@
     "name": "ミラーショット",
     "type": "はがね",
     "pp": 10,
-    "category": "特殊",
+    "category": 1,
     "hitrate": 85,
     "power": 65
   },
@@ -2099,7 +2099,7 @@
     "name": "がんせきほう",
     "type": "いわ",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 90,
     "power": 150
   },
@@ -2107,7 +2107,7 @@
     "name": "テクスチャー2",
     "type": "ノーマル",
     "pp": 30,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -2115,7 +2115,7 @@
     "name": "タマゴうみ",
     "type": "ノーマル",
     "pp": 10,
-    "category": "変化",
+    "category": 2,
     "hitrate": 0,
     "power": 0
   },
@@ -2123,7 +2123,7 @@
     "name": "しんそく",
     "type": "ノーマル",
     "pp": 5,
-    "category": "物理",
+    "category": 0,
     "hitrate": 100,
     "power": 80
   },
@@ -2131,7 +2131,7 @@
     "name": "コメットパンチ",
     "type": "はがね",
     "pp": 10,
-    "category": "物理",
+    "category": 0,
     "hitrate": 85,
     "power": 100
   }
