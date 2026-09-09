@@ -13,6 +13,10 @@ class BaseMove:
         self.pp = data["pp"]
         self.hitrate = data["hitrate"]
 
+    # 追加効果が無い技はここで何もしない。追加効果がある技はサブクラスでオーバーライドする
+    def apply_effect(self, battle, attacker, defender):
+        pass
+
     def __repr__(self):
         parts = []
         for key, value in vars(self).items():

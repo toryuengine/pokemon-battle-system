@@ -5,6 +5,7 @@ from core.damage import calculate_damage
 from core.type_chart import get_effectiveness
 from move.base_move import BaseMove
 from pokemon import Pokemon
+from core.stat_stage import StatStages
 
 
 class Battle:
@@ -13,6 +14,9 @@ class Battle:
     def __init__(self, pokemon1: Pokemon, pokemon2: Pokemon):
         self.pokemon1 = pokemon1
         self.pokemon2 = pokemon2
+
+        self.stages1 = StatStages()
+        self.stages2 = StatStages()
 
     #バトルスタート
     def start_battle(self):
@@ -32,7 +36,7 @@ class Battle:
                 break
 
     # ここ
-    # attackerが持つ技の中からランダムに1つ選ぶ
+    # attackerが持つ技リストからランダムに1つ選ぶ
     def select_move(self, attacker: Pokemon) -> BaseMove:
         return random.choice(attacker.moves)
 
@@ -75,6 +79,9 @@ class Battle:
             result["damage"] = damage
             result["effectiveness"] = get_effectiveness(move.type, defender.type1, defender.type2)
 
+        # 命中していれば、かみくだくの防御ダウンのような技固有の追加効果を発動させる（無い技はBaseMoveのデフォルトで何もしない）
+        move.apply_effect(self, attacker, defender)
+
         return result
 
     # どちらかが瀕死なら生き残っている方を返す。両方生存/両方瀕死ならNone
@@ -89,3 +96,26 @@ class Battle:
         if pokemon2_fainted:
             return self.pokemon1
         return None
+
+    # targetがpokemon1/pokemon2のどちらかを見て、対応するランク補正(StatStages)を返す
+    def get_stages(self, target: Pokemon) -> StatStages:
+        if target is self.pokemon1:
+            return self.stages1
+        elif target is self.pokemon2:
+            return self.stages2
+        else:
+            raise ValueError("target is not part of this battle")
+
+    # targetのstatランクをchangeだけ変更する（-6〜6にクランプ）
+    def change_stage(self, target: Pokemon, stat: str, change: int):
+        stages = self.get_stages(target)
+        current_stage = getattr(stages, stat)
+        new_stage = max(-6, min(6, current_stage + change))
+        setattr(stages, stat, new_stage)
+
+    # chanceの確率でstat_nameのランクをstage_amountだけ変える（かみくだくの防御ダウンなどで使う）
+    def try_apply_stat_change(self, target, stat_name, stage_amount, chance):
+        if random.random() < chance:
+            self.change_stage(target, stat_name, stage_amount)
+            return True
+        return False
