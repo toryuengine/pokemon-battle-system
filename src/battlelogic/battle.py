@@ -1,11 +1,11 @@
 import random
 
-from core.accuracy import check_hit
-from core.damage import calculate_damage
-from core.type_chart import get_effectiveness
+from battlelogic.accuracy import check_hit
+from battlelogic.damage import calculate_damage
+from battlelogic.stat_stage import StatStages
+from battlelogic.type_chart import get_effectiveness
 from move.base_move import BaseMove
 from pokemon import Pokemon
-from core.stat_stage import StatStages
 
 
 class Battle:

@@ -1,4 +1,4 @@
-from core.battle import Battle
+from battlelogic.battle import Battle
 from pokemon import Pokemon
 
 
