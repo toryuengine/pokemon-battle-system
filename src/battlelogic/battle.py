@@ -18,9 +18,12 @@ class Battle:
         self.stages1 = StatStages()
         self.stages2 = StatStages()
 
+    # 双方が回復技しか選ばない等でHPが減らないケースがあるため、無限ループ防止に上限を設ける
+    MAX_TURNS = 1000
+
     #バトルスタート
     def start_battle(self):
-        while True:
+        for _ in range(self.MAX_TURNS):
             move1 = self.select_move(self.pokemon1) #技のインスタンスが入っている
             move2 = self.select_move(self.pokemon2) #技のインスタンスが入っている
             attacker, defender = self.get_attacker_and_defender(move1, move2)  # 先行後攻を取得
@@ -30,6 +33,11 @@ class Battle:
             self.use_move(attacker, defender, attacker_move)
             if self.get_winner() is not None:
                 break
+
+            # ひるみ中なら後攻は行動できずターン終了（ひるみは1ターンだけなのでここで解除する）
+            if defender.current_status.is_flinched:
+                defender.current_status.is_flinched = False
+                continue
 
             self.use_move(defender, attacker, defender_move)
             if self.get_winner() is not None:
@@ -72,6 +80,7 @@ class Battle:
             return result
 
         result["hit"] = True
+        damage = 0
 
         # 変化技(CATEGORY_STATUS)はダメージを与えないので、物理・特殊技の時だけダメージ計算する
         if move.category != CATEGORY_STATUS:
@@ -80,8 +89,8 @@ class Battle:
             result["damage"] = damage
             result["effectiveness"] = get_effectiveness(move.type, defender.type1, defender.type2)
 
-        # 命中していれば、かみくだくの防御ダウンのような技固有の追加効果を発動させる（無い技はBaseMoveのデフォルトで何もしない）
-        move.apply_effect(self, attacker, defender)
+        # 命中していれば、技固有の追加効果を発動させる（無い技はBaseMoveのデフォルトで何もしない）
+        move.apply_effect(self, attacker, defender, damage)
 
         return result
 
@@ -107,6 +116,11 @@ class Battle:
         else:
             raise ValueError("target is not part of this battle")
 
+    # 両者の能力ランクを全て0にリセットする（はきなど）
+    def reset_all_stages(self):
+        self.stages1 = StatStages()
+        self.stages2 = StatStages()
+
     # targetのstatランクをchangeだけ変更する（-6〜6にクランプ）
     def change_stage(self, target: Pokemon, stat: str, change: int):
         stages = self.get_stages(target)
@@ -120,3 +134,44 @@ class Battle:
             self.change_stage(target, stat_name, stage_amount)
             return True
         return False
+
+    # chanceの確率で複数の能力ランクを同時に変える（げんしのちからのような複合効果用。1回の判定で全部まとめて適用する）
+    def try_apply_stat_multi_change(self, target, stat_changes, chance):
+        if random.random() < chance:
+            for stat_name, stage_amount in stat_changes:
+                self.change_stage(target, stat_name, stage_amount)
+            return True
+        return False
+
+    # chanceの確率でtargetに状態異常を付与する（既に何か状態異常が付いている場合は上書きしない）
+    def try_apply_status(self, target, condition, chance):
+        if target.current_status.status_condition is not None:
+            return False
+        if random.random() < chance:
+            target.current_status.status_condition = condition
+            return True
+        return False
+
+    # chanceの確率でtargetをひるませる（そのターンだけ行動不能。start_battle側で判定・解除する）
+    def try_apply_flinch(self, target, chance):
+        if random.random() < chance:
+            target.current_status.is_flinched = True
+            return True
+        return False
+
+    # attacker自身がdamageのratio分だけ反動ダメージを受ける（フレアドライブなど）
+    def apply_recoil(self, attacker, damage, ratio):
+        recoil_damage = max(1, int(damage * ratio))
+        self.apply_damage(attacker, recoil_damage)
+
+    # attacker自身がdamageのratio分だけHPを回復する（ギガドレインなど）
+    def apply_drain(self, attacker, damage, ratio):
+        heal_amount = int(damage * ratio)
+        max_hp = attacker.status.hp
+        attacker.current_status.current_hp = min(max_hp, attacker.current_status.current_hp + heal_amount)
+
+    # attacker自身が最大HPのratio分だけ回復する（じこさいせいなど）
+    def apply_heal(self, attacker, ratio):
+        max_hp = attacker.status.hp
+        heal_amount = int(max_hp * ratio)
+        attacker.current_status.current_hp = min(max_hp, attacker.current_status.current_hp + heal_amount)

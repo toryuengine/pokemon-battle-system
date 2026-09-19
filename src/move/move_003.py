@@ -5,4 +5,4 @@ from move.base_move import BaseMove
 class SleepPowder(BaseMove):
     def __init__(self):
         super().__init__(id=3)
-        self.causes_sleep = True
+        self.effects = [('status', 'target', 'sleep', 1.0)]

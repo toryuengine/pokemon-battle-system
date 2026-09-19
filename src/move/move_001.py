@@ -5,4 +5,4 @@ from move.base_move import BaseMove
 class SludgeBomb(BaseMove):
     def __init__(self):
         super().__init__(id=1)
-        self.poison_chance = 0.3
+        self.effects = [('status', 'target', 'poison', 0.3)]

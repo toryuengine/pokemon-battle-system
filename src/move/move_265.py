@@ -2,6 +2,7 @@ from move.base_move import BaseMove
 
 
 # しんそく
-class しんそく(BaseMove):
+class ExtremeSpeed(BaseMove):
     def __init__(self):
-        super().__init__(id=265)
+        super().__init__(id=265)  # 優先度（先制技）は未対応
+        self.effects = []

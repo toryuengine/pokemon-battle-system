@@ -2,6 +2,7 @@ from move.base_move import BaseMove
 
 
 # みやぶる
-class みやぶる(BaseMove):
+class Foresight(BaseMove):
     def __init__(self):
-        super().__init__(id=237)
+        super().__init__(id=237)  # 命中率・回避率のランク補正は未対応
+        self.effects = []

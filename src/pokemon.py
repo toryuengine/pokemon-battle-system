@@ -22,6 +22,8 @@ class PokemonStatus:
 class CurrentStatus:
     current_hp: int
     status_condition: Optional[str] = None
+    # ひるみはそのターン限りの一時的な状態なので、行動チェック後にBattle側でリセットする
+    is_flinched: bool = False
 
 
 class Pokemon:

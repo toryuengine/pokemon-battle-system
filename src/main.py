@@ -13,7 +13,8 @@ def main():
         battle.start_battle()
 
         winner = battle.get_winner()
-        winrate[winner.name] = winrate.get(winner.name, 0) + 1
+        winner_name = winner.name if winner is not None else "引き分け"
+        winrate[winner_name] = winrate.get(winner_name, 0) + 1
 
     print(winrate)
 

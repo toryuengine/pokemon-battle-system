@@ -2,6 +2,7 @@ from move.base_move import BaseMove
 
 
 # マジカルリーフ
-class マジカルリーフ(BaseMove):
+class MagicalLeaf(BaseMove):
     def __init__(self):
         super().__init__(id=216)
+        self.effects = []

@@ -5,4 +5,4 @@ from move.base_move import BaseMove
 class FrenzyPlant(BaseMove):
     def __init__(self):
         super().__init__(id=11)
-        self.requires_recharge = True
+        self.effects = []

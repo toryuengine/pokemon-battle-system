@@ -2,6 +2,7 @@ from move.base_move import BaseMove
 
 
 # ハサミギロチン
-class ハサミギロチン(BaseMove):
+class Guillotine(BaseMove):
     def __init__(self):
-        super().__init__(id=229)
+        super().__init__(id=229)  # 一撃必殺技は未実装
+        self.effects = []

@@ -2,6 +2,7 @@ from move.base_move import BaseMove
 
 
 # ぜったいれいど
-class ぜったいれいど(BaseMove):
+class SheerCold(BaseMove):
     def __init__(self):
-        super().__init__(id=166)
+        super().__init__(id=166)  # 一撃必殺技は未実装
+        self.effects = []

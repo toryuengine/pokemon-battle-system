@@ -2,6 +2,7 @@ from move.base_move import BaseMove
 
 
 # あなをほる
-class あなをほる(BaseMove):
+class Dig(BaseMove):
     def __init__(self):
-        super().__init__(id=135)
+        super().__init__(id=135)  # 溜め技・回避ターンのような複数ターンにまたがる処理は未実装
+        self.effects = []

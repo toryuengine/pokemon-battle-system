@@ -2,6 +2,7 @@ from move.base_move import BaseMove
 
 
 # そらをとぶ
-class そらをとぶ(BaseMove):
+class Fly(BaseMove):
     def __init__(self):
-        super().__init__(id=141)
+        super().__init__(id=141)  # 溜め技・回避ターンのような複数ターンにまたがる処理は未実装
+        self.effects = []

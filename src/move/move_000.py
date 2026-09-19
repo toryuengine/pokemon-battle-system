@@ -5,4 +5,4 @@ from move.base_move import BaseMove
 class LeafStorm(BaseMove):
     def __init__(self):
         super().__init__(id=0)
-        self.spatk_drop_stage = 2
+        self.effects = [('stat', 'self', 'spatk', -2, 1.0)]

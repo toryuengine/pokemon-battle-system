@@ -2,6 +2,7 @@ from move.base_move import BaseMove
 
 
 # サイコカッター
-class サイコカッター(BaseMove):
+class PsychoCut(BaseMove):
     def __init__(self):
         super().__init__(id=101)
+        self.effects = []

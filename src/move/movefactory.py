@@ -1,271 +1,271 @@
 from move.base_move import BaseMove
-from move.leaf_storm import LeafStorm
-from move.sludge_bomb import SludgeBomb
-from move.amnesia import Amnesia
-from move.sleep_powder import SleepPowder
-from move.giga_drain import GigaDrain
-from move.ingrain import Ingrain
-from move.leech_seed import LeechSeed
-from move.seed_bomb import SeedBomb
-from move.earthquake import Earthquake
-from move.outrage import Outrage
-from move.curse import Curse
-from move.frenzy_plant import FrenzyPlant
-from move.hyper_beam import HyperBeam
-from move.synthesis import Synthesis
-from move.move_014 import かえんほうしゃ
-from move.move_015 import エアスラッシュ
-from move.move_016 import えんまく
-from move.move_017 import こわいかお
-from move.move_018 import オーバーヒート
-from move.move_019 import ソーラービーム
-from move.move_020 import おにび
-from move.move_021 import にほんばれ
-from move.flare_drive import FlareDrive
-from move.crunch import Crunch
-from move.dragon_claw import DragonClaw
-from move.move_025 import ブラストバーン
-from move.move_026 import きあいだま
-from move.move_027 import げんしのちから
-from move.move_028 import ハイドロポンプ
-from move.move_029 import シグナルビーム
-from move.move_030 import こごえるかぜ
-from move.move_031 import ミラーコート
-from move.move_032 import たきのぼり
-from move.move_033 import きあいパンチ
-from move.move_034 import かげぶんしん
-from move.move_035 import アクアリング
-from move.move_036 import アクアテール
-from move.move_037 import ゆきなだれ
-from move.move_038 import しねんのずつき
-from move.move_039 import ハイドロカノン
-from move.move_040 import れいとうビーム
-from move.move_041 import どくどく
-from move.move_042 import みがわり
-from move.move_043 import しぼりとる
-from move.move_044 import ひかりのかべ
-from move.move_045 import リフレクター
-from move.move_046 import ほのおのパンチ
-from move.move_047 import かみなりパンチ
-from move.move_048 import シャドークロー
-from move.move_049 import でんこうせっか
-from move.move_050 import きしかいせい
-from move.move_051 import こらえる
-from move.move_052 import つばめがえし
-from move.move_053 import こおりのキバ
-from move.move_054 import いわなだれ
-from move.move_055 import ばかぢから
-from move.move_056 import りゅうのまい
-from move.move_057 import リーフブレード
-from move.move_058 import いやなおと
-from move.move_059 import シザークロス
-from move.move_060 import つじぎり
-from move.move_061 import りゅうのはどう
-from move.move_062 import ブレイズキック
-from move.move_063 import ストーンエッジ
-from move.move_064 import れいとうパンチ
-from move.move_065 import まもる
-from move.move_066 import アームハンマー
-from move.move_067 import だくりゅう
-from move.move_068 import だいちのちから
-from move.move_069 import カウンター
-from move.move_070 import くさむすび
-from move.move_071 import ウッドハンマー
-from move.move_072 import インファイト
-from move.move_073 import とんぼがえり
-from move.move_074 import ねこだまし
-from move.move_075 import ダストシュート
-from move.move_076 import メタルクロー
-from move.move_077 import かわらわり
-from move.move_078 import はたきおとす
-from move.move_079 import ドリルくちばし
-from move.move_080 import アクアジェット
-from move.move_081 import なみのり
-from move.move_082 import ふぶき
-from move.move_083 import ラスターカノン
-from move.move_084 import おどろかす
-from move.move_085 import すなじごく
-from move.move_086 import トライアタック
-from move.move_087 import すなあらし
-from move.move_088 import じわれ
-from move.move_089 import ギガインパクト
-from move.move_090 import きりさく
-from move.move_091 import ボーンラッシュ
-from move.move_092 import アイアンテール
-from move.move_093 import アイアンヘッド
-from move.move_094 import ドレインパンチ
-from move.move_095 import どくづき
-from move.move_096 import みきり
-from move.move_097 import じこさいせい
-from move.move_098 import サイコキネシス
-from move.move_099 import シャドーボール
-from move.move_100 import めいそう
-from move.move_101 import サイコカッター
-from move.move_102 import ダイビング
-from move.move_103 import あくび
-from move.move_104 import おんがえし
-from move.move_105 import でんじは
-from move.move_106 import からげんき
-from move.move_107 import ほのおのキバ
-from move.move_108 import かみなりのキバ
-from move.move_109 import しっぺがえし
-from move.move_110 import あくまのキッス
-from move.move_111 import うそなき
-from move.move_112 import ゆめくい
-from move.move_113 import ほろびのうた
-from move.move_114 import くろいまなざし
-from move.move_115 import エナジーボール
-from move.move_116 import まねっこ
-from move.move_117 import ものまね
-from move.move_118 import さいみんじゅつ
-from move.move_119 import _10まんボルト
-from move.move_120 import チャージビーム
-from move.move_121 import ほうでん
-from move.move_122 import あやしいひかり
-from move.move_123 import メロメロ
-from move.move_124 import かみなり
-from move.move_125 import あまごい
-from move.move_126 import スカイアッパー
-from move.move_127 import ばくれつパンチ
-from move.move_128 import キノコのほうし
-from move.move_129 import ジャイロボール
-from move.move_130 import むしくい
-from move.move_131 import リベンジ
-from move.move_132 import ステルスロック
-from move.move_133 import どくびし
-from move.move_134 import まきびし
-from move.move_135 import あなをほる
-from move.move_136 import いばる
-from move.move_137 import だいばくはつ
-from move.move_138 import すてみタックル
-from move.move_139 import はがねのつばさ
-from move.move_140 import ほえる
-from move.move_141 import そらをとぶ
-from move.move_142 import はねやすめ
-from move.move_143 import ブレイブバード
-from move.move_144 import ふいうち
-from move.move_145 import ちょうはつ
-from move.move_146 import おしおき
-from move.move_147 import あばれる
-from move.move_148 import つっぱり
-from move.move_149 import なげつける
-from move.move_150 import クロスチョップ
-from move.move_151 import ぎんいろのかぜ
-from move.move_152 import エアカッター
-from move.move_153 import あやしいかぜ
-from move.move_154 import かいふくしれい
-from move.move_155 import みちづれ
-from move.move_156 import おいうち
-from move.move_157 import こうげきしれい
-from move.move_158 import ぼうぎょしれい
-from move.move_159 import たたきつける
-from move.move_160 import てんしのキッス
-from move.move_161 import わるだくみ
-from move.move_162 import ボルテッカー
-from move.move_163 import ずつき
-from move.move_164 import アンコール
-from move.move_165 import かなしばり
-from move.move_166 import ぜったいれいど
-from move.move_167 import つのドリル
-from move.move_168 import ねむる
-from move.move_169 import ねごと
-from move.move_170 import かみつく
-from move.move_171 import スピードスター
-from move.move_172 import がむしゃら
-from move.move_173 import どろばくだん
-from move.move_174 import あくのはどう
-from move.move_175 import やつあたり
-from move.move_176 import つるぎのまい
-from move.move_177 import いえき
-from move.move_178 import はきだす
-from move.move_179 import のみこむ
-from move.move_180 import たくわえる
-from move.move_181 import フラッシュ
-from move.move_182 import でんじふゆう
-from move.move_183 import はっぱカッター
-from move.move_184 import だましうち
-from move.move_185 import ハイパーボイス
-from move.move_186 import じんつうりき
-from move.move_187 import みずのはどう
-from move.move_188 import いちゃもん
-from move.move_189 import こおりのつぶて
-from move.move_190 import あられ
-from move.move_191 import あまえる
-from move.move_192 import ピヨピヨパンチ
-from move.move_193 import じこあんじ
-from move.move_194 import ダブルアタック
-from move.move_195 import とっておき
-from move.move_196 import トリックルーム
-from move.move_197 import あくむ
-from move.move_198 import メガホーン
-from move.move_199 import でんげきは
-from move.move_200 import おんねん
-from move.move_201 import みらいよち
-from move.move_202 import しおみず
-from move.move_203 import ミルクのみ
-from move.move_204 import うたう
-from move.move_205 import ドラゴンダイブ
-from move.move_206 import ゴッドバード
-from move.move_207 import りゅうせいぐん
-from move.move_208 import くさぶえ
-from move.move_209 import どくどくのキバ
-from move.move_210 import にどげり
-from move.move_211 import てっぺき
-from move.move_212 import ブレイククロー
-from move.move_213 import クロスポイズン
-from move.move_214 import メタルバースト
-from move.move_215 import パワージェム
-from move.move_216 import マジカルリーフ
-from move.move_217 import おきみやげ
-from move.move_218 import バトンタッチ
-from move.move_219 import トリック
-from move.move_220 import しんくうは
-from move.move_221 import ビルドアップ
-from move.move_222 import だいもんじ
-from move.move_223 import かげうち
-from move.move_224 import ちいさくなる
-from move.move_225 import とける
-from move.move_226 import うらみ
-from move.move_227 import はらだいこ
-from move.move_228 import じたばた
-from move.move_229 import ハサミギロチン
-from move.move_230 import バレットパンチ
-from move.move_231 import うずしお
-from move.move_232 import もろはのずつき
-from move.move_233 import つぼをつく
-from move.move_234 import とおぼえ
-from move.move_235 import じゅうでん
-from move.move_236 import ねっぷう
-from move.move_237 import みやぶる
-from move.move_238 import パワートリック
-from move.move_239 import まきつく
-from move.move_240 import しびれごな
-from move.move_241 import どろかけ
-from move.move_242 import ウェザーボール
-from move.move_243 import ついばむ
-from move.move_244 import バリアー
-from move.move_245 import リサイクル
-from move.move_246 import のしかかり
-from move.move_247 import パワーウィップ
-from move.move_248 import むしのさざめき
-from move.move_249 import こうそくいどう
-from move.move_250 import すなかけ
-from move.move_251 import あさのひざし
-from move.move_252 import きりふだ
-from move.move_253 import つきのひかり
-from move.move_254 import はどうだん
-from move.move_255 import なまける
-from move.move_256 import マグネットボム
-from move.move_257 import シャドーパンチ
-from move.move_258 import いたみわけ
-from move.move_259 import つつく
-from move.move_260 import たつまき
-from move.move_261 import ミラーショット
-from move.move_262 import がんせきほう
-from move.move_263 import テクスチャー2
-from move.move_264 import タマゴうみ
-from move.move_265 import しんそく
-from move.move_266 import コメットパンチ
+from move.move_000 import LeafStorm
+from move.move_001 import SludgeBomb
+from move.move_002 import Amnesia
+from move.move_003 import SleepPowder
+from move.move_004 import GigaDrain
+from move.move_005 import Ingrain
+from move.move_006 import LeechSeed
+from move.move_007 import SeedBomb
+from move.move_008 import Earthquake
+from move.move_009 import Outrage
+from move.move_010 import Curse
+from move.move_011 import FrenzyPlant
+from move.move_012 import HyperBeam
+from move.move_013 import Synthesis
+from move.move_014 import Flamethrower
+from move.move_015 import AirSlash
+from move.move_016 import Smokescreen
+from move.move_017 import ScaryFace
+from move.move_018 import Overheat
+from move.move_019 import SolarBeam
+from move.move_020 import WillOWisp
+from move.move_021 import SunnyDay
+from move.move_022 import FlareBlitz
+from move.move_023 import Crunch
+from move.move_024 import DragonClaw
+from move.move_025 import BlastBurn
+from move.move_026 import FocusBlast
+from move.move_027 import AncientPower
+from move.move_028 import HydroPump
+from move.move_029 import SignalBeam
+from move.move_030 import IcyWind
+from move.move_031 import MirrorCoat
+from move.move_032 import Waterfall
+from move.move_033 import FocusPunch
+from move.move_034 import DoubleTeam
+from move.move_035 import AquaRing
+from move.move_036 import AquaTail
+from move.move_037 import Avalanche
+from move.move_038 import ZenHeadbutt
+from move.move_039 import HydroCannon
+from move.move_040 import IceBeam
+from move.move_041 import Toxic
+from move.move_042 import Substitute
+from move.move_043 import WringOut
+from move.move_044 import LightScreen
+from move.move_045 import Reflect
+from move.move_046 import FirePunch
+from move.move_047 import ThunderPunch
+from move.move_048 import ShadowClaw
+from move.move_049 import QuickAttack
+from move.move_050 import Reversal
+from move.move_051 import Endure
+from move.move_052 import AerialAce
+from move.move_053 import IceFang
+from move.move_054 import RockSlide
+from move.move_055 import Superpower
+from move.move_056 import DragonDance
+from move.move_057 import LeafBlade
+from move.move_058 import Screech
+from move.move_059 import XScissor
+from move.move_060 import NightSlash
+from move.move_061 import DragonPulse
+from move.move_062 import BlazeKick
+from move.move_063 import StoneEdge
+from move.move_064 import IcePunch
+from move.move_065 import Protect
+from move.move_066 import HammerArm
+from move.move_067 import MuddyWater
+from move.move_068 import EarthPower
+from move.move_069 import Counter
+from move.move_070 import GrassKnot
+from move.move_071 import WoodHammer
+from move.move_072 import CloseCombat
+from move.move_073 import UTurn
+from move.move_074 import FakeOut
+from move.move_075 import GunkShot
+from move.move_076 import MetalClaw
+from move.move_077 import RockSmash
+from move.move_078 import KnockOff
+from move.move_079 import DrillPeck
+from move.move_080 import AquaJet
+from move.move_081 import Surf
+from move.move_082 import Blizzard
+from move.move_083 import FlashCannon
+from move.move_084 import Astonish
+from move.move_085 import SandTomb
+from move.move_086 import TriAttack
+from move.move_087 import Sandstorm
+from move.move_088 import Fissure
+from move.move_089 import GigaImpact
+from move.move_090 import Slash
+from move.move_091 import BoneRush
+from move.move_092 import IronTail
+from move.move_093 import IronHead
+from move.move_094 import DrainPunch
+from move.move_095 import PoisonJab
+from move.move_096 import Detect
+from move.move_097 import Recover
+from move.move_098 import Psychic
+from move.move_099 import ShadowBall
+from move.move_100 import CalmMind
+from move.move_101 import PsychoCut
+from move.move_102 import Dive
+from move.move_103 import Yawn
+from move.move_104 import Return
+from move.move_105 import ThunderWave
+from move.move_106 import Facade
+from move.move_107 import FireFang
+from move.move_108 import ThunderFang
+from move.move_109 import Payback
+from move.move_110 import LovelyKiss
+from move.move_111 import FakeTears
+from move.move_112 import DreamEater
+from move.move_113 import PerishSong
+from move.move_114 import MeanLook
+from move.move_115 import EnergyBall
+from move.move_116 import Mimic
+from move.move_117 import Transform
+from move.move_118 import Hypnosis
+from move.move_119 import Thunderbolt
+from move.move_120 import ChargeBeam
+from move.move_121 import Discharge
+from move.move_122 import ConfuseRay
+from move.move_123 import Attract
+from move.move_124 import Thunder
+from move.move_125 import RainDance
+from move.move_126 import SkyUppercut
+from move.move_127 import DynamicPunch
+from move.move_128 import Spore
+from move.move_129 import GyroBall
+from move.move_130 import BugBite
+from move.move_131 import Revenge
+from move.move_132 import StealthRock
+from move.move_133 import ToxicSpikes
+from move.move_134 import Spikes
+from move.move_135 import Dig
+from move.move_136 import Swagger
+from move.move_137 import Explosion
+from move.move_138 import TakeDown
+from move.move_139 import SteelWing
+from move.move_140 import Roar
+from move.move_141 import Fly
+from move.move_142 import Roost
+from move.move_143 import BraveBird
+from move.move_144 import Feint
+from move.move_145 import Taunt
+from move.move_146 import Punishment
+from move.move_147 import Thrash
+from move.move_148 import ArmThrust
+from move.move_149 import Fling
+from move.move_150 import CrossChop
+from move.move_151 import SilverWind
+from move.move_152 import AirCutter
+from move.move_153 import OminousWind
+from move.move_154 import HealOrder
+from move.move_155 import DestinyBond
+from move.move_156 import Pursuit
+from move.move_157 import AttackOrder
+from move.move_158 import DefendOrder
+from move.move_159 import Slam
+from move.move_160 import SweetKiss
+from move.move_161 import NastyPlot
+from move.move_162 import VoltTackle
+from move.move_163 import Headbutt
+from move.move_164 import Encore
+from move.move_165 import Disable
+from move.move_166 import SheerCold
+from move.move_167 import HornDrill
+from move.move_168 import Rest
+from move.move_169 import SleepTalk
+from move.move_170 import Bite
+from move.move_171 import Swift
+from move.move_172 import Flail
+from move.move_173 import MudBomb
+from move.move_174 import DarkPulse
+from move.move_175 import Frustration
+from move.move_176 import SwordsDance
+from move.move_177 import Haze
+from move.move_178 import SpitUp
+from move.move_179 import Swallow
+from move.move_180 import Stockpile
+from move.move_181 import Flash
+from move.move_182 import MagnetRise
+from move.move_183 import RazorLeaf
+from move.move_184 import SuckerPunch
+from move.move_185 import HyperVoice
+from move.move_186 import Extrasensory
+from move.move_187 import WaterPulse
+from move.move_188 import Torment
+from move.move_189 import IceShard
+from move.move_190 import Hail
+from move.move_191 import Charm
+from move.move_192 import ChickPunch
+from move.move_193 import PsychUp
+from move.move_194 import DoubleHit
+from move.move_195 import LastResort
+from move.move_196 import TrickRoom
+from move.move_197 import Nightmare
+from move.move_198 import Megahorn
+from move.move_199 import ZapCannon
+from move.move_200 import Grudge
+from move.move_201 import FutureSight
+from move.move_202 import Brine
+from move.move_203 import MilkDrink
+from move.move_204 import Sing
+from move.move_205 import DragonRush
+from move.move_206 import SkyAttack
+from move.move_207 import DracoMeteor
+from move.move_208 import GrassWhistle
+from move.move_209 import PoisonFang
+from move.move_210 import DoubleKick
+from move.move_211 import IronDefense
+from move.move_212 import CrushClaw
+from move.move_213 import CrossPoison
+from move.move_214 import MetalBurst
+from move.move_215 import PowerGem
+from move.move_216 import MagicalLeaf
+from move.move_217 import Memento
+from move.move_218 import BatonPass
+from move.move_219 import Trick
+from move.move_220 import VacuumWave
+from move.move_221 import BulkUp
+from move.move_222 import FireBlast
+from move.move_223 import ShadowSneak
+from move.move_224 import Minimize
+from move.move_225 import AcidArmor
+from move.move_226 import Spite
+from move.move_227 import BellyDrum
+from move.move_228 import Struggle2
+from move.move_229 import Guillotine
+from move.move_230 import BulletPunch
+from move.move_231 import Whirlpool
+from move.move_232 import HeadSmash
+from move.move_233 import Acupressure
+from move.move_234 import Howl
+from move.move_235 import Charge
+from move.move_236 import HeatWave
+from move.move_237 import Foresight
+from move.move_238 import PowerTrick
+from move.move_239 import Wrap
+from move.move_240 import StunSpore
+from move.move_241 import MudSlap
+from move.move_242 import WeatherBall
+from move.move_243 import Peck
+from move.move_244 import Barrier
+from move.move_245 import Recycle
+from move.move_246 import BodySlam
+from move.move_247 import PowerWhip
+from move.move_248 import BugBuzz
+from move.move_249 import Agility
+from move.move_250 import SandAttack
+from move.move_251 import MorningSun
+from move.move_252 import TrumpCard
+from move.move_253 import Moonlight
+from move.move_254 import AuraSphere
+from move.move_255 import SlackOff
+from move.move_256 import MagnetBomb
+from move.move_257 import ShadowPunch
+from move.move_258 import PainSplit
+from move.move_259 import Peck2
+from move.move_260 import Twister
+from move.move_261 import MirrorShot
+from move.move_262 import RockWrecker
+from move.move_263 import UnknownMove263
+from move.move_264 import UnknownMove264
+from move.move_265 import ExtremeSpeed
+from move.move_266 import CometPunch
 
 _MOVE_CLASSES = {
     0: LeafStorm,
@@ -282,259 +282,259 @@ _MOVE_CLASSES = {
     11: FrenzyPlant,
     12: HyperBeam,
     13: Synthesis,
-    14: かえんほうしゃ,
-    15: エアスラッシュ,
-    16: えんまく,
-    17: こわいかお,
-    18: オーバーヒート,
-    19: ソーラービーム,
-    20: おにび,
-    21: にほんばれ,
-    22: FlareDrive,
+    14: Flamethrower,
+    15: AirSlash,
+    16: Smokescreen,
+    17: ScaryFace,
+    18: Overheat,
+    19: SolarBeam,
+    20: WillOWisp,
+    21: SunnyDay,
+    22: FlareBlitz,
     23: Crunch,
     24: DragonClaw,
-    25: ブラストバーン,
-    26: きあいだま,
-    27: げんしのちから,
-    28: ハイドロポンプ,
-    29: シグナルビーム,
-    30: こごえるかぜ,
-    31: ミラーコート,
-    32: たきのぼり,
-    33: きあいパンチ,
-    34: かげぶんしん,
-    35: アクアリング,
-    36: アクアテール,
-    37: ゆきなだれ,
-    38: しねんのずつき,
-    39: ハイドロカノン,
-    40: れいとうビーム,
-    41: どくどく,
-    42: みがわり,
-    43: しぼりとる,
-    44: ひかりのかべ,
-    45: リフレクター,
-    46: ほのおのパンチ,
-    47: かみなりパンチ,
-    48: シャドークロー,
-    49: でんこうせっか,
-    50: きしかいせい,
-    51: こらえる,
-    52: つばめがえし,
-    53: こおりのキバ,
-    54: いわなだれ,
-    55: ばかぢから,
-    56: りゅうのまい,
-    57: リーフブレード,
-    58: いやなおと,
-    59: シザークロス,
-    60: つじぎり,
-    61: りゅうのはどう,
-    62: ブレイズキック,
-    63: ストーンエッジ,
-    64: れいとうパンチ,
-    65: まもる,
-    66: アームハンマー,
-    67: だくりゅう,
-    68: だいちのちから,
-    69: カウンター,
-    70: くさむすび,
-    71: ウッドハンマー,
-    72: インファイト,
-    73: とんぼがえり,
-    74: ねこだまし,
-    75: ダストシュート,
-    76: メタルクロー,
-    77: かわらわり,
-    78: はたきおとす,
-    79: ドリルくちばし,
-    80: アクアジェット,
-    81: なみのり,
-    82: ふぶき,
-    83: ラスターカノン,
-    84: おどろかす,
-    85: すなじごく,
-    86: トライアタック,
-    87: すなあらし,
-    88: じわれ,
-    89: ギガインパクト,
-    90: きりさく,
-    91: ボーンラッシュ,
-    92: アイアンテール,
-    93: アイアンヘッド,
-    94: ドレインパンチ,
-    95: どくづき,
-    96: みきり,
-    97: じこさいせい,
-    98: サイコキネシス,
-    99: シャドーボール,
-    100: めいそう,
-    101: サイコカッター,
-    102: ダイビング,
-    103: あくび,
-    104: おんがえし,
-    105: でんじは,
-    106: からげんき,
-    107: ほのおのキバ,
-    108: かみなりのキバ,
-    109: しっぺがえし,
-    110: あくまのキッス,
-    111: うそなき,
-    112: ゆめくい,
-    113: ほろびのうた,
-    114: くろいまなざし,
-    115: エナジーボール,
-    116: まねっこ,
-    117: ものまね,
-    118: さいみんじゅつ,
-    119: _10まんボルト,
-    120: チャージビーム,
-    121: ほうでん,
-    122: あやしいひかり,
-    123: メロメロ,
-    124: かみなり,
-    125: あまごい,
-    126: スカイアッパー,
-    127: ばくれつパンチ,
-    128: キノコのほうし,
-    129: ジャイロボール,
-    130: むしくい,
-    131: リベンジ,
-    132: ステルスロック,
-    133: どくびし,
-    134: まきびし,
-    135: あなをほる,
-    136: いばる,
-    137: だいばくはつ,
-    138: すてみタックル,
-    139: はがねのつばさ,
-    140: ほえる,
-    141: そらをとぶ,
-    142: はねやすめ,
-    143: ブレイブバード,
-    144: ふいうち,
-    145: ちょうはつ,
-    146: おしおき,
-    147: あばれる,
-    148: つっぱり,
-    149: なげつける,
-    150: クロスチョップ,
-    151: ぎんいろのかぜ,
-    152: エアカッター,
-    153: あやしいかぜ,
-    154: かいふくしれい,
-    155: みちづれ,
-    156: おいうち,
-    157: こうげきしれい,
-    158: ぼうぎょしれい,
-    159: たたきつける,
-    160: てんしのキッス,
-    161: わるだくみ,
-    162: ボルテッカー,
-    163: ずつき,
-    164: アンコール,
-    165: かなしばり,
-    166: ぜったいれいど,
-    167: つのドリル,
-    168: ねむる,
-    169: ねごと,
-    170: かみつく,
-    171: スピードスター,
-    172: がむしゃら,
-    173: どろばくだん,
-    174: あくのはどう,
-    175: やつあたり,
-    176: つるぎのまい,
-    177: いえき,
-    178: はきだす,
-    179: のみこむ,
-    180: たくわえる,
-    181: フラッシュ,
-    182: でんじふゆう,
-    183: はっぱカッター,
-    184: だましうち,
-    185: ハイパーボイス,
-    186: じんつうりき,
-    187: みずのはどう,
-    188: いちゃもん,
-    189: こおりのつぶて,
-    190: あられ,
-    191: あまえる,
-    192: ピヨピヨパンチ,
-    193: じこあんじ,
-    194: ダブルアタック,
-    195: とっておき,
-    196: トリックルーム,
-    197: あくむ,
-    198: メガホーン,
-    199: でんげきは,
-    200: おんねん,
-    201: みらいよち,
-    202: しおみず,
-    203: ミルクのみ,
-    204: うたう,
-    205: ドラゴンダイブ,
-    206: ゴッドバード,
-    207: りゅうせいぐん,
-    208: くさぶえ,
-    209: どくどくのキバ,
-    210: にどげり,
-    211: てっぺき,
-    212: ブレイククロー,
-    213: クロスポイズン,
-    214: メタルバースト,
-    215: パワージェム,
-    216: マジカルリーフ,
-    217: おきみやげ,
-    218: バトンタッチ,
-    219: トリック,
-    220: しんくうは,
-    221: ビルドアップ,
-    222: だいもんじ,
-    223: かげうち,
-    224: ちいさくなる,
-    225: とける,
-    226: うらみ,
-    227: はらだいこ,
-    228: じたばた,
-    229: ハサミギロチン,
-    230: バレットパンチ,
-    231: うずしお,
-    232: もろはのずつき,
-    233: つぼをつく,
-    234: とおぼえ,
-    235: じゅうでん,
-    236: ねっぷう,
-    237: みやぶる,
-    238: パワートリック,
-    239: まきつく,
-    240: しびれごな,
-    241: どろかけ,
-    242: ウェザーボール,
-    243: ついばむ,
-    244: バリアー,
-    245: リサイクル,
-    246: のしかかり,
-    247: パワーウィップ,
-    248: むしのさざめき,
-    249: こうそくいどう,
-    250: すなかけ,
-    251: あさのひざし,
-    252: きりふだ,
-    253: つきのひかり,
-    254: はどうだん,
-    255: なまける,
-    256: マグネットボム,
-    257: シャドーパンチ,
-    258: いたみわけ,
-    259: つつく,
-    260: たつまき,
-    261: ミラーショット,
-    262: がんせきほう,
-    263: テクスチャー2,
-    264: タマゴうみ,
-    265: しんそく,
-    266: コメットパンチ,
+    25: BlastBurn,
+    26: FocusBlast,
+    27: AncientPower,
+    28: HydroPump,
+    29: SignalBeam,
+    30: IcyWind,
+    31: MirrorCoat,
+    32: Waterfall,
+    33: FocusPunch,
+    34: DoubleTeam,
+    35: AquaRing,
+    36: AquaTail,
+    37: Avalanche,
+    38: ZenHeadbutt,
+    39: HydroCannon,
+    40: IceBeam,
+    41: Toxic,
+    42: Substitute,
+    43: WringOut,
+    44: LightScreen,
+    45: Reflect,
+    46: FirePunch,
+    47: ThunderPunch,
+    48: ShadowClaw,
+    49: QuickAttack,
+    50: Reversal,
+    51: Endure,
+    52: AerialAce,
+    53: IceFang,
+    54: RockSlide,
+    55: Superpower,
+    56: DragonDance,
+    57: LeafBlade,
+    58: Screech,
+    59: XScissor,
+    60: NightSlash,
+    61: DragonPulse,
+    62: BlazeKick,
+    63: StoneEdge,
+    64: IcePunch,
+    65: Protect,
+    66: HammerArm,
+    67: MuddyWater,
+    68: EarthPower,
+    69: Counter,
+    70: GrassKnot,
+    71: WoodHammer,
+    72: CloseCombat,
+    73: UTurn,
+    74: FakeOut,
+    75: GunkShot,
+    76: MetalClaw,
+    77: RockSmash,
+    78: KnockOff,
+    79: DrillPeck,
+    80: AquaJet,
+    81: Surf,
+    82: Blizzard,
+    83: FlashCannon,
+    84: Astonish,
+    85: SandTomb,
+    86: TriAttack,
+    87: Sandstorm,
+    88: Fissure,
+    89: GigaImpact,
+    90: Slash,
+    91: BoneRush,
+    92: IronTail,
+    93: IronHead,
+    94: DrainPunch,
+    95: PoisonJab,
+    96: Detect,
+    97: Recover,
+    98: Psychic,
+    99: ShadowBall,
+    100: CalmMind,
+    101: PsychoCut,
+    102: Dive,
+    103: Yawn,
+    104: Return,
+    105: ThunderWave,
+    106: Facade,
+    107: FireFang,
+    108: ThunderFang,
+    109: Payback,
+    110: LovelyKiss,
+    111: FakeTears,
+    112: DreamEater,
+    113: PerishSong,
+    114: MeanLook,
+    115: EnergyBall,
+    116: Mimic,
+    117: Transform,
+    118: Hypnosis,
+    119: Thunderbolt,
+    120: ChargeBeam,
+    121: Discharge,
+    122: ConfuseRay,
+    123: Attract,
+    124: Thunder,
+    125: RainDance,
+    126: SkyUppercut,
+    127: DynamicPunch,
+    128: Spore,
+    129: GyroBall,
+    130: BugBite,
+    131: Revenge,
+    132: StealthRock,
+    133: ToxicSpikes,
+    134: Spikes,
+    135: Dig,
+    136: Swagger,
+    137: Explosion,
+    138: TakeDown,
+    139: SteelWing,
+    140: Roar,
+    141: Fly,
+    142: Roost,
+    143: BraveBird,
+    144: Feint,
+    145: Taunt,
+    146: Punishment,
+    147: Thrash,
+    148: ArmThrust,
+    149: Fling,
+    150: CrossChop,
+    151: SilverWind,
+    152: AirCutter,
+    153: OminousWind,
+    154: HealOrder,
+    155: DestinyBond,
+    156: Pursuit,
+    157: AttackOrder,
+    158: DefendOrder,
+    159: Slam,
+    160: SweetKiss,
+    161: NastyPlot,
+    162: VoltTackle,
+    163: Headbutt,
+    164: Encore,
+    165: Disable,
+    166: SheerCold,
+    167: HornDrill,
+    168: Rest,
+    169: SleepTalk,
+    170: Bite,
+    171: Swift,
+    172: Flail,
+    173: MudBomb,
+    174: DarkPulse,
+    175: Frustration,
+    176: SwordsDance,
+    177: Haze,
+    178: SpitUp,
+    179: Swallow,
+    180: Stockpile,
+    181: Flash,
+    182: MagnetRise,
+    183: RazorLeaf,
+    184: SuckerPunch,
+    185: HyperVoice,
+    186: Extrasensory,
+    187: WaterPulse,
+    188: Torment,
+    189: IceShard,
+    190: Hail,
+    191: Charm,
+    192: ChickPunch,
+    193: PsychUp,
+    194: DoubleHit,
+    195: LastResort,
+    196: TrickRoom,
+    197: Nightmare,
+    198: Megahorn,
+    199: ZapCannon,
+    200: Grudge,
+    201: FutureSight,
+    202: Brine,
+    203: MilkDrink,
+    204: Sing,
+    205: DragonRush,
+    206: SkyAttack,
+    207: DracoMeteor,
+    208: GrassWhistle,
+    209: PoisonFang,
+    210: DoubleKick,
+    211: IronDefense,
+    212: CrushClaw,
+    213: CrossPoison,
+    214: MetalBurst,
+    215: PowerGem,
+    216: MagicalLeaf,
+    217: Memento,
+    218: BatonPass,
+    219: Trick,
+    220: VacuumWave,
+    221: BulkUp,
+    222: FireBlast,
+    223: ShadowSneak,
+    224: Minimize,
+    225: AcidArmor,
+    226: Spite,
+    227: BellyDrum,
+    228: Struggle2,
+    229: Guillotine,
+    230: BulletPunch,
+    231: Whirlpool,
+    232: HeadSmash,
+    233: Acupressure,
+    234: Howl,
+    235: Charge,
+    236: HeatWave,
+    237: Foresight,
+    238: PowerTrick,
+    239: Wrap,
+    240: StunSpore,
+    241: MudSlap,
+    242: WeatherBall,
+    243: Peck,
+    244: Barrier,
+    245: Recycle,
+    246: BodySlam,
+    247: PowerWhip,
+    248: BugBuzz,
+    249: Agility,
+    250: SandAttack,
+    251: MorningSun,
+    252: TrumpCard,
+    253: Moonlight,
+    254: AuraSphere,
+    255: SlackOff,
+    256: MagnetBomb,
+    257: ShadowPunch,
+    258: PainSplit,
+    259: Peck2,
+    260: Twister,
+    261: MirrorShot,
+    262: RockWrecker,
+    263: UnknownMove263,
+    264: UnknownMove264,
+    265: ExtremeSpeed,
+    266: CometPunch,
 }
 
 

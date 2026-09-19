@@ -5,4 +5,4 @@ from move.base_move import BaseMove
 class Ingrain(BaseMove):
     def __init__(self):
         super().__init__(id=5)
-        self.heal_ratio = 1 / 16
+        self.effects = []

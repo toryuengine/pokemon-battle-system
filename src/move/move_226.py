@@ -2,6 +2,7 @@ from move.base_move import BaseMove
 
 
 # うらみ
-class うらみ(BaseMove):
+class Spite(BaseMove):
     def __init__(self):
-        super().__init__(id=226)
+        super().__init__(id=226)  # 交代・拘束・特殊なターン管理などが必要な効果は未実装
+        self.effects = []
