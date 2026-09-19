@@ -5,6 +5,7 @@ from battlelogic.damage import calculate_damage
 from battlelogic.stat_stage import StatStages
 from battlelogic.type_chart import get_effectiveness
 from move.base_move import CATEGORY_STATUS, BaseMove
+from move.struggle import Struggle
 from pokemon import Pokemon
 
 
@@ -44,9 +45,16 @@ class Battle:
                 break
 
     # ここ
-    # attackerが持つ技リストからランダムに1つ選ぶ
+    # attackerが持つ技のうちPPが残っているものからランダムに1つ選ぶ。全て0ならわるあがきを選ぶ
     def select_move(self, attacker: Pokemon) -> BaseMove:
-        return random.choice(attacker.moves)
+        usable_moves = []
+        for move in attacker.moves:
+            if move.current_pp > 0:
+                usable_moves.append(move)
+
+        if not usable_moves:
+            return Struggle()
+        return random.choice(usable_moves)
 
     # 素早さを比較して先攻・後攻を決める（同速なら五分五分でランダム）
     def get_attacker_and_defender(self, move1: BaseMove, move2: BaseMove):
@@ -75,6 +83,9 @@ class Battle:
     # attackerがdefenderにmoveを撃つ。命中判定→(変化技でなければ)ダメージ計算・適用の順で行い、結果を返す
     def use_move(self, attacker: Pokemon, defender: Pokemon, move: BaseMove) -> dict:
         result = {"hit": False, "damage": 0, "effectiveness": 1.0}
+
+        # PPは命中/失敗に関わらず、使った時点で1消費する
+        move.current_pp = max(0, move.current_pp - 1)
 
         if not check_hit(move.hitrate):
             return result
@@ -162,6 +173,11 @@ class Battle:
     # attacker自身がdamageのratio分だけ反動ダメージを受ける（フレアドライブなど）
     def apply_recoil(self, attacker, damage, ratio):
         recoil_damage = max(1, int(damage * ratio))
+        self.apply_damage(attacker, recoil_damage)
+
+    # attacker自身が最大HPのratio分だけ反動ダメージを受ける（わるあがきなど、与ダメージに依存しない反動）
+    def apply_max_hp_recoil(self, attacker, ratio):
+        recoil_damage = max(1, int(attacker.status.hp * ratio))
         self.apply_damage(attacker, recoil_damage)
 
     # attacker自身がdamageのratio分だけHPを回復する（ギガドレインなど）

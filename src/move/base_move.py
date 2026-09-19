@@ -19,6 +19,8 @@ class BaseMove:
         self.power = data["power"]
         self.pp = data["pp"]
         self.hitrate = data["hitrate"]
+        # 現在の残りPP。使うたびにBattle側で1減らす
+        self.current_pp = self.pp
 
         # 追加効果のデータ一覧。何もしない技は空リストのまま
         # 各要素の形式:
@@ -27,7 +29,8 @@ class BaseMove:
         #   ("stat", target, stat_name, stages, chance)       例: ("stat", "self", "spatk", -2, 1.0)
         #   ("stat_multi", target, [(stat_name, stages), ...], chance)  1回の判定で複数能力を同時に変化
         #   ("flinch", target, chance)
-        #   ("recoil", ratio)   attacker(自分)が反動ダメージを受ける
+        #   ("recoil", ratio)   attacker(自分)が与えたダメージのratio分だけ反動を受ける
+        #   ("recoil_max_hp", ratio)  attacker(自分)が最大HPのratio分だけ反動を受ける（わるあがき用）
         #   ("drain", ratio)    attacker(自分)が与えたダメージの一部を回復する
         #   ("heal", ratio)     attacker(自分)が最大HPの一定割合を回復する
         #   ("clear_stats",)    両者の能力ランクを全てリセットする（はき等）
@@ -68,6 +71,10 @@ class BaseMove:
             elif kind == "recoil":
                 _, ratio = effect
                 battle.apply_recoil(attacker, damage, ratio)
+
+            elif kind == "recoil_max_hp":
+                _, ratio = effect
+                battle.apply_max_hp_recoil(attacker, ratio)
 
             elif kind == "drain":
                 _, ratio = effect
