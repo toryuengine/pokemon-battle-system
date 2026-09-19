@@ -21,8 +21,8 @@ class Battle:
     #バトルスタート
     def start_battle(self):
         while True:
-            move1 = self.select_move(self.pokemon1)
-            move2 = self.select_move(self.pokemon2)
+            move1 = self.select_move(self.pokemon1) #技のインスタンスが入っている
+            move2 = self.select_move(self.pokemon2) #技のインスタンスが入っている
             attacker, defender = self.get_attacker_and_defender(move1, move2)  # 先行後攻を取得
             attacker_move = move1 if attacker is self.pokemon1 else move2
             defender_move = move2 if attacker is self.pokemon1 else move1
