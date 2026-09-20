@@ -6,3 +6,4 @@ class CrossChop(BaseMove):
     def __init__(self):
         super().__init__(id=150)
         self.effects = []
+        self.high_crit = True

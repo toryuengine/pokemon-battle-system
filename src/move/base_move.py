@@ -22,6 +22,9 @@ class BaseMove:
         # 現在の残りPP。使うたびにBattle側で1減らす
         self.current_pp = self.pp
 
+        # 急所に当たりやすい技（きりさく等）はサブクラス側でTrueに上書きする
+        self.high_crit = False
+
         # 追加効果のデータ一覧。何もしない技は空リストのまま
         # 各要素の形式:
         #   ("status", target, condition, chance)            例: ("status", "target", "poison", 0.3)

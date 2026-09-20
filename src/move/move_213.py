@@ -6,3 +6,4 @@ class CrossPoison(BaseMove):
     def __init__(self):
         super().__init__(id=213)
         self.effects = [('status', 'target', 'poison', 0.1)]
+        self.high_crit = True

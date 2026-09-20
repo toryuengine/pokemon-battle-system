@@ -6,3 +6,4 @@ class AttackOrder(BaseMove):
     def __init__(self):
         super().__init__(id=157)
         self.effects = []
+        self.high_crit = True
