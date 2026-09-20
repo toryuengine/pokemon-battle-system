@@ -16,6 +16,19 @@ FREEZE_THAW_CHANCE = 0.2
 CONFUSION_SELF_HIT_CHANCE = 1 / 3
 CONFUSION_SELF_HIT_RATIO = 1 / 8
 
+# 天候ダメージ（すなあらし・あられ）の効果値と、免疫となるタイプID
+WEATHER_DAMAGE_RATIO = 1 / 16
+WEATHER_IMMUNE_TYPE_IDS = {
+    "sandstorm": {8, 12, 16},  # じめん、いわ、はがね
+    "hail": {5},  # こおり
+}
+WEATHER_DURATION = 5
+
+# 天候によって必ず命中する技・命中率が変わる技（idで個別に判定する）
+THUNDER_ID = 124  # かみなり
+BLIZZARD_ID = 82  # ふぶき
+SOLAR_BEAM_ID = 19  # ソーラービーム
+
 
 class Battle:
     # 現在HPはBattleではなくPokemon側(current_status.current_hp)で管理する
@@ -26,6 +39,10 @@ class Battle:
 
         self.stages1 = StatStages()
         self.stages2 = StatStages()
+
+        # 天候（None/"sun"/"rain"/"sandstorm"/"hail"）と残りターン数
+        self.weather = None
+        self.weather_turns_remaining = 0
 
     # 双方が回復技しか選ばない等でHPが減らないケースがあるため、無限ループ防止に上限を設ける
     MAX_TURNS = 1000
@@ -51,8 +68,10 @@ class Battle:
                 if self.get_winner() is not None:
                     break
 
-            # 毎ターン終了時のどく・やけどダメージ
+            # 毎ターン終了時のどく・やけど・天候ダメージ、天候の経過処理
             self.apply_end_of_turn_status_damage()
+            self.apply_end_of_turn_weather_damage()
+            self.tick_weather()
             if self.get_winner() is not None:
                 break
 
@@ -113,6 +132,33 @@ class Battle:
                 damage = max(1, int(pokemon.status.hp * BURN_DAMAGE_RATIO))
                 self.apply_damage(pokemon, damage)
 
+    # 天候を変える（5ターン継続）。にほんばれ・あまごい・すなあらし・あられから呼ばれる
+    def set_weather(self, weather):
+        self.weather = weather
+        self.weather_turns_remaining = WEATHER_DURATION
+
+    # 天候の残りターンを1減らし、0になったら天候を晴天(なし)に戻す
+    def tick_weather(self):
+        if self.weather is None:
+            return
+        self.weather_turns_remaining -= 1
+        if self.weather_turns_remaining <= 0:
+            self.weather = None
+
+    # すなあらし・あられの間、免疫タイプ以外に毎ターン終了時ダメージを与える
+    def apply_end_of_turn_weather_damage(self):
+        immune_type_ids = WEATHER_IMMUNE_TYPE_IDS.get(self.weather)
+        if immune_type_ids is None:
+            return
+
+        for pokemon in (self.pokemon1, self.pokemon2):
+            if self.is_fainted(pokemon):
+                continue
+            if pokemon.type1 in immune_type_ids or pokemon.type2 in immune_type_ids:
+                continue
+            damage = max(1, int(pokemon.status.hp * WEATHER_DAMAGE_RATIO))
+            self.apply_damage(pokemon, damage)
+
     # ここ
     # attackerが持つ技のうちPPが残っているものからランダムに1つ選ぶ。全て0ならわるあがきを選ぶ
     # 溜め中（ソーラービーム等の1ターン目を終えた状態）なら、選択せず溜めていた技を強制的に返す
@@ -158,6 +204,18 @@ class Battle:
     def is_fainted(self, target: Pokemon) -> bool:
         return self.get_current_hp(target) <= 0
 
+    # 天候によって命中率が変わる技（かみなり・ふぶき）を考慮した実際の命中率を返す
+    # hitrate=0は「必ず命中する」という既存の規約なので、必中にしたい場合はそのまま流用できる
+    def get_effective_hitrate(self, move: BaseMove) -> int:
+        if move.id == THUNDER_ID:
+            if self.weather == "rain":
+                return 0
+            if self.weather == "sun":
+                return 50
+        elif move.id == BLIZZARD_ID and self.weather == "hail":
+            return 0
+        return move.hitrate
+
     # move.min_hits/max_hitsから今回のヒット回数を決める
     # 2〜5回攻撃(ボーンラッシュ等)は3/8, 3/8, 1/8, 1/8という第4世代仕様の確率分布、それ以外(固定回数)はそのまま使う
     def roll_hit_count(self, move: BaseMove) -> int:
@@ -173,7 +231,10 @@ class Battle:
         # 1ターン目（溜め開始）かどうか。charging_moveが同じ技を指していれば、今回は2ターン目(攻撃)
         is_releasing_charge = attacker.current_status.charging_move is move
 
-        if move.requires_charge_turn and not is_releasing_charge:
+        # ソーラービームは晴れの間だけ、溜めターンを省略していきなり攻撃する
+        skip_charge_turn = move.id == SOLAR_BEAM_ID and self.weather == "sun"
+
+        if move.requires_charge_turn and not is_releasing_charge and not skip_charge_turn:
             # 溜めターン: PPだけ消費し、攻撃せずに次のターンに備える（あなをほる等は回避状態にもなる）
             move.current_pp = max(0, move.current_pp - 1)
             attacker.current_status.charging_move = move
@@ -198,7 +259,7 @@ class Battle:
         if defender.current_status.is_invulnerable:
             return result
 
-        if not check_hit(move.hitrate):
+        if not check_hit(self.get_effective_hitrate(move)):
             return result
 
         result["hit"] = True
@@ -210,7 +271,7 @@ class Battle:
             for _ in range(hit_count):
                 if self.is_fainted(defender):
                     break
-                damage = calculate_damage(attacker, defender, move)
+                damage = calculate_damage(attacker, defender, move, self.weather)
                 self.apply_damage(defender, damage)
                 total_damage += damage
                 result["hit_count"] += 1

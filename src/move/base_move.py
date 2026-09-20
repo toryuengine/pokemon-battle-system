@@ -67,6 +67,7 @@ class BaseMove:
         #   ("drain", ratio)    attacker(自分)が与えたダメージの一部を回復する
         #   ("heal", ratio)     attacker(自分)が最大HPの一定割合を回復する
         #   ("clear_stats",)    両者の能力ランクを全てリセットする（はき等）
+        #   ("set_weather", weather)  天候を変える（"sun"/"rain"/"sandstorm"/"hail"）
         # target は "self"（attacker） か "target"（defender）
         self.effects = []
 
@@ -115,10 +116,20 @@ class BaseMove:
 
             elif kind == "heal":
                 _, ratio = effect
+                # こうごうせい・あさのひざし・つきのひかりは天候によって回復量が変わる
+                if self.id in (13, 251, 253):
+                    if battle.weather == "sun":
+                        ratio = 2 / 3
+                    elif battle.weather in ("rain", "sandstorm", "hail"):
+                        ratio = 1 / 4
                 battle.apply_heal(attacker, ratio)
 
             elif kind == "clear_stats":
                 battle.reset_all_stages()
+
+            elif kind == "set_weather":
+                _, weather = effect
+                battle.set_weather(weather)
 
     def __repr__(self):
         parts = []

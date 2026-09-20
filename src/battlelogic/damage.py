@@ -13,8 +13,33 @@ HIGH_CRIT_CHANCE = 1 / 8
 # 第4世代の急所ダメージ倍率（第6世代以降の1.5倍とは異なる）
 CRIT_MULTIPLIER = 2.0
 
+TYPE_ID_ROCK = 12
 
-def calculate_damage(attacker, defender, move) -> int:
+# ソーラービームのid。晴れ以外での溜め省略・雨での威力半減という固有仕様があるため個別に参照する
+SOLAR_BEAM_ID = 19
+
+
+# 天候によるほのお/みず技の威力補正。ソーラービームは雨で別途さらに半減する
+def get_weather_power_multiplier(move, weather) -> float:
+    multiplier = 1.0
+
+    if weather == "sun":
+        if move.type == "ほのお":
+            multiplier *= 1.5
+        elif move.type == "みず":
+            multiplier *= 0.5
+    elif weather == "rain":
+        if move.type == "みず":
+            multiplier *= 1.5
+        elif move.type == "ほのお":
+            multiplier *= 0.5
+        if move.id == SOLAR_BEAM_ID:
+            multiplier *= 0.5
+
+    return multiplier
+
+
+def calculate_damage(attacker, defender, move, weather=None) -> int:
     # 変化技(CATEGORY_STATUS)はダメージを与えない
     if move.category == CATEGORY_STATUS:
         return 0
@@ -33,6 +58,10 @@ def calculate_damage(attacker, defender, move) -> int:
         attack_stat = attacker.status.spatk
         defense_stat = defender.status.spdef
 
+        # すなあらしの間、いわタイプの特防は1.5倍になる
+        if weather == "sandstorm" and TYPE_ID_ROCK in (defender.type1, defender.type2):
+            defense_stat = int(defense_stat * 1.5)
+
     base_damage = (2 * LEVEL / 5 + 2) * move.power * attack_stat / defense_stat
     base_damage = base_damage / 50 + 2
 
@@ -41,10 +70,11 @@ def calculate_damage(attacker, defender, move) -> int:
     stab = 1.5 if is_stab else 1.0
 
     effectiveness = get_move_effectiveness(move, defender)
+    weather_multiplier = get_weather_power_multiplier(move, weather)
     random_factor = random.randint(85, 100) / 100
 
     crit_chance = HIGH_CRIT_CHANCE if move.high_crit else NORMAL_CRIT_CHANCE
     crit_multiplier = CRIT_MULTIPLIER if random.random() < crit_chance else 1.0
 
-    damage = base_damage * stab * effectiveness * crit_multiplier * random_factor
+    damage = base_damage * stab * effectiveness * weather_multiplier * crit_multiplier * random_factor
     return int(damage)
