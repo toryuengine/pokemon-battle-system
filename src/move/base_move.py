@@ -28,6 +28,11 @@ class BaseMove:
         # 一撃必殺技（じわれ等）はサブクラス側でTrueに上書きする
         self.is_ohko = False
 
+        # 1回の使用で何回ヒットするか。通常技は1〜1（1回のみ）
+        # 固定2回攻撃（にどげり等）はmin_hits=max_hits=2、2〜5回攻撃（ボーンラッシュ等）はmin_hits=2, max_hits=5
+        self.min_hits = 1
+        self.max_hits = 1
+
         # 追加効果のデータ一覧。何もしない技は空リストのまま
         # 各要素の形式:
         #   ("status", target, condition, chance)            例: ("status", "target", "poison", 0.3)

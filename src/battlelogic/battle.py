@@ -80,9 +80,17 @@ class Battle:
     def is_fainted(self, target: Pokemon) -> bool:
         return self.get_current_hp(target) <= 0
 
+    # move.min_hits/max_hitsから今回のヒット回数を決める
+    # 2〜5回攻撃(ボーンラッシュ等)は3/8, 3/8, 1/8, 1/8という第4世代仕様の確率分布、それ以外(固定回数)はそのまま使う
+    def roll_hit_count(self, move: BaseMove) -> int:
+        if move.min_hits == 2 and move.max_hits == 5:
+            return random.choices([2, 3, 4, 5], weights=[3, 3, 1, 1])[0]
+        return random.randint(move.min_hits, move.max_hits)
+
     # attackerがdefenderにmoveを撃つ。命中判定→(変化技でなければ)ダメージ計算・適用の順で行い、結果を返す
+    # 複数回攻撃技は命中判定を1回だけ行い、そのあと決めたヒット回数分ダメージを繰り返し与える（相手が瀕死になったら打ち切り）
     def use_move(self, attacker: Pokemon, defender: Pokemon, move: BaseMove) -> dict:
-        result = {"hit": False, "damage": 0, "effectiveness": 1.0}
+        result = {"hit": False, "damage": 0, "effectiveness": 1.0, "hit_count": 0}
 
         # PPは命中/失敗に関わらず、使った時点で1消費する
         move.current_pp = max(0, move.current_pp - 1)
@@ -91,17 +99,24 @@ class Battle:
             return result
 
         result["hit"] = True
-        damage = 0
+        total_damage = 0
 
         # 変化技(CATEGORY_STATUS)はダメージを与えないので、物理・特殊技の時だけダメージ計算する
         if move.category != CATEGORY_STATUS:
-            damage = calculate_damage(attacker, defender, move)
-            self.apply_damage(defender, damage)
-            result["damage"] = damage
+            hit_count = self.roll_hit_count(move)
+            for _ in range(hit_count):
+                if self.is_fainted(defender):
+                    break
+                damage = calculate_damage(attacker, defender, move)
+                self.apply_damage(defender, damage)
+                total_damage += damage
+                result["hit_count"] += 1
+
+            result["damage"] = total_damage
             result["effectiveness"] = get_effectiveness(move.type, defender.type1, defender.type2)
 
         # 命中していれば、技固有の追加効果を発動させる（無い技はBaseMoveのデフォルトで何もしない）
-        move.apply_effect(self, attacker, defender, damage)
+        move.apply_effect(self, attacker, defender, total_damage)
 
         return result
 

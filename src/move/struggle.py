@@ -18,3 +18,5 @@ class Struggle(BaseMove):
 
         self.high_crit = False
         self.is_ohko = False
+        self.min_hits = 1
+        self.max_hits = 1
