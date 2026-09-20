@@ -15,3 +15,6 @@ class Struggle(BaseMove):
 
         # 通常のダメージ以外に、自分が最大HPの1/4だけ反動を受ける
         self.effects = [("recoil_max_hp", 0.25)]
+
+        self.high_crit = False
+        self.is_ohko = False

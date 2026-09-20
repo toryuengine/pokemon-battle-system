@@ -13,6 +13,13 @@ def calculate_damage(attacker, defender, move) -> int:
     if move.category == CATEGORY_STATUS:
         return 0
 
+    # 一撃必殺技: タイプ相性が0倍(無効)なら失敗、それ以外は相手の残りHPと同じ量のダメージで即座に瀕死にする
+    if move.is_ohko:
+        effectiveness = get_effectiveness(move.type, defender.type1, defender.type2)
+        if effectiveness == 0:
+            return 0
+        return defender.current_status.current_hp
+
     # 物理技(CATEGORY_PHYSICAL)はatk/defense、それ以外(特殊)はspatk/spdefを使う
     if move.category == CATEGORY_PHYSICAL:
         attack_stat = attacker.status.atk

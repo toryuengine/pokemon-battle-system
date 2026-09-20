@@ -25,6 +25,9 @@ class BaseMove:
         # 急所に当たりやすい技（きりさく等）はサブクラス側でTrueに上書きする
         self.high_crit = False
 
+        # 一撃必殺技（じわれ等）はサブクラス側でTrueに上書きする
+        self.is_ohko = False
+
         # 追加効果のデータ一覧。何もしない技は空リストのまま
         # 各要素の形式:
         #   ("status", target, condition, chance)            例: ("status", "target", "poison", 0.3)
