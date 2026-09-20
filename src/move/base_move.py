@@ -68,6 +68,7 @@ class BaseMove:
         #   ("heal", ratio)     attacker(自分)が最大HPの一定割合を回復する
         #   ("clear_stats",)    両者の能力ランクを全てリセットする（はき等）
         #   ("set_weather", weather)  天候を変える（"sun"/"rain"/"sandstorm"/"hail"）
+        #   ("set_hazard", hazard_type)  相手の場に罠を設置する（"stealth_rock"/"spikes"/"toxic_spikes"）
         # target は "self"（attacker） か "target"（defender）
         self.effects = []
 
@@ -130,6 +131,10 @@ class BaseMove:
             elif kind == "set_weather":
                 _, weather = effect
                 battle.set_weather(weather)
+
+            elif kind == "set_hazard":
+                _, hazard_type = effect
+                battle.add_hazard(battle.get_trainer(defender), hazard_type)
 
     def __repr__(self):
         parts = []

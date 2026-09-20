@@ -4,9 +4,11 @@ from battlelogic.accuracy import check_hit
 from battlelogic.damage import calculate_damage
 from battlelogic.stat_stage import StatStages
 from battlelogic.type_chart import get_move_effectiveness
+from battlelogic.type_chart import get_effectiveness
 from move.base_move import CATEGORY_STATUS, BaseMove
 from move.struggle import Struggle
 from pokemon import Pokemon
+from trainer import Trainer
 
 # 状態異常の効果値（第4世代仕様）
 POISON_DAMAGE_RATIO = 1 / 8
@@ -29,13 +31,22 @@ THUNDER_ID = 124  # かみなり
 BLIZZARD_ID = 82  # ふぶき
 SOLAR_BEAM_ID = 19  # ソーラービーム
 
+# 設置技の効果値。まきびしは層数(1〜3)に応じてダメージ割合が変わる
+STEALTH_ROCK_DAMAGE_RATIO = 1 / 8
+SPIKES_DAMAGE_RATIOS = {1: 1 / 8, 2: 1 / 6, 3: 1 / 4}
+TYPE_ID_ROCK = 12
+TYPE_ID_POISON = 7
+TYPE_ID_FLYING = 9
+
 
 class Battle:
     # 現在HPはBattleではなくPokemon側(current_status.current_hp)で管理する
     # (交代しても引き継がれる状態のため)
-    def __init__(self, pokemon1: Pokemon, pokemon2: Pokemon):
-        self.pokemon1 = pokemon1
-        self.pokemon2 = pokemon2
+    # side1/side2はTrainerを渡す想定だが、単体のPokemonを渡した場合は
+    # 手持ち1体だけのTrainerとして扱う（今までのBattle(pokemon1, pokemon2)呼び出しと互換）
+    def __init__(self, side1, side2):
+        self.trainer1: Trainer = side1 if isinstance(side1, Trainer) else Trainer([side1])
+        self.trainer2: Trainer = side2 if isinstance(side2, Trainer) else Trainer([side2])
 
         self.stages1 = StatStages()
         self.stages2 = StatStages()
@@ -47,33 +58,127 @@ class Battle:
     # 双方が回復技しか選ばない等でHPが減らないケースがあるため、無限ループ防止に上限を設ける
     MAX_TURNS = 1000
 
+    # 場に出ている現在の1体目。手持ちが交代してもここは常に「今出ている個体」を指す
+    @property
+    def pokemon1(self) -> Pokemon:
+        return self.trainer1.active
+
+    # 場に出ている現在の2体目
+    @property
+    def pokemon2(self) -> Pokemon:
+        return self.trainer2.active
+
     #バトルスタート
     def start_battle(self):
         for _ in range(self.MAX_TURNS):
             move1 = self.select_move(self.pokemon1) #技のインスタンスが入っている
             move2 = self.select_move(self.pokemon2) #技のインスタンスが入っている
-            attacker, defender = self.get_attacker_and_defender(move1, move2)  # 優先度→素早さで先行後攻を取得
-            attacker_move = move1 if attacker is self.pokemon1 else move2
-            defender_move = move2 if attacker is self.pokemon1 else move1
+            first_mover, second_mover = self.get_attacker_and_defender(move1, move2)  # 優先度→素早さで先行後攻を取得
+            first_move = move1 if first_mover is self.pokemon1 else move2
+            second_move = move2 if first_mover is self.pokemon1 else move1
+            second_trainer = self.trainer1 if second_mover is self.pokemon1 else self.trainer2
 
             # can_actが反動硬直・ひるみ・状態異常（ねむり/こおり/まひ/こんらん）による行動不能を
             # まとめて判定する。行動不能ならその技は不発のまま次に進む
-            if self.can_act(attacker):
-                self.use_move(attacker, defender, attacker_move)
-                if self.get_winner() is not None:
-                    break
+            if self.can_act(first_mover):
+                self.use_move(first_mover, second_mover, first_move)
+            # 瀕死になった側がいれば手持ちから次の1体に自動で交代させる（設置技もここで発動する）
+            self.resolve_faints()
+            if self.is_battle_over():
+                break
 
-            if self.can_act(defender):
-                self.use_move(defender, attacker, defender_move)
-                if self.get_winner() is not None:
-                    break
+            # 後攻側(second_mover)がこの攻撃で瀕死になり別の個体に交代していたら、
+            # 交代してきたばかりの個体は今ターンもう行動できない
+            if second_trainer.active is not second_mover:
+                continue
+
+            # 先攻側が反動等で自滅して交代していた場合に備えて、攻撃対象は今現在の相手を改めて取得する
+            current_opponent = self.pokemon1 if second_mover is self.pokemon2 else self.pokemon2
+
+            if self.can_act(second_mover):
+                self.use_move(second_mover, current_opponent, second_move)
+            self.resolve_faints()
+            if self.is_battle_over():
+                break
 
             # 毎ターン終了時のどく・やけど・天候ダメージ、天候の経過処理
             self.apply_end_of_turn_status_damage()
+            self.resolve_faints()
+            if self.is_battle_over():
+                break
+
             self.apply_end_of_turn_weather_damage()
             self.tick_weather()
-            if self.get_winner() is not None:
+            self.resolve_faints()
+            if self.is_battle_over():
                 break
+
+    # どちらかのトレーナーが全滅していれば対戦は終了（get_winner()は引き分けの場合Noneを返すため、
+    # 「決着したか」の判定にはget_winner()ではなくこちらを使う）
+    def is_battle_over(self) -> bool:
+        return self.trainer1.is_defeated() or self.trainer2.is_defeated()
+
+    # 場に出ているポケモンが瀕死なら、手持ちの中から生きている次の1体に自動で交代させる
+    # (交代先も設置技等で瀕死になる可能性があるため、生きている個体が出るか手持ちが尽きるまで繰り返す)
+    def resolve_faints(self):
+        for trainer in (self.trainer1, self.trainer2):
+            while self.is_fainted(trainer.active) and not trainer.is_defeated():
+                next_index = trainer.find_next_alive_index()
+                if next_index is None:
+                    break
+                self.switch_in(trainer, next_index)
+
+    # trainerの場のポケモンをnew_indexの個体に交代させる。能力ランクをリセットし、設置技の効果を適用する
+    def switch_in(self, trainer: Trainer, new_index: int):
+        trainer.active_index = new_index
+        if trainer is self.trainer1:
+            self.stages1 = StatStages()
+        else:
+            self.stages2 = StatStages()
+        self.apply_entry_hazards(trainer)
+
+    # trainerが持つ罠(ステルスロック・まきびし・どくびし)を、今場に出ている個体に適用する
+    def apply_entry_hazards(self, trainer: Trainer):
+        pokemon = trainer.active
+        if self.is_fainted(pokemon):
+            return
+
+        is_grounded = TYPE_ID_FLYING not in (pokemon.type1, pokemon.type2)
+
+        if trainer.spikes > 0 and is_grounded:
+            ratio = SPIKES_DAMAGE_RATIOS[trainer.spikes]
+            damage = max(1, int(pokemon.status.hp * ratio))
+            self.apply_damage(pokemon, damage)
+
+        if trainer.stealth_rock:
+            effectiveness = get_effectiveness(TYPE_ID_ROCK, pokemon.type1, pokemon.type2)
+            damage = max(1, int(pokemon.status.hp * STEALTH_ROCK_DAMAGE_RATIO * effectiveness))
+            self.apply_damage(pokemon, damage)
+
+        if trainer.toxic_spikes > 0 and is_grounded:
+            if TYPE_ID_POISON in (pokemon.type1, pokemon.type2):
+                # どくタイプが出ると、どくびしはその場から消滅する
+                trainer.toxic_spikes = 0
+            elif pokemon.current_status.status_condition is None:
+                # 本来は2層で「もうどく」（悪化していくどく）になるが、簡略化して通常のどく扱いにしている
+                pokemon.current_status.status_condition = "poison"
+
+    # targetのトレーナー（罠等を管理している側）を返す
+    def get_trainer(self, target: Pokemon) -> Trainer:
+        if target is self.pokemon1:
+            return self.trainer1
+        if target is self.pokemon2:
+            return self.trainer2
+        raise ValueError("target is not part of this battle")
+
+    # hazard_typeをtrainerの場に設置する（まきびしは3層、どくびしは2層まで重ねがけできる）
+    def add_hazard(self, trainer: Trainer, hazard_type: str):
+        if hazard_type == "stealth_rock":
+            trainer.stealth_rock = True
+        elif hazard_type == "spikes":
+            trainer.spikes = min(3, trainer.spikes + 1)
+        elif hazard_type == "toxic_spikes":
+            trainer.toxic_spikes = min(2, trainer.toxic_spikes + 1)
 
     # pokemonが今ターン行動できるかどうかを判定する。判定と同時に必要な状態更新も行う
     # (反動硬直・ひるみの解除、ねむり/こおりの残りターン処理、まひの判定、こんらんの自傷など)
@@ -200,9 +305,10 @@ class Battle:
             raise ValueError("target is not part of this battle")
         target.current_status.current_hp = max(0, target.current_status.current_hp - damage)
 
-    # 残りHPが0以下なら瀕死
+    # 残りHPが0以下なら瀕死。交代でベンチに下がった後の個体にも呼べるよう、
+    # get_current_hpの「今場に出ているか」チェックは経由せず直接HPを見る
     def is_fainted(self, target: Pokemon) -> bool:
-        return self.get_current_hp(target) <= 0
+        return target.current_status.current_hp <= 0
 
     # 天候によって命中率が変わる技（かみなり・ふぶき）を考慮した実際の命中率を返す
     # hitrate=0は「必ず命中する」という既存の規約なので、必中にしたい場合はそのまま流用できる
@@ -284,16 +390,16 @@ class Battle:
 
         return result
 
-    # どちらかが瀕死なら生き残っている方を返す。両方生存/両方瀕死ならNone
+    # どちらかの手持ち全員が瀕死なら、もう片方の場のポケモンを返す。両方全滅/両方生存中ならNone
     def get_winner(self):
-        pokemon1_fainted = self.is_fainted(self.pokemon1)
-        pokemon2_fainted = self.is_fainted(self.pokemon2)
+        trainer1_defeated = self.trainer1.is_defeated()
+        trainer2_defeated = self.trainer2.is_defeated()
 
-        if pokemon1_fainted and pokemon2_fainted:
+        if trainer1_defeated and trainer2_defeated:
             return None
-        if pokemon1_fainted:
+        if trainer1_defeated:
             return self.pokemon2
-        if pokemon2_fainted:
+        if trainer2_defeated:
             return self.pokemon1
         return None
 
