@@ -6,3 +6,4 @@ class FrenzyPlant(BaseMove):
     def __init__(self):
         super().__init__(id=11)
         self.effects = []
+        self.requires_recharge = True

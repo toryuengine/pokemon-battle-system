@@ -11,12 +11,11 @@ class Struggle(BaseMove):
         self.power = 50
         self.pp = 1
         self.hitrate = 100
-        self.current_pp = self.pp
+
+        # BaseMoveが持つ他の性質（current_pp, high_crit, is_ohko, min_hits/max_hits,
+        # requires_recharge, effects等）のデフォルト値をまとめて設定する。
+        # 新しい性質が増えてもここを直す必要はない
+        self._init_extra_defaults()
 
         # 通常のダメージ以外に、自分が最大HPの1/4だけ反動を受ける
         self.effects = [("recoil_max_hp", 0.25)]
-
-        self.high_crit = False
-        self.is_ohko = False
-        self.min_hits = 1
-        self.max_hits = 1

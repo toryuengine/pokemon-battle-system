@@ -24,6 +24,8 @@ class CurrentStatus:
     status_condition: Optional[str] = None
     # ひるみはそのターン限りの一時的な状態なので、行動チェック後にBattle側でリセットする
     is_flinched: bool = False
+    # はかいこうせん等を使った次のターンは反動で行動不能。行動チェック後にBattle側でリセットする
+    must_recharge: bool = False
 
 
 class Pokemon:

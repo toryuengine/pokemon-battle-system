@@ -19,6 +19,13 @@ class BaseMove:
         self.power = data["power"]
         self.pp = data["pp"]
         self.hitrate = data["hitrate"]
+
+        self._init_extra_defaults()
+
+    # move.jsonから読めない、技ごとの追加性質のデフォルト値をまとめて設定する。
+    # move.jsonに存在しない特殊技（わるあがき等）は__init__を通さずここだけ呼び出して使う。
+    # 新しい性質を追加するときはここに1箇所書けば、通常の技にも特殊技にも自動的に反映される。
+    def _init_extra_defaults(self):
         # 現在の残りPP。使うたびにBattle側で1減らす
         self.current_pp = self.pp
 
@@ -32,6 +39,9 @@ class BaseMove:
         # 固定2回攻撃（にどげり等）はmin_hits=max_hits=2、2〜5回攻撃（ボーンラッシュ等）はmin_hits=2, max_hits=5
         self.min_hits = 1
         self.max_hits = 1
+
+        # 使うと次のターン反動で行動不能になる技（はかいこうせん等）はサブクラス側でTrueに上書きする
+        self.requires_recharge = False
 
         # 追加効果のデータ一覧。何もしない技は空リストのまま
         # 各要素の形式:

@@ -25,6 +25,31 @@ class Battle:
     #バトルスタート
     def start_battle(self):
         for _ in range(self.MAX_TURNS):
+            # 反動硬直中（はかいこうせん等を使った直後）のポケモンは技を選べず行動不能。
+            # フラグはここで判定と同時に解除する（このターンだけの効果のため）
+            pokemon1_recharging = self.pokemon1.current_status.must_recharge
+            pokemon2_recharging = self.pokemon2.current_status.must_recharge
+            self.pokemon1.current_status.must_recharge = False
+            self.pokemon2.current_status.must_recharge = False
+
+            if pokemon1_recharging and pokemon2_recharging:
+                # 両者とも行動できないターン
+                continue
+
+            if pokemon1_recharging:
+                move2 = self.select_move(self.pokemon2)
+                self.use_move(self.pokemon2, self.pokemon1, move2)
+                if self.get_winner() is not None:
+                    break
+                continue
+
+            if pokemon2_recharging:
+                move1 = self.select_move(self.pokemon1)
+                self.use_move(self.pokemon1, self.pokemon2, move1)
+                if self.get_winner() is not None:
+                    break
+                continue
+
             move1 = self.select_move(self.pokemon1) #技のインスタンスが入っている
             move2 = self.select_move(self.pokemon2) #技のインスタンスが入っている
             attacker, defender = self.get_attacker_and_defender(move1, move2)  # 先行後攻を取得
@@ -94,6 +119,10 @@ class Battle:
 
         # PPは命中/失敗に関わらず、使った時点で1消費する
         move.current_pp = max(0, move.current_pp - 1)
+
+        # はかいこうせん等は命中・失敗に関わらず、使った時点で次ターンの反動硬直が確定する
+        if move.requires_recharge:
+            attacker.current_status.must_recharge = True
 
         if not check_hit(move.hitrate):
             return result
