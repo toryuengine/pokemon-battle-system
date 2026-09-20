@@ -40,6 +40,13 @@ def get_effectiveness(attack_type, defend_type1, defend_type2=None) -> float:
     return multiplier
 
 
+# moveがis_typeless(わるあがき等)なら常に等倍。そうでなければ通常通りタイプ相性を計算する
+def get_move_effectiveness(move, defender) -> float:
+    if move.is_typeless:
+        return 1.0
+    return get_effectiveness(move.type, defender.type1, defender.type2)
+
+
 def describe_effectiveness(multiplier: float) -> str:
     if multiplier == 0:
         return "こうかがない"

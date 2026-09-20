@@ -3,10 +3,18 @@ import random
 from battlelogic.accuracy import check_hit
 from battlelogic.damage import calculate_damage
 from battlelogic.stat_stage import StatStages
-from battlelogic.type_chart import get_effectiveness
+from battlelogic.type_chart import get_move_effectiveness
 from move.base_move import CATEGORY_STATUS, BaseMove
 from move.struggle import Struggle
 from pokemon import Pokemon
+
+# 状態異常の効果値（第4世代仕様）
+POISON_DAMAGE_RATIO = 1 / 8
+BURN_DAMAGE_RATIO = 1 / 16
+PARALYSIS_FULL_PARA_CHANCE = 0.25
+FREEZE_THAW_CHANCE = 0.2
+CONFUSION_SELF_HIT_CHANCE = 1 / 3
+CONFUSION_SELF_HIT_RATIO = 1 / 8
 
 
 class Battle:
@@ -25,53 +33,93 @@ class Battle:
     #バトルスタート
     def start_battle(self):
         for _ in range(self.MAX_TURNS):
-            # 反動硬直中（はかいこうせん等を使った直後）のポケモンは技を選べず行動不能。
-            # フラグはここで判定と同時に解除する（このターンだけの効果のため）
-            pokemon1_recharging = self.pokemon1.current_status.must_recharge
-            pokemon2_recharging = self.pokemon2.current_status.must_recharge
-            self.pokemon1.current_status.must_recharge = False
-            self.pokemon2.current_status.must_recharge = False
-
-            if pokemon1_recharging and pokemon2_recharging:
-                # 両者とも行動できないターン
-                continue
-
-            if pokemon1_recharging:
-                move2 = self.select_move(self.pokemon2)
-                self.use_move(self.pokemon2, self.pokemon1, move2)
-                if self.get_winner() is not None:
-                    break
-                continue
-
-            if pokemon2_recharging:
-                move1 = self.select_move(self.pokemon1)
-                self.use_move(self.pokemon1, self.pokemon2, move1)
-                if self.get_winner() is not None:
-                    break
-                continue
-
             move1 = self.select_move(self.pokemon1) #技のインスタンスが入っている
             move2 = self.select_move(self.pokemon2) #技のインスタンスが入っている
-            attacker, defender = self.get_attacker_and_defender(move1, move2)  # 先行後攻を取得
+            attacker, defender = self.get_attacker_and_defender(move1, move2)  # 優先度→素早さで先行後攻を取得
             attacker_move = move1 if attacker is self.pokemon1 else move2
             defender_move = move2 if attacker is self.pokemon1 else move1
 
-            self.use_move(attacker, defender, attacker_move)
+            # can_actが反動硬直・ひるみ・状態異常（ねむり/こおり/まひ/こんらん）による行動不能を
+            # まとめて判定する。行動不能ならその技は不発のまま次に進む
+            if self.can_act(attacker):
+                self.use_move(attacker, defender, attacker_move)
+                if self.get_winner() is not None:
+                    break
+
+            if self.can_act(defender):
+                self.use_move(defender, attacker, defender_move)
+                if self.get_winner() is not None:
+                    break
+
+            # 毎ターン終了時のどく・やけどダメージ
+            self.apply_end_of_turn_status_damage()
             if self.get_winner() is not None:
                 break
 
-            # ひるみ中なら後攻は行動できずターン終了（ひるみは1ターンだけなのでここで解除する）
-            if defender.current_status.is_flinched:
-                defender.current_status.is_flinched = False
+    # pokemonが今ターン行動できるかどうかを判定する。判定と同時に必要な状態更新も行う
+    # (反動硬直・ひるみの解除、ねむり/こおりの残りターン処理、まひの判定、こんらんの自傷など)
+    def can_act(self, pokemon: Pokemon) -> bool:
+        status = pokemon.current_status
+
+        # 反動硬直中（はかいこうせん等を使った直後）は必ず行動不能。このターン限りなので解除する
+        if status.must_recharge:
+            status.must_recharge = False
+            return False
+
+        # ひるみは1ターンだけの行動不能。判定と同時に解除する
+        if status.is_flinched:
+            status.is_flinched = False
+            return False
+
+        condition = status.status_condition
+
+        if condition == "sleep":
+            if status.sleep_turns_remaining <= 0:
+                status.status_condition = None
+            else:
+                status.sleep_turns_remaining -= 1
+                return False
+
+        if condition == "freeze":
+            if random.random() < FREEZE_THAW_CHANCE:
+                status.status_condition = None
+            else:
+                return False
+
+        if condition == "paralysis" and random.random() < PARALYSIS_FULL_PARA_CHANCE:
+            return False
+
+        if condition == "confusion":
+            status.confusion_turns_remaining -= 1
+            if status.confusion_turns_remaining <= 0:
+                status.status_condition = None
+            if random.random() < CONFUSION_SELF_HIT_CHANCE:
+                damage = max(1, int(pokemon.status.hp * CONFUSION_SELF_HIT_RATIO))
+                self.apply_damage(pokemon, damage)
+                return False
+
+        return True
+
+    # 両者が瀕死でなければ、どく・やけどの残りHPダメージをこのターンの終わりに適用する
+    def apply_end_of_turn_status_damage(self):
+        for pokemon in (self.pokemon1, self.pokemon2):
+            if self.is_fainted(pokemon):
                 continue
-
-            self.use_move(defender, attacker, defender_move)
-            if self.get_winner() is not None:
-                break
+            condition = pokemon.current_status.status_condition
+            if condition == "poison":
+                damage = max(1, int(pokemon.status.hp * POISON_DAMAGE_RATIO))
+                self.apply_damage(pokemon, damage)
+            elif condition == "burn":
+                damage = max(1, int(pokemon.status.hp * BURN_DAMAGE_RATIO))
+                self.apply_damage(pokemon, damage)
 
     # ここ
     # attackerが持つ技のうちPPが残っているものからランダムに1つ選ぶ。全て0ならわるあがきを選ぶ
+    # 溜め中（ソーラービーム等の1ターン目を終えた状態）なら、選択せず溜めていた技を強制的に返す
     def select_move(self, attacker: Pokemon) -> BaseMove:
+        if attacker.current_status.charging_move is not None:
+            return attacker.current_status.charging_move
+
         usable_moves = []
         for move in attacker.moves:
             if move.current_pp > 0:
@@ -81,8 +129,13 @@ class Battle:
             return Struggle()
         return random.choice(usable_moves)
 
-    # 素早さを比較して先攻・後攻を決める（同速なら五分五分でランダム）
+    # まず技の優先度を比較し、同じ優先度なら素早さを比較して先攻・後攻を決める（同速なら五分五分でランダム）
     def get_attacker_and_defender(self, move1: BaseMove, move2: BaseMove):
+        if move1.priority != move2.priority:
+            if move1.priority > move2.priority:
+                return self.pokemon1, self.pokemon2
+            return self.pokemon2, self.pokemon1
+
         if self.pokemon1.status.spd > self.pokemon2.status.spd:
             return self.pokemon1, self.pokemon2
         if self.pokemon2.status.spd > self.pokemon1.status.spd:
@@ -115,14 +168,35 @@ class Battle:
     # attackerがdefenderにmoveを撃つ。命中判定→(変化技でなければ)ダメージ計算・適用の順で行い、結果を返す
     # 複数回攻撃技は命中判定を1回だけ行い、そのあと決めたヒット回数分ダメージを繰り返し与える（相手が瀕死になったら打ち切り）
     def use_move(self, attacker: Pokemon, defender: Pokemon, move: BaseMove) -> dict:
-        result = {"hit": False, "damage": 0, "effectiveness": 1.0, "hit_count": 0}
+        result = {"hit": False, "damage": 0, "effectiveness": 1.0, "hit_count": 0, "charging": False}
 
-        # PPは命中/失敗に関わらず、使った時点で1消費する
-        move.current_pp = max(0, move.current_pp - 1)
+        # 1ターン目（溜め開始）かどうか。charging_moveが同じ技を指していれば、今回は2ターン目(攻撃)
+        is_releasing_charge = attacker.current_status.charging_move is move
+
+        if move.requires_charge_turn and not is_releasing_charge:
+            # 溜めターン: PPだけ消費し、攻撃せずに次のターンに備える（あなをほる等は回避状態にもなる）
+            move.current_pp = max(0, move.current_pp - 1)
+            attacker.current_status.charging_move = move
+            if move.charge_is_invulnerable:
+                attacker.current_status.is_invulnerable = True
+            result["charging"] = True
+            return result
+
+        if is_releasing_charge:
+            # 2ターン目: 溜め状態・回避状態を解除して攻撃に移る（PPは1ターン目で消費済みなのでここでは減らさない）
+            attacker.current_status.charging_move = None
+            attacker.current_status.is_invulnerable = False
+        else:
+            # PPは命中/失敗に関わらず、使った時点で1消費する
+            move.current_pp = max(0, move.current_pp - 1)
 
         # はかいこうせん等は命中・失敗に関わらず、使った時点で次ターンの反動硬直が確定する
         if move.requires_recharge:
             attacker.current_status.must_recharge = True
+
+        # 相手が回避状態（あなをほる等で溜め中）なら、命中率に関わらず必ず外れる
+        if defender.current_status.is_invulnerable:
+            return result
 
         if not check_hit(move.hitrate):
             return result
@@ -142,7 +216,7 @@ class Battle:
                 result["hit_count"] += 1
 
             result["damage"] = total_damage
-            result["effectiveness"] = get_effectiveness(move.type, defender.type1, defender.type2)
+            result["effectiveness"] = get_move_effectiveness(move, defender)
 
         # 命中していれば、技固有の追加効果を発動させる（無い技はBaseMoveのデフォルトで何もしない）
         move.apply_effect(self, attacker, defender, total_damage)
@@ -199,11 +273,16 @@ class Battle:
         return False
 
     # chanceの確率でtargetに状態異常を付与する（既に何か状態異常が付いている場合は上書きしない）
+    # ねむり・こんらんは残りターン数もあわせて設定する
     def try_apply_status(self, target, condition, chance):
         if target.current_status.status_condition is not None:
             return False
         if random.random() < chance:
             target.current_status.status_condition = condition
+            if condition == "sleep":
+                target.current_status.sleep_turns_remaining = random.randint(1, 3)
+            elif condition == "confusion":
+                target.current_status.confusion_turns_remaining = random.randint(1, 4)
             return True
         return False
 

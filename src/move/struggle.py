@@ -19,3 +19,6 @@ class Struggle(BaseMove):
 
         # 通常のダメージ以外に、自分が最大HPの1/4だけ反動を受ける
         self.effects = [("recoil_max_hp", 0.25)]
+
+        # タイプを持たないため、タイプ相性による無効化を受けない（ゴーストにも当たる）
+        self.is_typeless = True

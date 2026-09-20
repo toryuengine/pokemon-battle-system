@@ -32,6 +32,13 @@ class BaseMove:
         # 急所に当たりやすい技（きりさく等）はサブクラス側でTrueに上書きする
         self.high_crit = False
 
+        # 優先度。通常技は0、でんこうせっか等の先制技はサブクラス側で正の値に、
+        # ほえる等の後攻技は負の値に上書きする
+        self.priority = 0
+
+        # タイプを持たない技（わるあがき等）。タイプ相性を一切無視し常に等倍になる
+        self.is_typeless = False
+
         # 一撃必殺技（じわれ等）はサブクラス側でTrueに上書きする
         self.is_ohko = False
 
@@ -42,6 +49,11 @@ class BaseMove:
 
         # 使うと次のターン反動で行動不能になる技（はかいこうせん等）はサブクラス側でTrueに上書きする
         self.requires_recharge = False
+
+        # 1ターン目に溜めて2ターン目に攻撃する技（ソーラービーム等）はサブクラス側でTrueに上書きする
+        self.requires_charge_turn = False
+        # 溜めている間、相手の技を回避できる技（あなをほる・そらをとぶ等）はサブクラス側でTrueに上書きする
+        self.charge_is_invulnerable = False
 
         # 追加効果のデータ一覧。何もしない技は空リストのまま
         # 各要素の形式:

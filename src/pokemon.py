@@ -26,6 +26,14 @@ class CurrentStatus:
     is_flinched: bool = False
     # はかいこうせん等を使った次のターンは反動で行動不能。行動チェック後にBattle側でリセットする
     must_recharge: bool = False
+    # ソーラービーム等、溜め中の技のインスタンス。Noneなら溜めていない。次のターンに自動でこの技を撃つ
+    charging_move: Optional[BaseMove] = None
+    # あなをほる等、溜め中に相手の技を回避できる状態かどうか
+    is_invulnerable: bool = False
+    # ねむり状態の残りターン数（0になったら自然に目覚める）
+    sleep_turns_remaining: int = 0
+    # こんらん状態の残りターン数（0になったら自然に治る）
+    confusion_turns_remaining: int = 0
 
 
 class Pokemon:
