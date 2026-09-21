@@ -69,6 +69,7 @@ class BaseMove:
         #   ("clear_stats",)    両者の能力ランクを全てリセットする（はき等）
         #   ("set_weather", weather)  天候を変える（"sun"/"rain"/"sandstorm"/"hail"）
         #   ("set_hazard", hazard_type)  相手の場に罠を設置する（"stealth_rock"/"spikes"/"toxic_spikes"）
+        #   ("set_screen", screen_type)  自分の場に壁を張る（"reflect"/"light_screen"）
         # target は "self"（attacker） か "target"（defender）
         self.effects = []
 
@@ -135,6 +136,10 @@ class BaseMove:
             elif kind == "set_hazard":
                 _, hazard_type = effect
                 battle.add_hazard(battle.get_trainer(defender), hazard_type)
+
+            elif kind == "set_screen":
+                _, screen_type = effect
+                battle.set_screen(battle.get_trainer(attacker), screen_type)
 
     def __repr__(self):
         parts = []

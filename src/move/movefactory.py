@@ -76,7 +76,7 @@ from move.move_073 import UTurn
 from move.move_074 import FakeOut
 from move.move_075 import GunkShot
 from move.move_076 import MetalClaw
-from move.move_077 import RockSmash
+from move.move_077 import BrickBreak
 from move.move_078 import KnockOff
 from move.move_079 import DrillPeck
 from move.move_080 import AquaJet
@@ -345,7 +345,7 @@ _MOVE_CLASSES = {
     74: FakeOut,
     75: GunkShot,
     76: MetalClaw,
-    77: RockSmash,
+    77: BrickBreak,
     78: KnockOff,
     79: DrillPeck,
     80: AquaJet,

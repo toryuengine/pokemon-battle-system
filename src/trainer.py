@@ -14,6 +14,10 @@ class Trainer:
         self.spikes = 0  # 0〜3
         self.toxic_spikes = 0  # 0〜2
 
+        # 自分の場に張られている壁の残りターン数。0なら無効
+        self.reflect_turns_remaining = 0
+        self.light_screen_turns_remaining = 0
+
     @property
     def active(self) -> Pokemon:
         return self.party[self.active_index]

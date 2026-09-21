@@ -39,7 +39,7 @@ def get_weather_power_multiplier(move, weather) -> float:
     return multiplier
 
 
-def calculate_damage(attacker, defender, move, weather=None) -> int:
+def calculate_damage(attacker, defender, move, weather=None, screen_active=False) -> int:
     # 変化技(CATEGORY_STATUS)はダメージを与えない
     if move.category == CATEGORY_STATUS:
         return 0
@@ -74,7 +74,11 @@ def calculate_damage(attacker, defender, move, weather=None) -> int:
     random_factor = random.randint(85, 100) / 100
 
     crit_chance = HIGH_CRIT_CHANCE if move.high_crit else NORMAL_CRIT_CHANCE
-    crit_multiplier = CRIT_MULTIPLIER if random.random() < crit_chance else 1.0
+    is_critical = random.random() < crit_chance
+    crit_multiplier = CRIT_MULTIPLIER if is_critical else 1.0
 
-    damage = base_damage * stab * effectiveness * weather_multiplier * crit_multiplier * random_factor
+    # リフレクター/ひかりのかべによる軽減。急所に当たった場合は壁を無視する
+    screen_multiplier = 0.5 if (screen_active and not is_critical) else 1.0
+
+    damage = base_damage * stab * effectiveness * weather_multiplier * crit_multiplier * screen_multiplier * random_factor
     return int(damage)

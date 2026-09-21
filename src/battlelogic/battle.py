@@ -3,9 +3,8 @@ import random
 from battlelogic.accuracy import check_hit
 from battlelogic.damage import calculate_damage
 from battlelogic.stat_stage import StatStages
-from battlelogic.type_chart import get_move_effectiveness
-from battlelogic.type_chart import get_effectiveness
-from move.base_move import CATEGORY_STATUS, BaseMove
+from battlelogic.type_chart import get_effectiveness, get_move_effectiveness
+from move.base_move import CATEGORY_PHYSICAL, CATEGORY_SPECIAL, CATEGORY_STATUS, BaseMove
 from move.struggle import Struggle
 from pokemon import Pokemon
 from trainer import Trainer
@@ -37,6 +36,11 @@ SPIKES_DAMAGE_RATIOS = {1: 1 / 8, 2: 1 / 6, 3: 1 / 4}
 TYPE_ID_ROCK = 12
 TYPE_ID_POISON = 7
 TYPE_ID_FLYING = 9
+
+# 壁（リフレクター・ひかりのかべ）の持続ターン数
+SCREEN_DURATION = 5
+# かわらわりは攻撃前に相手の場の壁を破壊する
+BRICK_BREAK_ID = 77
 
 
 class Battle:
@@ -109,6 +113,7 @@ class Battle:
 
             self.apply_end_of_turn_weather_damage()
             self.tick_weather()
+            self.tick_screens()
             self.resolve_faints()
             if self.is_battle_over():
                 break
@@ -179,6 +184,30 @@ class Battle:
             trainer.spikes = min(3, trainer.spikes + 1)
         elif hazard_type == "toxic_spikes":
             trainer.toxic_spikes = min(2, trainer.toxic_spikes + 1)
+
+    # 壁(リフレクター/ひかりのかべ)をtrainerの場に張る（5ターン継続）
+    def set_screen(self, trainer: Trainer, screen_type: str):
+        if screen_type == "reflect":
+            trainer.reflect_turns_remaining = SCREEN_DURATION
+        elif screen_type == "light_screen":
+            trainer.light_screen_turns_remaining = SCREEN_DURATION
+
+    # 両トレーナーの壁の残りターンを1減らす
+    def tick_screens(self):
+        for trainer in (self.trainer1, self.trainer2):
+            if trainer.reflect_turns_remaining > 0:
+                trainer.reflect_turns_remaining -= 1
+            if trainer.light_screen_turns_remaining > 0:
+                trainer.light_screen_turns_remaining -= 1
+
+    # moveのカテゴリに対応する壁が、defenderの場に張られているかどうか
+    def is_screen_active(self, defender: Pokemon, move: BaseMove) -> bool:
+        trainer = self.get_trainer(defender)
+        if move.category == CATEGORY_PHYSICAL:
+            return trainer.reflect_turns_remaining > 0
+        if move.category == CATEGORY_SPECIAL:
+            return trainer.light_screen_turns_remaining > 0
+        return False
 
     # pokemonが今ターン行動できるかどうかを判定する。判定と同時に必要な状態更新も行う
     # (反動硬直・ひるみの解除、ねむり/こおりの残りターン処理、まひの判定、こんらんの自傷など)
@@ -371,13 +400,20 @@ class Battle:
         result["hit"] = True
         total_damage = 0
 
+        # かわらわりはダメージを与える前に、相手の場の壁(リフレクター/ひかりのかべ)を破壊する
+        if move.id == BRICK_BREAK_ID:
+            defender_trainer = self.get_trainer(defender)
+            defender_trainer.reflect_turns_remaining = 0
+            defender_trainer.light_screen_turns_remaining = 0
+
         # 変化技(CATEGORY_STATUS)はダメージを与えないので、物理・特殊技の時だけダメージ計算する
         if move.category != CATEGORY_STATUS:
+            screen_active = self.is_screen_active(defender, move)
             hit_count = self.roll_hit_count(move)
             for _ in range(hit_count):
                 if self.is_fainted(defender):
                     break
-                damage = calculate_damage(attacker, defender, move, self.weather)
+                damage = calculate_damage(attacker, defender, move, self.weather, screen_active)
                 self.apply_damage(defender, damage)
                 total_damage += damage
                 result["hit_count"] += 1
