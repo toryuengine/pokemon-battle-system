@@ -75,6 +75,7 @@ class BaseMove:
         #   ("set_screen", screen_type)  自分の場に壁を張る（"reflect"/"light_screen"）
         #   ("mimic",)     相手が直前に使った技を自分の技としてコピーする（まねっこ）
         #   ("transform",) 相手の見た目・実数値(HP以外)・技・特性をコピーして変身する（ものまね）
+        #   ("self_switch",) 攻撃後、自分から手持ちの生きている次の1体に強制的に交代する（とんぼがえり）
         # target は "self"（attacker） か "target"（defender）
         self.effects = []
 
@@ -151,6 +152,9 @@ class BaseMove:
 
             elif kind == "transform":
                 battle.perform_transform(attacker, defender)
+
+            elif kind == "self_switch":
+                battle.perform_self_switch(attacker)
 
     def __repr__(self):
         parts = []

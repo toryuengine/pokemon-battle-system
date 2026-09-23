@@ -567,3 +567,13 @@ class Battle:
             copied_move.current_pp = COPIED_MOVE_PP
             copied_moves.append(copied_move)
         attacker.moves = copied_moves
+
+    # とんぼがえり: 攻撃したpokemon自身が、手持ちの生きている次の1体に強制的に交代する
+    # (プレイヤー判断が無いので、resolve_faintsと同じ選び方＝手持ち順で最初に見つかった生存個体にする)
+    # 手持ちに他に生きている個体がいなければ何もしない（交代せず攻撃だけで終わる）
+    def perform_self_switch(self, pokemon: Pokemon):
+        trainer = self.get_trainer(pokemon)
+        next_index = trainer.find_next_alive_index()
+        if next_index is None:
+            return
+        self.switch_in(trainer, next_index)
