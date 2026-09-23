@@ -5,9 +5,15 @@ from battlelogic.damage import calculate_damage
 from battlelogic.stat_stage import StatStages
 from battlelogic.type_chart import get_effectiveness, get_move_effectiveness
 from move.base_move import CATEGORY_PHYSICAL, CATEGORY_SPECIAL, CATEGORY_STATUS, BaseMove
+from move.movefactory import create_move
 from move.struggle import Struggle
-from pokemon import Pokemon
+from pokemon import Pokemon, PokemonStatus
 from trainer import Trainer
+
+# まねっこ・ものまねでコピーできない技のID（わるあがきは技一覧に存在しないため）
+STRUGGLE_ID = -1
+# コピーした技のPPは元の最大PPに関わらず固定でこの値になる
+COPIED_MOVE_PP = 5
 
 # 状態異常の効果値（第4世代仕様）
 POISON_DAMAGE_RATIO = 1 / 8
@@ -363,6 +369,9 @@ class Battle:
     def use_move(self, attacker: Pokemon, defender: Pokemon, move: BaseMove) -> dict:
         result = {"hit": False, "damage": 0, "effectiveness": 1.0, "hit_count": 0, "charging": False}
 
+        # まねっこがコピーできるよう、使った技のIDを記録しておく
+        attacker.current_status.last_move_used_id = move.id
+
         # 1ターン目（溜め開始）かどうか。charging_moveが同じ技を指していれば、今回は2ターン目(攻撃)
         is_releasing_charge = attacker.current_status.charging_move is move
 
@@ -517,3 +526,44 @@ class Battle:
         max_hp = attacker.status.hp
         heal_amount = int(max_hp * ratio)
         attacker.current_status.current_hp = min(max_hp, attacker.current_status.current_hp + heal_amount)
+
+    # まねっこ: targetが直前に使った技を、attackerの技構成の中のmimic_move(まねっこ自身)の枠にコピーする
+    # コピーした技のPPは固定5。targetがまだ技を使っていない場合や、コピー不可の技(わるあがき)なら失敗する
+    # 注意: 交代して元のまねっこに戻す処理はまだ実装していない
+    def perform_mimic(self, attacker: Pokemon, target: Pokemon, mimic_move: BaseMove):
+        last_move_id = target.current_status.last_move_used_id
+        if last_move_id is None or last_move_id == STRUGGLE_ID:
+            return
+
+        for index, move in enumerate(attacker.moves):
+            if move is mimic_move:
+                copied_move = create_move(last_move_id)
+                copied_move.pp = COPIED_MOVE_PP
+                copied_move.current_pp = COPIED_MOVE_PP
+                attacker.moves[index] = copied_move
+                break
+
+    # ものまね: attackerがtargetに変身する。タイプ・実数値(HPを除く)・技構成(各PP5)・特性をコピーする
+    # 現在HP・状態異常・持ち物はコピーしない
+    # 注意: 交代して元の姿に戻す処理はまだ実装していない
+    def perform_transform(self, attacker: Pokemon, target: Pokemon):
+        attacker.type1 = target.type1
+        attacker.type2 = target.type2
+        attacker.ability = target.ability
+
+        attacker.status = PokemonStatus(
+            hp=attacker.status.hp,  # HPは変身前のまま変わらない
+            atk=target.status.atk,
+            defense=target.status.defense,
+            spatk=target.status.spatk,
+            spdef=target.status.spdef,
+            spd=target.status.spd,
+        )
+
+        copied_moves = []
+        for move in target.moves:
+            copied_move = create_move(move.id)
+            copied_move.pp = COPIED_MOVE_PP
+            copied_move.current_pp = COPIED_MOVE_PP
+            copied_moves.append(copied_move)
+        attacker.moves = copied_moves

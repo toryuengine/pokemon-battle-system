@@ -34,6 +34,8 @@ class CurrentStatus:
     sleep_turns_remaining: int = 0
     # こんらん状態の残りターン数（0になったら自然に治る）
     confusion_turns_remaining: int = 0
+    # 直前に使った技のID（まねっこがコピーする対象を判定するために使う）。まだ何も使っていなければNone
+    last_move_used_id: Optional[int] = None
 
 
 class Pokemon:

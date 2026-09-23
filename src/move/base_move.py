@@ -70,6 +70,8 @@ class BaseMove:
         #   ("set_weather", weather)  天候を変える（"sun"/"rain"/"sandstorm"/"hail"）
         #   ("set_hazard", hazard_type)  相手の場に罠を設置する（"stealth_rock"/"spikes"/"toxic_spikes"）
         #   ("set_screen", screen_type)  自分の場に壁を張る（"reflect"/"light_screen"）
+        #   ("mimic",)     相手が直前に使った技を自分の技としてコピーする（まねっこ）
+        #   ("transform",) 相手の見た目・実数値(HP以外)・技・特性をコピーして変身する（ものまね）
         # target は "self"（attacker） か "target"（defender）
         self.effects = []
 
@@ -140,6 +142,12 @@ class BaseMove:
             elif kind == "set_screen":
                 _, screen_type = effect
                 battle.set_screen(battle.get_trainer(attacker), screen_type)
+
+            elif kind == "mimic":
+                battle.perform_mimic(attacker, defender, self)
+
+            elif kind == "transform":
+                battle.perform_transform(attacker, defender)
 
     def __repr__(self):
         parts = []
