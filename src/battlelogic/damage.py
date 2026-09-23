@@ -18,6 +18,26 @@ TYPE_ID_ROCK = 12
 # ソーラービームのid。晴れ以外での溜め省略・雨での威力半減という固有仕様があるため個別に参照する
 SOLAR_BEAM_ID = 19
 
+# じたばた等、自分の残りHP割合によって威力が変わる技の閾値テーブル
+# (残りHP割合の下限(以上), 威力)。上から順に見て、最初に条件を満たしたものを使う
+HP_BASED_POWER_TABLE = [
+    (0.6875, 20),
+    (0.3542, 40),
+    (0.1563, 80),
+    (0.0938, 100),
+    (0.0417, 150),
+    (0.0, 200),
+]
+
+
+# attackerの残りHP割合から、上のテーブルに沿った威力を返す
+def get_hp_based_power(attacker) -> int:
+    hp_ratio = attacker.current_status.current_hp / attacker.status.hp
+    for threshold, power in HP_BASED_POWER_TABLE:
+        if hp_ratio >= threshold:
+            return power
+    return HP_BASED_POWER_TABLE[-1][1]
+
 
 # 天候によるほのお/みず技の威力補正。ソーラービームは雨で別途さらに半減する
 def get_weather_power_multiplier(move, weather) -> float:
@@ -62,7 +82,9 @@ def calculate_damage(attacker, defender, move, weather=None, screen_active=False
         if weather == "sandstorm" and TYPE_ID_ROCK in (defender.type1, defender.type2):
             defense_stat = int(defense_stat * 1.5)
 
-    base_damage = (2 * LEVEL / 5 + 2) * move.power * attack_stat / defense_stat
+    power = get_hp_based_power(attacker) if move.has_hp_based_power else move.power
+
+    base_damage = (2 * LEVEL / 5 + 2) * power * attack_stat / defense_stat
     base_damage = base_damage / 50 + 2
 
     # タイプを持たない技(わるあがき等)はタイプ一致による強化(STAB)も無い

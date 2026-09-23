@@ -227,7 +227,7 @@ from move.move_224 import Minimize
 from move.move_225 import AcidArmor
 from move.move_226 import Spite
 from move.move_227 import BellyDrum
-from move.move_228 import Struggle2
+from move.move_228 import Flail2
 from move.move_229 import Guillotine
 from move.move_230 import BulletPunch
 from move.move_231 import Whirlpool
@@ -496,7 +496,7 @@ _MOVE_CLASSES = {
     225: AcidArmor,
     226: Spite,
     227: BellyDrum,
-    228: Struggle2,
+    228: Flail2,
     229: Guillotine,
     230: BulletPunch,
     231: Whirlpool,

@@ -42,6 +42,9 @@ class BaseMove:
         # 一撃必殺技（じわれ等）はサブクラス側でTrueに上書きする
         self.is_ohko = False
 
+        # 自分の残りHP割合によって威力が変わる技（じたばた等）はサブクラス側でTrueに上書きする
+        self.has_hp_based_power = False
+
         # 1回の使用で何回ヒットするか。通常技は1〜1（1回のみ）
         # 固定2回攻撃（にどげり等）はmin_hits=max_hits=2、2〜5回攻撃（ボーンラッシュ等）はmin_hits=2, max_hits=5
         self.min_hits = 1
