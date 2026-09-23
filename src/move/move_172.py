@@ -6,3 +6,4 @@ class Flail(BaseMove):
     def __init__(self):
         super().__init__(id=172)
         self.effects = []
+        self.has_hp_based_power = True
