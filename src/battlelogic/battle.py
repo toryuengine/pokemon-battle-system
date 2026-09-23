@@ -2,7 +2,7 @@ import random
 
 from battlelogic.accuracy import check_hit
 from battlelogic.damage import calculate_damage
-from battlelogic.stat_stage import StatStages
+from battlelogic.stat_stage import StatStages, accuracy_stage_multiplier
 from battlelogic.type_chart import get_effectiveness, get_move_effectiveness, get_multiplier
 from move.base_move import CATEGORY_PHYSICAL, CATEGORY_SPECIAL, CATEGORY_STATUS, BaseMove
 from move.movefactory import create_move
@@ -142,6 +142,9 @@ class Battle:
 
     # trainerの場のポケモンをnew_indexの個体に交代させる。能力ランクをリセットし、設置技の効果を適用する
     def switch_in(self, trainer: Trainer, new_index: int):
+        # みやぶるの「見破られた」状態は、対象が場を退くと解除される
+        trainer.active.current_status.is_identified = False
+
         trainer.active_index = new_index
         if trainer is self.trainer1:
             self.stages1 = StatStages()
@@ -346,17 +349,33 @@ class Battle:
     def is_fainted(self, target: Pokemon) -> bool:
         return target.current_status.current_hp <= 0
 
-    # 天候によって命中率が変わる技（かみなり・ふぶき）を考慮した実際の命中率を返す
+    # 天候・命中率/回避率ランクを考慮した実際の命中率を返す
     # hitrate=0は「必ず命中する」という既存の規約なので、必中にしたい場合はそのまま流用できる
-    def get_effective_hitrate(self, move: BaseMove) -> int:
+    def get_effective_hitrate(self, move: BaseMove, attacker: Pokemon, defender: Pokemon) -> int:
+        base_hitrate = move.hitrate
         if move.id == THUNDER_ID:
             if self.weather == "rain":
-                return 0
-            if self.weather == "sun":
-                return 50
+                base_hitrate = 0
+            elif self.weather == "sun":
+                base_hitrate = 50
         elif move.id == BLIZZARD_ID and self.weather == "hail":
+            base_hitrate = 0
+
+        if base_hitrate == 0:
             return 0
-        return move.hitrate
+
+        # みやぶるで見破られている相手には、回避ランクを無視して命中判定する
+        accuracy_stage = self.get_stages(attacker).accuracy
+        if defender.current_status.is_identified:
+            evasion_stage = 0
+        else:
+            evasion_stage = self.get_stages(defender).evasion
+
+        combined_stage = max(-6, min(6, accuracy_stage - evasion_stage))
+        effective_hitrate = base_hitrate * accuracy_stage_multiplier(combined_stage)
+
+        # hitrate=0は「必中」を表す既存の規約と衝突しないよう、下限を1にクランプする
+        return max(1, min(100, round(effective_hitrate)))
 
     # move.min_hits/max_hitsから今回のヒット回数を決める
     # 2〜5回攻撃(ボーンラッシュ等)は3/8, 3/8, 1/8, 1/8という第4世代仕様の確率分布、それ以外(固定回数)はそのまま使う
@@ -404,7 +423,7 @@ class Battle:
         if defender.current_status.is_invulnerable:
             return result
 
-        if not check_hit(self.get_effective_hitrate(move)):
+        if not check_hit(self.get_effective_hitrate(move, attacker, defender)):
             return result
 
         result["hit"] = True
@@ -419,17 +438,18 @@ class Battle:
         # 変化技(CATEGORY_STATUS)はダメージを与えないので、物理・特殊技の時だけダメージ計算する
         if move.category != CATEGORY_STATUS:
             screen_active = self.is_screen_active(defender, move)
+            ignore_ghost_immunity = defender.current_status.is_identified
             hit_count = self.roll_hit_count(move)
             for _ in range(hit_count):
                 if self.is_fainted(defender):
                     break
-                damage = calculate_damage(attacker, defender, move, self.weather, screen_active)
+                damage = calculate_damage(attacker, defender, move, self.weather, screen_active, ignore_ghost_immunity)
                 self.apply_damage(defender, damage)
                 total_damage += damage
                 result["hit_count"] += 1
 
             result["damage"] = total_damage
-            result["effectiveness"] = get_move_effectiveness(move, defender)
+            result["effectiveness"] = get_move_effectiveness(move, defender, ignore_ghost_immunity)
 
             # テクスチャー2が参照できるよう、受けた技のタイプを記録しておく
             if result["hit_count"] > 0:
@@ -480,6 +500,11 @@ class Battle:
             self.change_stage(target, stat_name, stage_amount)
             return True
         return False
+
+    # みやぶるでtargetを「見破った」状態にする。以後、相手の回避ランクを無視して命中判定し、
+    # ノーマル/かくとう技に対するゴーストタイプの無効化も無視する（対象が場を退くと解除）
+    def perform_identify(self, target):
+        target.current_status.is_identified = True
 
     # chanceの確率で複数の能力ランクを同時に変える（げんしのちからのような複合効果用。1回の判定で全部まとめて適用する）
     def try_apply_stat_multi_change(self, target, stat_changes, chance):

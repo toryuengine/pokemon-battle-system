@@ -77,6 +77,7 @@ class BaseMove:
         #   ("transform",) 相手の見た目・実数値(HP以外)・技・特性をコピーして変身する（ものまね）
         #   ("self_switch",) 攻撃後、自分から手持ちの生きている次の1体に強制的に交代する（とんぼがえり）
         #   ("type_change_resist",) 自分のタイプを、直前に受けた技のタイプを半減/無効にするタイプに変える（テクスチャー2）
+        #   ("identify",)  相手を見破る。相手の回避ランクを無視し、ゴーストタイプの無効化も無視する（みやぶる）
         # target は "self"（attacker） か "target"（defender）
         self.effects = []
 
@@ -159,6 +160,9 @@ class BaseMove:
 
             elif kind == "type_change_resist":
                 battle.perform_type_change_resist(attacker)
+
+            elif kind == "identify":
+                battle.perform_identify(defender)
 
     def __repr__(self):
         parts = []

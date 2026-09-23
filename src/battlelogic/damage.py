@@ -59,14 +59,14 @@ def get_weather_power_multiplier(move, weather) -> float:
     return multiplier
 
 
-def calculate_damage(attacker, defender, move, weather=None, screen_active=False) -> int:
+def calculate_damage(attacker, defender, move, weather=None, screen_active=False, ignore_ghost_immunity=False) -> int:
     # 変化技(CATEGORY_STATUS)はダメージを与えない
     if move.category == CATEGORY_STATUS:
         return 0
 
     # 一撃必殺技: タイプ相性が0倍(無効)なら失敗、それ以外は相手の残りHPと同じ量のダメージで即座に瀕死にする
     if move.is_ohko:
-        if get_move_effectiveness(move, defender) == 0:
+        if get_move_effectiveness(move, defender, ignore_ghost_immunity) == 0:
             return 0
         return defender.current_status.current_hp
 
@@ -91,7 +91,7 @@ def calculate_damage(attacker, defender, move, weather=None, screen_active=False
     is_stab = not move.is_typeless and resolve_type_id(move.type) in (attacker.type1, attacker.type2)
     stab = 1.5 if is_stab else 1.0
 
-    effectiveness = get_move_effectiveness(move, defender)
+    effectiveness = get_move_effectiveness(move, defender, ignore_ghost_immunity)
     weather_multiplier = get_weather_power_multiplier(move, weather)
     random_factor = random.randint(85, 100) / 100
 

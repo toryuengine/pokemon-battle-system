@@ -1,5 +1,10 @@
 from readpokemondata import load_type_chart_data, load_type_data
 
+# みやぶるでゴースト無効化を無視する対象タイプ（ノーマル/かくとう技がゴーストタイプに無効化される仕様の解除用）
+TYPE_ID_NORMAL = 0
+TYPE_ID_FIGHTING = 6
+TYPE_ID_GHOST = 13
+
 _name_to_id = None
 
 
@@ -41,9 +46,26 @@ def get_effectiveness(attack_type, defend_type1, defend_type2=None) -> float:
 
 
 # moveがis_typeless(わるあがき等)なら常に等倍。そうでなければ通常通りタイプ相性を計算する
-def get_move_effectiveness(move, defender) -> float:
+# ignore_ghost_immunity=True（みやぶる済みの相手）かつノーマル/かくとう技の場合は、
+# 相手のゴーストタイプを無いものとして相性を計算する（ゴースト無効化の解除）
+def get_move_effectiveness(move, defender, ignore_ghost_immunity=False) -> float:
     if move.is_typeless:
         return 1.0
+
+    attack_id = resolve_type_id(move.type)
+
+    if ignore_ghost_immunity and attack_id in (TYPE_ID_NORMAL, TYPE_ID_FIGHTING):
+        defend_types = [
+            t for t in (defender.type1, defender.type2)
+            if t is not None and t != TYPE_ID_GHOST
+        ]
+        if not defend_types:
+            return 1.0
+        multiplier = 1.0
+        for defend_type in defend_types:
+            multiplier *= get_multiplier(attack_id, defend_type)
+        return multiplier
+
     return get_effectiveness(move.type, defender.type1, defender.type2)
 
 

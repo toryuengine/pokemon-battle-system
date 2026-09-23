@@ -38,6 +38,9 @@ class CurrentStatus:
     last_move_used_id: Optional[int] = None
     # 直前に受けたダメージ技のタイプ（テクスチャー2が変化先を判定するために使う）。まだ受けていなければNone
     last_hit_by_type: Optional[str] = None
+    # みやぶるで「見破られた」状態かどうか。Trueの間は相手の回避ランクを無視して命中判定し、
+    # ノーマル/かくとう技に対するゴーストタイプの無効化も無視する。場を退くと解除される
+    is_identified: bool = False
 
 
 class Pokemon:
