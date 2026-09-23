@@ -49,6 +49,11 @@ SCREEN_DURATION = 5
 # かわらわりは攻撃前に相手の場の壁を破壊する
 BRICK_BREAK_ID = 77
 
+# まもる・みきり・こらえる（本編仕様で連続成功の可否を共通の1つのカウンタで管理する）
+PROTECT_FAMILY_MOVE_IDS = {51, 65, 96}  # こらえる、まもる、みきり
+# 連続成功するたびに次回の成功率が1/3倍になっていく（3世代以降共通の仕様）
+PROTECT_STALL_SUCCESS_RATIO = 1 / 3
+
 
 class Battle:
     # 現在HPはBattleではなくPokemon側(current_status.current_hp)で管理する
@@ -82,6 +87,11 @@ class Battle:
     #バトルスタート
     def start_battle(self):
         for _ in range(self.MAX_TURNS):
+            # まもる・みきり・こらえるの効果は使ったそのターン限りなので、新しいターンの頭でリセットする
+            for pokemon in (self.pokemon1, self.pokemon2):
+                pokemon.current_status.is_protected = False
+                pokemon.current_status.is_enduring = False
+
             move1 = self.select_move(self.pokemon1) #技のインスタンスが入っている
             move2 = self.select_move(self.pokemon2) #技のインスタンスが入っている
             first_mover, second_mover = self.get_attacker_and_defender(move1, move2)  # 優先度→素早さで先行後攻を取得
@@ -142,8 +152,9 @@ class Battle:
 
     # trainerの場のポケモンをnew_indexの個体に交代させる。能力ランクをリセットし、設置技の効果を適用する
     def switch_in(self, trainer: Trainer, new_index: int):
-        # みやぶるの「見破られた」状態は、対象が場を退くと解除される
+        # みやぶるの「見破られた」状態、まもる・みきり・こらえるの連続成功カウンタは、場を退くと解除される
         trainer.active.current_status.is_identified = False
+        trainer.active.current_status.protect_stall_counter = 0
 
         trainer.active_index = new_index
         if trainer is self.trainer1:
@@ -387,10 +398,14 @@ class Battle:
     # attackerがdefenderにmoveを撃つ。命中判定→(変化技でなければ)ダメージ計算・適用の順で行い、結果を返す
     # 複数回攻撃技は命中判定を1回だけ行い、そのあと決めたヒット回数分ダメージを繰り返し与える（相手が瀕死になったら打ち切り）
     def use_move(self, attacker: Pokemon, defender: Pokemon, move: BaseMove) -> dict:
-        result = {"hit": False, "damage": 0, "effectiveness": 1.0, "hit_count": 0, "charging": False}
+        result = {"hit": False, "damage": 0, "effectiveness": 1.0, "hit_count": 0, "charging": False, "blocked_by_protect": False}
 
         # まねっこがコピーできるよう、使った技のIDを記録しておく
         attacker.current_status.last_move_used_id = move.id
+
+        # まもる・みきり・こらえる以外の技を使ったら、連続成功カウンタをリセットする
+        if move.id not in PROTECT_FAMILY_MOVE_IDS:
+            attacker.current_status.protect_stall_counter = 0
 
         # 1ターン目（溜め開始）かどうか。charging_moveが同じ技を指していれば、今回は2ターン目(攻撃)
         is_releasing_charge = attacker.current_status.charging_move is move
@@ -423,6 +438,11 @@ class Battle:
         if defender.current_status.is_invulnerable:
             return result
 
+        # 相手がまもる・みきりで守っていれば、命中率に関わらず技が防がれる
+        if defender.current_status.is_protected and self.is_move_blocked_by_protect(move):
+            result["blocked_by_protect"] = True
+            return result
+
         if not check_hit(self.get_effective_hitrate(move, attacker, defender)):
             return result
 
@@ -444,6 +464,11 @@ class Battle:
                 if self.is_fainted(defender):
                     break
                 damage = calculate_damage(attacker, defender, move, self.weather, screen_active, ignore_ghost_immunity)
+
+                # こらえる中なら、瀕死になるはずのダメージをHP1残りに抑える
+                if defender.current_status.is_enduring and damage >= defender.current_status.current_hp:
+                    damage = max(0, defender.current_status.current_hp - 1)
+
                 self.apply_damage(defender, damage)
                 total_damage += damage
                 result["hit_count"] += 1
@@ -505,6 +530,41 @@ class Battle:
     # ノーマル/かくとう技に対するゴーストタイプの無効化も無視する（対象が場を退くと解除）
     def perform_identify(self, target):
         target.current_status.is_identified = True
+
+    # moveがまもる・みきりで防がれる対象かどうかを判定する
+    # ダメージを与える技は常に防がれる。変化技は「相手(target)」に向けた効果を持つものだけ防がれ、
+    # 自分自身への効果（つるぎのまい等）や天候・設置技・壁など場に対する効果は本編仕様通り防がれない
+    def is_move_blocked_by_protect(self, move: BaseMove) -> bool:
+        if move.category != CATEGORY_STATUS:
+            return True
+        for effect in move.effects:
+            kind = effect[0]
+            if kind in ("status", "status_random", "stat", "stat_multi", "flinch") and effect[1] == "target":
+                return True
+        return False
+
+    # まもる・みきり・こらえるの連続使用による成功率の減衰を判定し、成功していればis_protected/is_enduringを立てる
+    # 本編仕様: 初回100%、以降連続成功するたびに1/3倍。失敗、またはこれら以外の技を使うと0に戻る
+    def attempt_protect_family_move(self, attacker: Pokemon, is_endure: bool):
+        stall_count = attacker.current_status.protect_stall_counter
+        success_chance = PROTECT_STALL_SUCCESS_RATIO ** stall_count
+
+        if random.random() < success_chance:
+            if is_endure:
+                attacker.current_status.is_enduring = True
+            else:
+                attacker.current_status.is_protected = True
+            attacker.current_status.protect_stall_counter = stall_count + 1
+        else:
+            attacker.current_status.protect_stall_counter = 0
+
+    # まもる・みきり（このターンの間、相手の技をほぼ全て防ぐ）
+    def perform_protect(self, attacker: Pokemon):
+        self.attempt_protect_family_move(attacker, is_endure=False)
+
+    # こらえる（このターンの間、瀕死になるはずの攻撃をHP1で耐える）
+    def perform_endure(self, attacker: Pokemon):
+        self.attempt_protect_family_move(attacker, is_endure=True)
 
     # chanceの確率で複数の能力ランクを同時に変える（げんしのちからのような複合効果用。1回の判定で全部まとめて適用する）
     def try_apply_stat_multi_change(self, target, stat_changes, chance):

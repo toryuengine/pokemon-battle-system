@@ -78,6 +78,8 @@ class BaseMove:
         #   ("self_switch",) 攻撃後、自分から手持ちの生きている次の1体に強制的に交代する（とんぼがえり）
         #   ("type_change_resist",) 自分のタイプを、直前に受けた技のタイプを半減/無効にするタイプに変える（テクスチャー2）
         #   ("identify",)  相手を見破る。相手の回避ランクを無視し、ゴーストタイプの無効化も無視する（みやぶる）
+        #   ("protect",)   このターンの間、相手の技をほぼ全て防ぐ（まもる・みきり）。連続成功で成功率が下がる
+        #   ("endure",)    このターンの間、瀕死になるはずの攻撃をHP1で耐える（こらえる）。連続成功で成功率が下がる
         # target は "self"（attacker） か "target"（defender）
         self.effects = []
 
@@ -163,6 +165,12 @@ class BaseMove:
 
             elif kind == "identify":
                 battle.perform_identify(defender)
+
+            elif kind == "protect":
+                battle.perform_protect(attacker)
+
+            elif kind == "endure":
+                battle.perform_endure(attacker)
 
     def __repr__(self):
         parts = []

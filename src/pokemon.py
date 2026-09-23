@@ -41,6 +41,13 @@ class CurrentStatus:
     # みやぶるで「見破られた」状態かどうか。Trueの間は相手の回避ランクを無視して命中判定し、
     # ノーマル/かくとう技に対するゴーストタイプの無効化も無視する。場を退くと解除される
     is_identified: bool = False
+    # まもる・みきりで守り状態かどうか。このターンの間だけ有効で、Battle側が毎ターン開始時にリセットする
+    is_protected: bool = False
+    # こらえるでHP1耐え状態かどうか。このターンの間だけ有効で、Battle側が毎ターン開始時にリセットする
+    is_enduring: bool = False
+    # まもる・みきり・こらえるを連続成功させた回数（本編仕様で成功率が1/3ずつ下がっていくため）。
+    # これら以外の技を使う、または失敗すると0に戻る。交代すると解除される
+    protect_stall_counter: int = 0
 
 
 class Pokemon:
