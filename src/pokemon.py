@@ -36,6 +36,8 @@ class CurrentStatus:
     confusion_turns_remaining: int = 0
     # 直前に使った技のID（まねっこがコピーする対象を判定するために使う）。まだ何も使っていなければNone
     last_move_used_id: Optional[int] = None
+    # 直前に受けたダメージ技のタイプ（テクスチャー2が変化先を判定するために使う）。まだ受けていなければNone
+    last_hit_by_type: Optional[str] = None
 
 
 class Pokemon:

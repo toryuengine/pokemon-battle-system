@@ -3,11 +3,12 @@ import random
 from battlelogic.accuracy import check_hit
 from battlelogic.damage import calculate_damage
 from battlelogic.stat_stage import StatStages
-from battlelogic.type_chart import get_effectiveness, get_move_effectiveness
+from battlelogic.type_chart import get_effectiveness, get_move_effectiveness, get_multiplier
 from move.base_move import CATEGORY_PHYSICAL, CATEGORY_SPECIAL, CATEGORY_STATUS, BaseMove
 from move.movefactory import create_move
 from move.struggle import Struggle
 from pokemon import Pokemon, PokemonStatus
+from readpokemondata import load_type_data
 from trainer import Trainer
 
 # まねっこ・ものまねでコピーできない技のID（わるあがきは技一覧に存在しないため）
@@ -430,6 +431,10 @@ class Battle:
             result["damage"] = total_damage
             result["effectiveness"] = get_move_effectiveness(move, defender)
 
+            # テクスチャー2が参照できるよう、受けた技のタイプを記録しておく
+            if result["hit_count"] > 0:
+                defender.current_status.last_hit_by_type = move.type
+
         # 命中していれば、技固有の追加効果を発動させる（無い技はBaseMoveのデフォルトで何もしない）
         move.apply_effect(self, attacker, defender, total_damage)
 
@@ -577,3 +582,26 @@ class Battle:
         if next_index is None:
             return
         self.switch_in(trainer, next_index)
+
+    # テクスチャー2: 直前に受けた技のタイプを半減または無効にするタイプの中から1つ選び、単一タイプに変わる
+    # (現在自分が持っているタイプは候補から除く)。まだ何も技を受けていない、外れた技しか受けていない、
+    # 候補が無い場合は失敗する
+    def perform_type_change_resist(self, attacker: Pokemon):
+        hit_type = attacker.current_status.last_hit_by_type
+        if hit_type is None:
+            return
+
+        current_types = {attacker.type1, attacker.type2}
+        candidates = []
+        for type_id_str in load_type_data():
+            type_id = int(type_id_str)
+            if type_id in current_types:
+                continue
+            if get_multiplier(hit_type, type_id) <= 0.5:
+                candidates.append(type_id)
+
+        if not candidates:
+            return
+
+        attacker.type1 = random.choice(candidates)
+        attacker.type2 = None

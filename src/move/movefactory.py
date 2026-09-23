@@ -262,7 +262,7 @@ from move.move_259 import Peck2
 from move.move_260 import Twister
 from move.move_261 import MirrorShot
 from move.move_262 import RockWrecker
-from move.move_263 import UnknownMove263
+from move.move_263 import Conversion2
 from move.move_264 import EggLay
 from move.move_265 import ExtremeSpeed
 from move.move_266 import CometPunch
@@ -531,7 +531,7 @@ _MOVE_CLASSES = {
     260: Twister,
     261: MirrorShot,
     262: RockWrecker,
-    263: UnknownMove263,
+    263: Conversion2,
     264: EggLay,
     265: ExtremeSpeed,
     266: CometPunch,
