@@ -32,7 +32,8 @@ class CurrentStatus:
     is_invulnerable: bool = False
     # ねむり状態の残りターン数（0になったら自然に目覚める）
     sleep_turns_remaining: int = 0
-    # こんらん状態の残りターン数（0になったら自然に治る）
+    # こんらん状態の残りターン数（0なら混乱していない）。どく・まひ等のstatus_conditionとは別枠で、
+    # 他の状態異常と重複する。交代すると解除される
     confusion_turns_remaining: int = 0
     # 直前に使った技のID（まねっこがコピーする対象を判定するために使う）。まだ何も使っていなければNone
     last_move_used_id: Optional[int] = None
@@ -48,6 +49,15 @@ class CurrentStatus:
     # まもる・みきり・こらえるを連続成功させた回数（本編仕様で成功率が1/3ずつ下がっていくため）。
     # これら以外の技を使う、または失敗すると0に戻る。交代すると解除される
     protect_stall_counter: int = 0
+    # じゅうでんの残りターン数。使ったターンの終わりと次のターンの終わりに1ずつ減り、
+    # 0より大きい間はでんき技の威力が2倍になる（でんき技を使うとその時点で解除）。交代すると解除される
+    charge_turns_remaining: int = 0
+    # のろい（ゴーストタイプが使った場合）を受けた状態。毎ターン終了時に最大HPの1/4を失う。交代すると解除される
+    is_cursed: bool = False
+    # たくわえるを使った回数（最大3回）。交代すると0に戻る
+    stockpile_count: int = 0
+    # いえきで特性を消された状態。交代すると解除される
+    is_ability_suppressed: bool = False
 
 
 class Pokemon:

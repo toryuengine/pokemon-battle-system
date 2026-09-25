@@ -58,6 +58,9 @@ class BaseMove:
         # 溜めている間、相手の技を回避できる技（あなをほる・そらをとぶ等）はサブクラス側でTrueに上書きする
         self.charge_is_invulnerable = False
 
+        # 使った時点で（命中・失敗に関わらず）自分が瀕死になる技（おきみやげ等）はサブクラス側でTrueに上書きする
+        self.user_faints_on_use = False
+
         # 追加効果のデータ一覧。何もしない技は空リストのまま
         # 各要素の形式:
         #   ("status", target, condition, chance)            例: ("status", "target", "poison", 0.3)
@@ -69,7 +72,13 @@ class BaseMove:
         #   ("recoil_max_hp", ratio)  attacker(自分)が最大HPのratio分だけ反動を受ける（わるあがき用）
         #   ("drain", ratio)    attacker(自分)が与えたダメージの一部を回復する
         #   ("heal", ratio)     attacker(自分)が最大HPの一定割合を回復する
-        #   ("clear_stats",)    両者の能力ランクを全てリセットする（はき等）
+        #   ("clear_stats",)    両者の能力ランクを全てリセットする（くろいきり等）
+        #   ("belly_drum",)     最大HPの半分を削って攻撃ランクを最大(+6)にする（はらだいこ）
+        #   ("curse",)          ゴーストタイプなら自分のHPを半分削って相手をのろい状態に、
+        #                       それ以外なら自分の攻撃・防御+1、素早さ-1（のろい）
+        #   ("charge",)         次のターンまで、でんき技の威力を2倍にする＋自分の特防+1（じゅうでん）
+        #   ("stockpile",)      自分の防御・特防+1。最大3回まで（たくわえる）
+        #   ("suppress_ability",) 相手の特性を消す（いえき）
         #   ("set_weather", weather)  天候を変える（"sun"/"rain"/"sandstorm"/"hail"）
         #   ("set_hazard", hazard_type)  相手の場に罠を設置する（"stealth_rock"/"spikes"/"toxic_spikes"）
         #   ("set_screen", screen_type)  自分の場に壁を張る（"reflect"/"light_screen"）
@@ -80,6 +89,7 @@ class BaseMove:
         #   ("identify",)  相手を見破る。相手の回避ランクを無視し、ゴーストタイプの無効化も無視する（みやぶる）
         #   ("protect",)   このターンの間、相手の技をほぼ全て防ぐ（まもる・みきり）。連続成功で成功率が下がる
         #   ("endure",)    このターンの間、瀕死になるはずの攻撃をHP1で耐える（こらえる）。連続成功で成功率が下がる
+        #   ("pain_split",) 自分と相手の残りHPを合計し、半分ずつ分け合う（いたみわけ）
         # target は "self"（attacker） か "target"（defender）
         self.effects = []
 
@@ -171,6 +181,24 @@ class BaseMove:
 
             elif kind == "endure":
                 battle.perform_endure(attacker)
+
+            elif kind == "pain_split":
+                battle.perform_pain_split(attacker, defender)
+
+            elif kind == "belly_drum":
+                battle.perform_belly_drum(attacker)
+
+            elif kind == "curse":
+                battle.perform_curse(attacker, defender)
+
+            elif kind == "charge":
+                battle.perform_charge(attacker)
+
+            elif kind == "stockpile":
+                battle.perform_stockpile(attacker)
+
+            elif kind == "suppress_ability":
+                battle.perform_suppress_ability(defender)
 
     def __repr__(self):
         parts = []
