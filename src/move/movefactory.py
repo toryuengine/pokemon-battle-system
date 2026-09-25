@@ -176,7 +176,7 @@ from move.move_173 import MudBomb
 from move.move_174 import DarkPulse
 from move.move_175 import Frustration
 from move.move_176 import SwordsDance
-from move.move_177 import Haze
+from move.move_177 import GastroAcid
 from move.move_178 import SpitUp
 from move.move_179 import Swallow
 from move.move_180 import Stockpile
@@ -445,7 +445,7 @@ _MOVE_CLASSES = {
     174: DarkPulse,
     175: Frustration,
     176: SwordsDance,
-    177: Haze,
+    177: GastroAcid,
     178: SpitUp,
     179: Swallow,
     180: Stockpile,

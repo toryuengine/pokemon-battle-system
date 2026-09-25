@@ -2,8 +2,8 @@ import random
 
 from battlelogic.accuracy import check_hit
 from battlelogic.damage import calculate_damage
-from battlelogic.stat_stage import StatStages, accuracy_stage_multiplier
-from battlelogic.type_chart import get_effectiveness, get_move_effectiveness, get_multiplier
+from battlelogic.stat_stage import StatStages, accuracy_stage_multiplier, stage_multiplier
+from battlelogic.type_chart import TYPE_ID_GHOST, get_effectiveness, get_move_effectiveness, get_multiplier
 from move.base_move import CATEGORY_PHYSICAL, CATEGORY_SPECIAL, CATEGORY_STATUS, BaseMove
 from move.movefactory import create_move
 from move.struggle import Struggle
@@ -23,6 +23,15 @@ PARALYSIS_FULL_PARA_CHANCE = 0.25
 FREEZE_THAW_CHANCE = 0.2
 CONFUSION_SELF_HIT_CHANCE = 1 / 3
 CONFUSION_SELF_HIT_RATIO = 1 / 8
+# まひ状態の素早さ倍率（第4世代仕様）
+PARALYSIS_SPEED_MULTIPLIER = 0.25
+
+# のろい（ゴーストタイプ使用時）の効果値
+CURSE_DAMAGE_RATIO = 1 / 4
+# じゅうでんの持続。使ったターンの終わりと次のターンの終わりに1ずつ減る
+CHARGE_DURATION = 2
+# たくわえるの上限回数
+STOCKPILE_MAX = 3
 
 # 天候ダメージ（すなあらし・あられ）の効果値と、免疫となるタイプID
 WEATHER_DAMAGE_RATIO = 1 / 16
@@ -131,6 +140,7 @@ class Battle:
             self.apply_end_of_turn_weather_damage()
             self.tick_weather()
             self.tick_screens()
+            self.tick_charge()
             self.resolve_faints()
             if self.is_battle_over():
                 break
@@ -153,8 +163,15 @@ class Battle:
     # trainerの場のポケモンをnew_indexの個体に交代させる。能力ランクをリセットし、設置技の効果を適用する
     def switch_in(self, trainer: Trainer, new_index: int):
         # みやぶるの「見破られた」状態、まもる・みきり・こらえるの連続成功カウンタは、場を退くと解除される
-        trainer.active.current_status.is_identified = False
-        trainer.active.current_status.protect_stall_counter = 0
+        outgoing_status = trainer.active.current_status
+        outgoing_status.is_identified = False
+        outgoing_status.protect_stall_counter = 0
+        # こんらん・じゅうでん・のろい・たくわえる・いえきの効果も、場を退くと解除される
+        outgoing_status.confusion_turns_remaining = 0
+        outgoing_status.charge_turns_remaining = 0
+        outgoing_status.is_cursed = False
+        outgoing_status.stockpile_count = 0
+        outgoing_status.is_ability_suppressed = False
 
         trainer.active_index = new_index
         if trainer is self.trainer1:
@@ -260,17 +277,17 @@ class Battle:
             else:
                 return False
 
-        if condition == "paralysis" and random.random() < PARALYSIS_FULL_PARA_CHANCE:
-            return False
-
-        if condition == "confusion":
+        # こんらんはstatus_conditionとは別枠なので、どく・まひ等と重複していても判定する
+        # 残りターンが尽きていれば、このターンの行動前に解ける
+        if status.confusion_turns_remaining > 0:
             status.confusion_turns_remaining -= 1
-            if status.confusion_turns_remaining <= 0:
-                status.status_condition = None
-            if random.random() < CONFUSION_SELF_HIT_CHANCE:
+            if status.confusion_turns_remaining > 0 and random.random() < CONFUSION_SELF_HIT_CHANCE:
                 damage = max(1, int(pokemon.status.hp * CONFUSION_SELF_HIT_RATIO))
                 self.apply_damage(pokemon, damage)
                 return False
+
+        if condition == "paralysis" and random.random() < PARALYSIS_FULL_PARA_CHANCE:
+            return False
 
         return True
 
@@ -285,6 +302,11 @@ class Battle:
                 self.apply_damage(pokemon, damage)
             elif condition == "burn":
                 damage = max(1, int(pokemon.status.hp * BURN_DAMAGE_RATIO))
+                self.apply_damage(pokemon, damage)
+
+            # のろい状態なら、どく・やけどとは別に最大HPの1/4を失う
+            if pokemon.current_status.is_cursed and not self.is_fainted(pokemon):
+                damage = max(1, int(pokemon.status.hp * CURSE_DAMAGE_RATIO))
                 self.apply_damage(pokemon, damage)
 
     # 天候を変える（5ターン継続）。にほんばれ・あまごい・すなあらし・あられから呼ばれる
@@ -337,11 +359,20 @@ class Battle:
                 return self.pokemon1, self.pokemon2
             return self.pokemon2, self.pokemon1
 
-        if self.pokemon1.status.spd > self.pokemon2.status.spd:
+        speed1 = self.get_effective_speed(self.pokemon1)
+        speed2 = self.get_effective_speed(self.pokemon2)
+        if speed1 > speed2:
             return self.pokemon1, self.pokemon2
-        if self.pokemon2.status.spd > self.pokemon1.status.spd:
+        if speed2 > speed1:
             return self.pokemon2, self.pokemon1
         return random.sample([self.pokemon1, self.pokemon2], 2)
+
+    # 素早さランクとまひ(1/4)を反映した、行動順の判定に使う素早さを返す
+    def get_effective_speed(self, pokemon: Pokemon) -> int:
+        speed = int(pokemon.status.spd * stage_multiplier(self.get_stages(pokemon).spd))
+        if pokemon.current_status.status_condition == "paralysis":
+            speed = int(speed * PARALYSIS_SPEED_MULTIPLIER)
+        return speed
 
     # targetがpokemon1/pokemon2のどちらかを見て、対応する残りHPを返す
     def get_current_hp(self, target: Pokemon) -> int:
@@ -434,12 +465,29 @@ class Battle:
         if move.requires_recharge:
             attacker.current_status.must_recharge = True
 
+        # おきみやげ等は命中・失敗に関わらず、使った時点で自分が瀕死になる（第4世代仕様）
+        if move.user_faints_on_use:
+            attacker.current_status.current_hp = 0
+
+        result = self._resolve_move_hit(attacker, defender, move, result)
+
+        # じゅうでん状態は、でんき技を使った時点で消費される（威力2倍はダメージ計算で反映済み）
+        if move.type == "でんき" and move.category != CATEGORY_STATUS:
+            attacker.current_status.charge_turns_remaining = 0
+
+        return result
+
+    # use_moveのうち、命中判定以降（回避状態・まもる・命中・ダメージ・追加効果）の処理
+    def _resolve_move_hit(self, attacker: Pokemon, defender: Pokemon, move: BaseMove, result: dict) -> dict:
+        # 相手に向けた技かどうか（自分自身・場に向けた変化技は、相手の回避状態やまもるの影響を受けない）
+        targets_opponent = self.is_move_blocked_by_protect(move, attacker)
+
         # 相手が回避状態（あなをほる等で溜め中）なら、命中率に関わらず必ず外れる
-        if defender.current_status.is_invulnerable:
+        if defender.current_status.is_invulnerable and targets_opponent:
             return result
 
         # 相手がまもる・みきりで守っていれば、命中率に関わらず技が防がれる
-        if defender.current_status.is_protected and self.is_move_blocked_by_protect(move):
+        if defender.current_status.is_protected and targets_opponent:
             result["blocked_by_protect"] = True
             return result
 
@@ -463,7 +511,10 @@ class Battle:
             for _ in range(hit_count):
                 if self.is_fainted(defender):
                     break
-                damage = calculate_damage(attacker, defender, move, self.weather, screen_active, ignore_ghost_immunity)
+                damage = calculate_damage(
+                    attacker, defender, move, self.weather, screen_active, ignore_ghost_immunity,
+                    self.get_stages(attacker), self.get_stages(defender),
+                )
 
                 # こらえる中なら、瀕死になるはずのダメージをHP1残りに抑える
                 if defender.current_status.is_enduring and damage >= defender.current_status.current_hp:
@@ -534,15 +585,18 @@ class Battle:
     # moveがまもる・みきりで防がれる対象かどうかを判定する
     # ダメージを与える技は常に防がれる。変化技は「相手(target)」に向けた効果を持つものだけ防がれ、
     # 自分自身への効果（つるぎのまい等）や天候・設置技・壁など場に対する効果は本編仕様通り防がれない
-    def is_move_blocked_by_protect(self, move: BaseMove) -> bool:
+    # のろいはゴーストタイプが使った場合だけ相手に向けた技になるため、使用者(attacker)も見て判定する
+    def is_move_blocked_by_protect(self, move: BaseMove, attacker: Pokemon = None) -> bool:
         if move.category != CATEGORY_STATUS:
             return True
         for effect in move.effects:
             kind = effect[0]
             if kind in ("status", "status_random", "stat", "stat_multi", "flinch") and effect[1] == "target":
                 return True
-            # いたみわけは相手のHPを直接書き換えるので、相手に向けた効果として防がれる
-            if kind == "pain_split":
+            # いたみわけ・いえきは相手のHP・特性を直接書き換えるので、相手に向けた効果として防がれる
+            if kind in ("pain_split", "suppress_ability"):
+                return True
+            if kind == "curse" and attacker is not None and self.is_ghost_type(attacker):
                 return True
         return False
 
@@ -579,15 +633,23 @@ class Battle:
 
     # chanceの確率でtargetに状態異常を付与する（既に何か状態異常が付いている場合は上書きしない）
     # ねむり・こんらんは残りターン数もあわせて設定する
+    # こんらんだけはstatus_conditionとは別枠で管理し、他の状態異常と重複できる（既にこんらん中なら上書きしない）
     def try_apply_status(self, target, condition, chance):
+        if condition == "confusion":
+            if target.current_status.confusion_turns_remaining > 0:
+                return False
+            if random.random() < chance:
+                # 行動前に1減らしてから判定するため、実際に混乱したまま行動する1〜4ターン分+1を設定する
+                target.current_status.confusion_turns_remaining = random.randint(2, 5)
+                return True
+            return False
+
         if target.current_status.status_condition is not None:
             return False
         if random.random() < chance:
             target.current_status.status_condition = condition
             if condition == "sleep":
                 target.current_status.sleep_turns_remaining = random.randint(1, 3)
-            elif condition == "confusion":
-                target.current_status.confusion_turns_remaining = random.randint(1, 4)
             return True
         return False
 
@@ -626,6 +688,55 @@ class Battle:
         shared_hp = (attacker.current_status.current_hp + target.current_status.current_hp) // 2
         attacker.current_status.current_hp = min(attacker.status.hp, shared_hp)
         target.current_status.current_hp = min(target.status.hp, shared_hp)
+
+    def is_ghost_type(self, pokemon: Pokemon) -> bool:
+        return TYPE_ID_GHOST in (pokemon.type1, pokemon.type2)
+
+    # はらだいこ: 最大HPの半分(端数切り捨て)を削り、攻撃ランクを最大(+6)にする
+    # 残りHPが最大HPの半分以下、または既に攻撃ランクが+6なら失敗する（HPも減らない）
+    def perform_belly_drum(self, attacker: Pokemon):
+        max_hp = attacker.status.hp
+        stages = self.get_stages(attacker)
+        if attacker.current_status.current_hp <= max_hp // 2 or stages.atk >= 6:
+            return
+        self.apply_damage(attacker, max_hp // 2)
+        stages.atk = 6
+
+    # のろい: ゴーストタイプが使うと、自分の最大HPの半分(端数切り捨て)を削って相手をのろい状態にする
+    # (自分のHPが足りなければそのまま瀕死になる。相手が既にのろい状態なら失敗しHPも減らない)
+    # ゴーストタイプ以外が使うと、自分の攻撃・防御+1、素早さ-1
+    def perform_curse(self, attacker: Pokemon, target: Pokemon):
+        if self.is_ghost_type(attacker):
+            if target.current_status.is_cursed:
+                return
+            self.apply_damage(attacker, max(1, attacker.status.hp // 2))
+            target.current_status.is_cursed = True
+        else:
+            self.try_apply_stat_multi_change(attacker, [("atk", 1), ("defense", 1), ("spd", -1)], 1.0)
+
+    # じゅうでん: 次のターンの終わりまで、でんき技の威力が2倍になる。あわせて自分の特防+1（第4世代以降）
+    def perform_charge(self, attacker: Pokemon):
+        attacker.current_status.charge_turns_remaining = CHARGE_DURATION
+        self.change_stage(attacker, "spdef", 1)
+
+    # 場に出ている両者のじゅうでんの残りターンを1減らす
+    def tick_charge(self):
+        for pokemon in (self.pokemon1, self.pokemon2):
+            if pokemon.current_status.charge_turns_remaining > 0:
+                pokemon.current_status.charge_turns_remaining -= 1
+
+    # たくわえる: 自分の防御・特防+1。3回まで使え、4回目以降は失敗する（交代するとカウントは0に戻る）
+    # 注意: はきだす・のみこむは未実装のため、たくわえた分のランクを解除する処理もまだ無い
+    def perform_stockpile(self, attacker: Pokemon):
+        if attacker.current_status.stockpile_count >= STOCKPILE_MAX:
+            return
+        attacker.current_status.stockpile_count += 1
+        self.try_apply_stat_multi_change(attacker, [("defense", 1), ("spdef", 1)], 1.0)
+
+    # いえき: targetの特性を消す（交代するまで）
+    # 注意: 特性の効果自体がまだ実装されていないため、今は状態を記録するだけで対戦結果には影響しない
+    def perform_suppress_ability(self, target: Pokemon):
+        target.current_status.is_ability_suppressed = True
 
     # まねっこ: targetが直前に使った技を、attackerの技構成の中のmimic_move(まねっこ自身)の枠にコピーする
     # コピーした技のPPは固定5。targetがまだ技を使っていない場合や、コピー不可の技(わるあがき)なら失敗する

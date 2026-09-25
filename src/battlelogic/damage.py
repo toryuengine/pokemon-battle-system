@@ -1,5 +1,6 @@
 import random
 
+from battlelogic.stat_stage import stage_multiplier
 from battlelogic.type_chart import get_move_effectiveness, resolve_type_id
 from move.base_move import CATEGORY_PHYSICAL, CATEGORY_STATUS
 
@@ -59,7 +60,19 @@ def get_weather_power_multiplier(move, weather) -> float:
     return multiplier
 
 
-def calculate_damage(attacker, defender, move, weather=None, screen_active=False, ignore_ghost_immunity=False) -> int:
+# 能力ランクを実数値に反映する。急所に当たった場合、攻撃側の下降ランク・防御側の上昇ランクは無視する（第4世代仕様）
+def apply_stage_to_stat(stat: int, stage: int, is_critical: bool, is_attack_side: bool) -> int:
+    if is_critical:
+        if is_attack_side and stage < 0:
+            stage = 0
+        if not is_attack_side and stage > 0:
+            stage = 0
+    return int(stat * stage_multiplier(stage))
+
+
+# attacker_stages/defender_stagesは両者のStatStages。省略時はランク補正なし（0段階）として計算する
+def calculate_damage(attacker, defender, move, weather=None, screen_active=False, ignore_ghost_immunity=False,
+                     attacker_stages=None, defender_stages=None) -> int:
     # 変化技(CATEGORY_STATUS)はダメージを与えない
     if move.category == CATEGORY_STATUS:
         return 0
@@ -70,19 +83,34 @@ def calculate_damage(attacker, defender, move, weather=None, screen_active=False
             return 0
         return defender.current_status.current_hp
 
+    # 急所判定はランク補正の扱いに影響するため、実数値を決める前に行う
+    crit_chance = HIGH_CRIT_CHANCE if move.high_crit else NORMAL_CRIT_CHANCE
+    is_critical = random.random() < crit_chance
+
     # 物理技(CATEGORY_PHYSICAL)はatk/defense、それ以外(特殊)はspatk/spdefを使う
     if move.category == CATEGORY_PHYSICAL:
         attack_stat = attacker.status.atk
         defense_stat = defender.status.defense
+        attack_stage = attacker_stages.atk if attacker_stages else 0
+        defense_stage = defender_stages.defense if defender_stages else 0
     else:
         attack_stat = attacker.status.spatk
         defense_stat = defender.status.spdef
+        attack_stage = attacker_stages.spatk if attacker_stages else 0
+        defense_stage = defender_stages.spdef if defender_stages else 0
 
-        # すなあらしの間、いわタイプの特防は1.5倍になる
-        if weather == "sandstorm" and TYPE_ID_ROCK in (defender.type1, defender.type2):
-            defense_stat = int(defense_stat * 1.5)
+    attack_stat = apply_stage_to_stat(attack_stat, attack_stage, is_critical, is_attack_side=True)
+    defense_stat = max(1, apply_stage_to_stat(defense_stat, defense_stage, is_critical, is_attack_side=False))
+
+    # すなあらしの間、いわタイプの特防は1.5倍になる
+    if move.category != CATEGORY_PHYSICAL and weather == "sandstorm" and TYPE_ID_ROCK in (defender.type1, defender.type2):
+        defense_stat = int(defense_stat * 1.5)
 
     power = get_hp_based_power(attacker) if move.has_hp_based_power else move.power
+
+    # じゅうでん状態なら、でんき技の威力が2倍になる
+    if attacker.current_status.charge_turns_remaining > 0 and move.type == "でんき":
+        power *= 2
 
     base_damage = (2 * LEVEL / 5 + 2) * power * attack_stat / defense_stat
     base_damage = base_damage / 50 + 2
@@ -95,8 +123,6 @@ def calculate_damage(attacker, defender, move, weather=None, screen_active=False
     weather_multiplier = get_weather_power_multiplier(move, weather)
     random_factor = random.randint(85, 100) / 100
 
-    crit_chance = HIGH_CRIT_CHANCE if move.high_crit else NORMAL_CRIT_CHANCE
-    is_critical = random.random() < crit_chance
     crit_multiplier = CRIT_MULTIPLIER if is_critical else 1.0
 
     # リフレクター/ひかりのかべによる軽減。急所に当たった場合は壁を無視する
