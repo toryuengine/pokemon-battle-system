@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# はたきおとす
+# はたきおとす: 当たると相手の持ち物をはたき落とす（第4世代は威力20）
 class KnockOff(BaseMove):
     def __init__(self):
-        super().__init__(id=78)  # 交代・拘束・特殊なターン管理などが必要な効果は未実装
-        self.effects = []
+        super().__init__(id=78)
+        self.effects = [("knock_off",)]

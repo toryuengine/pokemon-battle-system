@@ -61,6 +61,20 @@ class BaseMove:
         # 使った時点で（命中・失敗に関わらず）自分が瀕死になる技（おきみやげ等）はサブクラス側でTrueに上書きする
         self.user_faints_on_use = False
 
+        # ねむり状態でも使える技（ねごと）はサブクラス側でTrueに上書きする
+        self.usable_while_asleep = False
+
+        # 自分の他の技をランダムに1つ呼び出して使う技（ねごと）はサブクラス側でTrueに上書きする
+        self.calls_own_random_move = False
+        # ねごとで呼び出せない技（ねごと自身・きあいパンチ等）はサブクラス側でTrueに上書きする（溜め技は自動的に除外する）
+        self.cannot_be_called_by_sleep_talk = False
+
+        # 使ったターンにはダメージを与えず、2ターン後のターン終了時に攻撃する技（みらいよち）はサブクラス側でTrueに上書きする
+        self.is_delayed_attack = False
+
+        # まもる・みきりで防がれない、相手に向けた技（ほえる等）はサブクラス側でTrueに上書きする
+        self.bypasses_protect = False
+
         # 追加効果のデータ一覧。何もしない技は空リストのまま
         # 各要素の形式:
         #   ("status", target, condition, chance)            例: ("status", "target", "poison", 0.3)
@@ -90,8 +104,36 @@ class BaseMove:
         #   ("protect",)   このターンの間、相手の技をほぼ全て防ぐ（まもる・みきり）。連続成功で成功率が下がる
         #   ("endure",)    このターンの間、瀕死になるはずの攻撃をHP1で耐える（こらえる）。連続成功で成功率が下がる
         #   ("pain_split",) 自分と相手の残りHPを合計し、半分ずつ分け合う（いたみわけ）
+        #   ("knock_off",)  相手の持ち物をはたき落とす（はたきおとす）
+        #   ("bind",)       相手を2〜5ターン締め付け、毎ターン最大HPの1/16を削る（まきつく・すなじごく・うずしお）
+        #   ("mean_look",)  相手を逃げられなくする（くろいまなざし）
+        #   ("force_switch",) 相手を手持ちの他のポケモンに強制的に交代させる（ほえる）
+        #   ("taunt",)      相手を3〜5ターン変化技が使えない状態にする（ちょうはつ）
+        #   ("fling",)      投げつけた持ち物の効果を相手に与える（なげつける）
+        #   ("destiny_bond",) 次の行動までに相手の攻撃で瀕死になると、相手も道連れにする（みちづれ）
+        #   ("encore",)     相手が直前に使った技を4〜8ターンの間出し続けさせる（アンコール）
+        #   ("disable",)    相手が直前に使った技を4〜7ターンの間使えなくする（かなしばり）
+        #   ("release_stockpile",) たくわえた回数と、たくわえるで上がった防御・特防を元に戻す（はきだす）
+        #   ("swallow",)    たくわえた回数に応じて回復し、たくわえた効果を解除する（のみこむ）
+        #   ("magnet_rise",) 5ターンの間じめん技を受けなくなる（でんじふゆう）
+        #   ("torment",)    相手が同じ技を2回続けて出せなくする（いちゃもん）
+        #   ("nightmare",)  ねむっている相手を、毎ターン最大HPの1/4ずつ削る状態にする（あくむ）
+        #   ("grudge",)     次の行動までに相手の攻撃で瀕死になると、その技のPPを0にする（おんねん）
+        #   ("baton_pass",) 能力ランク等を引き継いで手持ちの次の1体に交代する（バトンタッチ）
+        #   ("trick",)      自分と相手の持ち物を入れ替える（トリック）
+        #   ("spite",)      相手が直前に使った技のPPを4減らす（うらみ）
+        #   ("recycle",)    最後に消費した持ち物を取り戻す（リサイクル）
         # target は "self"（attacker） か "target"（defender）
         self.effects = []
+
+    # ダメージ計算に使う威力。使う状況によって威力が変わる技（なげつける・はきだす）はサブクラス側で上書きする
+    def get_power(self, attacker) -> int:
+        return self.power
+
+    # 命中判定の直前に呼ばれる。技を出す条件を満たしていなければFalseを返し、技は失敗する（PPは消費済み）
+    # なげつける（持ち物が無い）・はきだす/のみこむ（たくわえていない）等はサブクラス側で上書きする
+    def try_execute(self, battle, attacker, defender) -> bool:
+        return True
 
     # 命中していれば、self.effectsの内容を順番にBattleへ適用する
     # 状態異常・能力ランク・ひるみは、特性（クリアボディ・シンクロ等）の判定のため効果の発生元(attacker)も渡す
@@ -206,6 +248,63 @@ class BaseMove:
 
             elif kind == "suppress_ability":
                 battle.perform_suppress_ability(defender)
+
+            elif kind == "knock_off":
+                battle.perform_knock_off(attacker, defender)
+
+            elif kind == "bind":
+                battle.perform_bind(attacker, defender)
+
+            elif kind == "mean_look":
+                battle.perform_mean_look(attacker, defender)
+
+            elif kind == "force_switch":
+                battle.perform_force_switch(attacker, defender)
+
+            elif kind == "taunt":
+                battle.perform_taunt(defender)
+
+            elif kind == "fling":
+                battle.apply_flung_item_effect(defender, self.flung_item, attacker)
+
+            elif kind == "destiny_bond":
+                battle.perform_destiny_bond(attacker)
+
+            elif kind == "encore":
+                battle.perform_encore(defender)
+
+            elif kind == "disable":
+                battle.perform_disable(defender)
+
+            elif kind == "release_stockpile":
+                battle.release_stockpile(attacker)
+
+            elif kind == "swallow":
+                battle.perform_swallow(attacker)
+
+            elif kind == "magnet_rise":
+                battle.perform_magnet_rise(attacker)
+
+            elif kind == "torment":
+                battle.perform_torment(defender)
+
+            elif kind == "nightmare":
+                battle.perform_nightmare(defender)
+
+            elif kind == "grudge":
+                battle.perform_grudge(attacker)
+
+            elif kind == "baton_pass":
+                battle.perform_baton_pass(attacker)
+
+            elif kind == "trick":
+                battle.perform_trick(attacker, defender)
+
+            elif kind == "spite":
+                battle.perform_spite(defender)
+
+            elif kind == "recycle":
+                battle.perform_recycle(attacker)
 
     def __repr__(self):
         parts = []

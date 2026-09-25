@@ -2,6 +2,7 @@ from item.base_item import BaseItem
 
 EXTENDED_WEATHER_DURATION = 8
 EXTENDED_SCREEN_DURATION = 8
+GRIP_CLAW_BINDING_TURNS = 5
 
 
 # あついいわ・しめったいわ・つめたいいわ: 持ち主が起こしたweatherの天候が8ターン続く
@@ -20,6 +21,7 @@ class LightClay(BaseItem):
         return EXTENDED_SCREEN_DURATION
 
 
-# ねばりのかぎづめ: しめつけ系の技が5ターン続く（しめつけ系の技が未実装のため今は効果なし）
+# ねばりのかぎづめ: しめつけ系の技（まきつく・すなじごく・うずしお）が必ず5ターン続く
 class GripClaw(BaseItem):
-    pass
+    def get_binding_turns(self, turns: int) -> int:
+        return GRIP_CLAW_BINDING_TURNS

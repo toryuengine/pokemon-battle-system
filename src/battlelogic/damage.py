@@ -147,7 +147,7 @@ def calculate_damage(attacker, defender, move, weather=None, screen_active=False
     if move.category != CATEGORY_PHYSICAL and weather == "sandstorm" and TYPE_ID_ROCK in (defender.type1, defender.type2):
         defense_stat = int(defense_stat * 1.5)
 
-    power = get_hp_based_power(attacker) if move.has_hp_based_power else move.power
+    power = get_hp_based_power(attacker) if move.has_hp_based_power else move.get_power(attacker)
     # テクニシャン等は持ち物・じゅうでんの補正前の威力で判定する
     ability_power_multiplier = (attacker_ability.get_power_multiplier(attacker, move, power)
                                 * defender_ability.get_received_power_multiplier(defender, move))

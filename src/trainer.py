@@ -18,6 +18,12 @@ class Trainer:
         self.reflect_turns_remaining = 0
         self.light_screen_turns_remaining = 0
 
+        # 自分の場に向けて撃たれたみらいよちの、攻撃が来るまでの残りターン数（0なら無し）と、
+        # 使った時点で計算済みのダメージ・命中率。攻撃はその時点で場に出ている個体が受ける
+        self.future_sight_turns_remaining = 0
+        self.future_sight_damage = 0
+        self.future_sight_hitrate = 0
+
     @property
     def active(self) -> Pokemon:
         return self.party[self.active_index]

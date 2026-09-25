@@ -16,17 +16,24 @@ class StatusCureBerry(BaseItem):
         self.cures_confusion = cures_confusion
 
     def activate(self, battle, pokemon):
+        if self._cure(battle, pokemon):
+            battle.consume_item(pokemon)
+
+    # なげつけるで投げつけられた相手が食べた扱いになり、相手の状態異常を回復する
+    def on_flung(self, battle, target, source):
+        self._cure(battle, target)
+
+    # pokemonの対応する状態異常・こんらんを回復する。回復したらTrueを返す
+    def _cure(self, battle, pokemon) -> bool:
         status = pokemon.current_status
         cures_condition = status.status_condition is not None and (
             self.cures_conditions is None or status.status_condition in self.cures_conditions)
         cures_confusion = self.cures_confusion and status.confusion_turns_remaining > 0
-        if not cures_condition and not cures_confusion:
-            return
         if cures_condition:
             battle.cure_status(pokemon)
         if cures_confusion:
             status.confusion_turns_remaining = 0
-        battle.consume_item(pokemon)
+        return cures_condition or cures_confusion
 
 
 # オボンのみ: HPが半分以下になったら最大HPの1/4回復する
@@ -38,6 +45,10 @@ class SitrusBerry(BaseItem):
             heal_amount = int(max_hp * SITRUS_BERRY_HEAL_RATIO)
             status.current_hp = min(max_hp, status.current_hp + heal_amount)
             battle.consume_item(pokemon)
+
+    # なげつけるで投げつけられた相手が、HPに関係なく食べた扱いになる
+    def on_flung(self, battle, target, source):
+        battle.apply_heal(target, SITRUS_BERRY_HEAL_RATIO)
 
 
 # ピンチ実（チイラのみ・ヤタピのみ・カムラのみ）: HPが1/4以下（くいしんぼうなら1/2以下）になったら
@@ -54,6 +65,10 @@ class PinchBerry(BaseItem):
                 and getattr(stages, self.stat_name) < 6):
             battle.change_stage(pokemon, self.stat_name, 1)
             battle.consume_item(pokemon)
+
+    # なげつけるで投げつけられた相手が、HPに関係なく食べた扱いになる
+    def on_flung(self, battle, target, source):
+        battle.change_stage(target, self.stat_name, 1)
 
 
 # 半減実（オッカのみ等）: resist_typeの効果抜群の技を受けたとき、ダメージを半分にして消費する
