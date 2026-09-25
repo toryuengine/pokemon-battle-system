@@ -1,4 +1,3 @@
-from battlelogic.item import IRON_BALL
 from readpokemondata import load_type_chart_data, load_type_data
 
 # みやぶるでゴースト無効化を無視する対象タイプ（ノーマル/かくとう技がゴーストタイプに無効化される仕様の解除用）
@@ -61,7 +60,7 @@ def get_move_effectiveness(move, defender, ignore_ghost_immunity=False) -> float
     ignored_type_ids = set()
     if ignore_ghost_immunity and attack_id in (TYPE_ID_NORMAL, TYPE_ID_FIGHTING):
         ignored_type_ids.add(TYPE_ID_GHOST)
-    if attack_id == TYPE_ID_GROUND and defender.item == IRON_BALL:
+    if attack_id == TYPE_ID_GROUND and defender.held_item.forces_grounded:
         ignored_type_ids.add(TYPE_ID_FLYING)
 
     if ignored_type_ids:
