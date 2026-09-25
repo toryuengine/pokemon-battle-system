@@ -70,6 +70,22 @@ def apply_stage_to_stat(stat: int, stage: int, is_critical: bool, is_attack_side
     return int(stat * stage_multiplier(stage))
 
 
+# こんらんの自傷ダメージ（第4世代仕様）。威力40・タイプなしの物理技で自分自身を攻撃した扱いになり、
+# 自分の攻撃・防御の実数値とランク補正を使う。急所・タイプ一致・タイプ相性・天候・壁の影響は受けず、乱数(85〜100%)のみ掛かる
+CONFUSION_SELF_HIT_POWER = 40
+
+
+def calculate_confusion_damage(pokemon, stages=None) -> int:
+    attack_stat = apply_stage_to_stat(pokemon.status.atk, stages.atk if stages else 0, False, is_attack_side=True)
+    defense_stat = max(1, apply_stage_to_stat(pokemon.status.defense, stages.defense if stages else 0, False, is_attack_side=False))
+
+    base_damage = (2 * LEVEL / 5 + 2) * CONFUSION_SELF_HIT_POWER * attack_stat / defense_stat
+    base_damage = base_damage / 50 + 2
+
+    random_factor = random.randint(85, 100) / 100
+    return max(1, int(base_damage * random_factor))
+
+
 # attacker_stages/defender_stagesは両者のStatStages。省略時はランク補正なし（0段階）として計算する
 def calculate_damage(attacker, defender, move, weather=None, screen_active=False, ignore_ghost_immunity=False,
                      attacker_stages=None, defender_stages=None) -> int:

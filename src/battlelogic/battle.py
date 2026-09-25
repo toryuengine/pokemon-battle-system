@@ -1,7 +1,7 @@
 import random
 
 from battlelogic.accuracy import check_hit
-from battlelogic.damage import calculate_damage
+from battlelogic.damage import calculate_confusion_damage, calculate_damage
 from battlelogic.stat_stage import StatStages, accuracy_stage_multiplier, stage_multiplier
 from battlelogic.type_chart import TYPE_ID_GHOST, get_effectiveness, get_move_effectiveness, get_multiplier
 from move.base_move import CATEGORY_PHYSICAL, CATEGORY_SPECIAL, CATEGORY_STATUS, BaseMove
@@ -21,8 +21,8 @@ POISON_DAMAGE_RATIO = 1 / 8
 BURN_DAMAGE_RATIO = 1 / 16
 PARALYSIS_FULL_PARA_CHANCE = 0.25
 FREEZE_THAW_CHANCE = 0.2
-CONFUSION_SELF_HIT_CHANCE = 1 / 3
-CONFUSION_SELF_HIT_RATIO = 1 / 8
+# こんらんの自傷確率（第4世代は1/2。第7世代以降の1/3とは異なる）
+CONFUSION_SELF_HIT_CHANCE = 1 / 2
 # まひ状態の素早さ倍率（第4世代仕様）
 PARALYSIS_SPEED_MULTIPLIER = 0.25
 
@@ -282,8 +282,7 @@ class Battle:
         if status.confusion_turns_remaining > 0:
             status.confusion_turns_remaining -= 1
             if status.confusion_turns_remaining > 0 and random.random() < CONFUSION_SELF_HIT_CHANCE:
-                damage = max(1, int(pokemon.status.hp * CONFUSION_SELF_HIT_RATIO))
-                self.apply_damage(pokemon, damage)
+                self.apply_damage(pokemon, calculate_confusion_damage(pokemon, self.get_stages(pokemon)))
                 return False
 
         if condition == "paralysis" and random.random() < PARALYSIS_FULL_PARA_CHANCE:
