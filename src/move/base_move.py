@@ -79,6 +79,9 @@ class BaseMove:
         # 当たった場合は威力が2倍になる。サブクラス側で上書きする
         self.hits_during_charge_move_ids = ()
 
+        # 相手が手動で交代しようとしていれば、交代する前に攻撃する技（おいうち）はサブクラス側でTrueに上書きする
+        self.hits_switching_target = False
+
         # 使った後2〜3ターン技が固定され、終わるとこんらんする技（げきりん・あばれる）はサブクラス側でTrueに上書きする
         self.is_rampage = False
 

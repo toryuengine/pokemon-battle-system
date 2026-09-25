@@ -122,6 +122,8 @@ class CurrentStatus:
     # ゆきなだれ・リベンジの威力、きあいパンチの失敗の判定に使う。毎ターン開始時にBattle側でリセットする
     # (みがわりが受けた攻撃・こんらんの自傷・ターン終了時のダメージは含まない)
     damaged_by_this_turn: Optional["Pokemon"] = None
+    # 手動で交代しようとしている最中（おいうちを交代前に受ける間だけTrue）
+    is_switching_out: bool = False
     # 場に出てから使った技のID（とっておきの成否判定に使う）。交代すると空に戻る（バトンタッチでも引き継がない）
     used_move_ids: set = field(default_factory=set)
     # げきりん・あばれるで固定されている技のインスタンスと、固定の残りターン数（この技を出す回数）。

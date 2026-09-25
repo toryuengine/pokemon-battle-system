@@ -1,7 +1,10 @@
-from ability.shared import UnimplementedAbility
+from ability.base_ability import BaseAbility
 
 
-# ありじごく: 相手を交代できなくする（プレイヤー判断による交代が無いため未実装）
-class ArenaTrap(UnimplementedAbility):
+# ありじごく: 地面にいる相手（ひこうタイプ・ふゆう・でんじふゆう中でない相手）を交代できなくする
+class ArenaTrap(BaseAbility):
     def __init__(self):
         super().__init__(id=4)
+
+    def traps_opponent(self, battle, opponent) -> bool:
+        return battle.is_grounded(opponent)

@@ -1,13 +1,31 @@
-from typing import List
+import random
+from typing import Callable, List, Optional
 
 from pokemon import Pokemon
 
 
+# 手動交代の判断（交代するかどうか・誰に交代するか）を決める関数の型。
+# 毎ターンの技選択の前に(battle, trainer)で呼ばれ、交代先の手持ちのインデックスを返す（交代しないならNone）
+SwitchPolicy = Callable[["Battle", "Trainer"], Optional[int]]
+
+
+# 毎ターンchanceの確率で、交代できる手持ちの中からランダムに1体選んで交代する判断
+def random_switch_policy(chance: float) -> SwitchPolicy:
+    def policy(battle, trainer: "Trainer") -> Optional[int]:
+        candidates = trainer.find_switch_candidates()
+        if not candidates or random.random() >= chance:
+            return None
+        return random.choice(candidates)
+    return policy
+
+
 # 手持ちポケモンと、場に設置された罠（相手側からの設置技）を管理する
 class Trainer:
-    def __init__(self, party: List[Pokemon]):
+    # switch_policyは手動交代の判断。Noneなら自分の意思では交代しない（瀕死時・とんぼがえり等の自動交代のみ）
+    def __init__(self, party: List[Pokemon], switch_policy: Optional[SwitchPolicy] = None):
         self.party = party
         self.active_index = 0
+        self.switch_policy = switch_policy
 
         # 自分の場に設置されている罠。設置技はここを書き換える
         self.stealth_rock = False
@@ -41,3 +59,8 @@ class Trainer:
             if index != self.active_index and pokemon.current_status.current_hp > 0:
                 return index
         return None
+
+    # 場に出ていない手持ちのうち、生きていて交代先に選べる個体のインデックスの一覧
+    def find_switch_candidates(self) -> List[int]:
+        return [index for index, pokemon in enumerate(self.party)
+                if index != self.active_index and pokemon.current_status.current_hp > 0]
