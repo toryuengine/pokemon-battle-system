@@ -5,4 +5,4 @@ from move.base_move import BaseMove
 class Attract(BaseMove):
     def __init__(self):
         super().__init__(id=123)
-        self.effects = []
+        self.effects = [("attract",)]

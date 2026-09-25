@@ -5,4 +5,4 @@ from move.base_move import BaseMove
 class AquaRing(BaseMove):
     def __init__(self):
         super().__init__(id=35)
-        self.effects = []
+        self.effects = [("aqua_ring",)]
