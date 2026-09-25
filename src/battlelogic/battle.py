@@ -1,7 +1,9 @@
 import random
 
+from ability.abilityfactory import create_ability
+from ability.base_ability import NO_ABILITY, BaseAbility
 from battlelogic.accuracy import check_hit
-from battlelogic.damage import calculate_confusion_damage, calculate_damage
+from battlelogic.damage import calculate_confusion_damage, calculate_damage, roll_critical
 from battlelogic.stat_stage import StatStages, accuracy_stage_multiplier, stage_multiplier
 from battlelogic.type_chart import TYPE_ID_FLYING, TYPE_ID_GHOST, get_effectiveness, get_move_effectiveness, get_multiplier
 from move.base_move import CATEGORY_PHYSICAL, CATEGORY_SPECIAL, CATEGORY_STATUS, BaseMove
@@ -94,6 +96,10 @@ class Battle:
 
     #バトルスタート
     def start_battle(self):
+        # 対戦開始時に場に出ている両者の特性（いかく・すなおこし等）を発動させる
+        self.activate_switch_in_abilities([self.pokemon1, self.pokemon2])
+        self.activate_held_items_on_field()
+
         for _ in range(self.MAX_TURNS):
             # まもる・みきり・こらえる・ひるみの効果は使ったそのターン限りなので、新しいターンの頭でリセットする
             # (後攻の技でひるんだ先攻側が、次のターンに行動不能にならないようにするため、ひるみもここで解除する)
@@ -146,6 +152,8 @@ class Battle:
                 break
 
             self.apply_end_of_turn_weather_damage()
+            # あめうけざら・かそく等、ターン終了時に発動する特性
+            self.apply_end_of_turn_abilities()
             # たべのこし・くろいヘドロの回復/ダメージ
             self.apply_end_of_turn_items()
             self.tick_weather()
@@ -165,18 +173,48 @@ class Battle:
 
     # 場に出ているポケモンが瀕死なら、手持ちの中から生きている次の1体に自動で交代させる
     # (交代先も設置技等で瀕死になる可能性があるため、生きている個体が出るか手持ちが尽きるまで繰り返す)
+    # 両者が同時に瀕死になった場合に、相手の交代先が出る前に特性（いかく等）が発動しないよう、
+    # 特性は両者の交代が済んでからまとめて発動させる
     def resolve_faints(self):
+        switched_trainers = []
         for trainer in (self.trainer1, self.trainer2):
             while self.is_fainted(trainer.active) and not trainer.is_defeated():
                 next_index = trainer.find_next_alive_index()
                 if next_index is None:
                     break
-                self.switch_in(trainer, next_index)
+                self.switch_in(trainer, next_index, activate_ability=False)
+                if trainer not in switched_trainers:
+                    switched_trainers.append(trainer)
+
+        if switched_trainers:
+            self.activate_switch_in_abilities([trainer.active for trainer in switched_trainers])
+            self.activate_held_items_on_field()
+
+    # 場に出たpokemonsの特性を、素早さが高い順に発動させる（同速ならランダム）
+    def activate_switch_in_abilities(self, pokemons):
+        ordered = sorted(pokemons, key=lambda p: (self.get_effective_speed(p), random.random()), reverse=True)
+        for pokemon in ordered:
+            if pokemon is not self.pokemon1 and pokemon is not self.pokemon2:
+                continue
+            if self.is_fainted(pokemon):
+                continue
+            self.get_ability(pokemon).on_switch_in(self, pokemon)
 
     # trainerの場のポケモンをnew_indexの個体に交代させる。能力ランクをリセットし、設置技の効果を適用する
-    def switch_in(self, trainer: Trainer, new_index: int):
+    # activate_ability=Falseなら、場に出た時の特性は呼び出し側でまとめて発動させる
+    def switch_in(self, trainer: Trainer, new_index: int, activate_ability: bool = True):
+        outgoing = trainer.active
+        outgoing_status = outgoing.current_status
+
+        # しぜんかいふく等、場を退く時に発動する特性（瀕死で退く場合は発動しない）
+        if not self.is_fainted(outgoing):
+            self.get_ability(outgoing).on_switch_out(self, outgoing)
+        # トレースでコピーした特性は、場を退くと元のトレースに戻る
+        if outgoing_status.ability_before_trace is not None:
+            outgoing.ability = outgoing_status.ability_before_trace
+            outgoing_status.ability_before_trace = None
+
         # みやぶるの「見破られた」状態、まもる・みきり・こらえるの連続成功カウンタは、場を退くと解除される
-        outgoing_status = trainer.active.current_status
         outgoing_status.is_identified = False
         outgoing_status.protect_stall_counter = 0
         # こんらん・じゅうでん・のろい・たくわえる・いえきの効果も、場を退くと解除される
@@ -195,9 +233,12 @@ class Battle:
         else:
             self.stages2 = StatStages()
         self.apply_entry_hazards(trainer)
-        # どくびしでどくになった直後にラムのみで回復する、といった持ち物の発動
         if not self.is_fainted(trainer.active):
-            self.activate_held_items(trainer.active)
+            if activate_ability:
+                self.get_ability(trainer.active).on_switch_in(self, trainer.active)
+            # どくびしでどくになった直後にラムのみで回復する、といった持ち物の発動
+            # (いかくで下がった攻撃をしろいハーブで戻す等、特性の発動後に判定する)
+            self.activate_held_items_on_field()
 
     # trainerが持つ罠(ステルスロック・まきびし・どくびし)を、今場に出ている個体に適用する
     def apply_entry_hazards(self, trainer: Trainer):
@@ -205,8 +246,8 @@ class Battle:
         if self.is_fainted(pokemon):
             return
 
-        # ひこうタイプは地面にいないので、まきびし・どくびしを受けない（くろいてっきゅうを持っていれば受ける）
-        is_grounded = pokemon.held_item.forces_grounded or TYPE_ID_FLYING not in (pokemon.type1, pokemon.type2)
+        # ひこうタイプ・ふゆうは地面にいないので、まきびし・どくびしを受けない（くろいてっきゅうを持っていれば受ける）
+        is_grounded = self.is_grounded(pokemon)
 
         if trainer.spikes > 0 and is_grounded:
             ratio = SPIKES_DAMAGE_RATIOS[trainer.spikes]
@@ -222,9 +263,52 @@ class Battle:
             if TYPE_ID_POISON in (pokemon.type1, pokemon.type2):
                 # どくタイプが出ると、どくびしはその場から消滅する
                 trainer.toxic_spikes = 0
-            elif pokemon.current_status.status_condition is None:
+            elif pokemon.current_status.status_condition is None and self.can_receive_status(pokemon, "poison"):
                 # 本来は2層で「もうどく」（悪化していくどく）になるが、簡略化して通常のどく扱いにしている
                 pokemon.current_status.status_condition = "poison"
+
+    # pokemonが地面にいるかどうか（まきびし・どくびしを受けるか）。くろいてっきゅうを持っていれば常に地面にいる扱い
+    def is_grounded(self, pokemon: Pokemon) -> bool:
+        if pokemon.held_item.forces_grounded:
+            return True
+        if self.get_ability(pokemon).is_levitating:
+            return False
+        return TYPE_ID_FLYING not in (pokemon.type1, pokemon.type2)
+
+    # pokemonの今有効な特性。いえきで消されていれば「特性なし」(NO_ABILITY)を返す
+    def get_ability(self, pokemon: Pokemon) -> BaseAbility:
+        if pokemon.current_status.is_ability_suppressed:
+            return NO_ABILITY
+        return pokemon.ability
+
+    # sourceの技・特性の効果を受けるtargetの特性。sourceがかたやぶりなら、受ける側で働く特性(is_breakable)を無視する
+    def get_target_ability(self, target: Pokemon, source: Pokemon = None) -> BaseAbility:
+        ability = self.get_ability(target)
+        if source is None or source is target:
+            return ability
+        if ability.is_breakable and self.get_ability(source).ignores_target_ability:
+            return NO_ABILITY
+        return ability
+
+    # pokemonの対戦相手（場に出ている方）
+    def get_opponent(self, pokemon: Pokemon) -> Pokemon:
+        if pokemon is self.pokemon1:
+            return self.pokemon2
+        if pokemon is self.pokemon2:
+            return self.pokemon1
+        raise ValueError("pokemon is not part of this battle")
+
+    # 天候の効果を判定する時に使う天候。場にノーてんきのポケモンがいれば、天候は無いものとして扱う
+    # (天候そのものは消えず、ターン経過も続く)
+    def get_effective_weather(self):
+        for pokemon in (self.pokemon1, self.pokemon2):
+            if not self.is_fainted(pokemon) and self.get_ability(pokemon).negates_weather:
+                return None
+        return self.weather
+
+    # pokemonがconditionの状態異常にかかるかどうか（特性による無効化）。sourceがかたやぶりなら特性を無視する
+    def can_receive_status(self, pokemon: Pokemon, condition: str, source: Pokemon = None) -> bool:
+        return self.get_target_ability(pokemon, source).can_receive_status(self, pokemon, condition)
 
     # targetのトレーナー（罠等を管理している側）を返す
     def get_trainer(self, target: Pokemon) -> Trainer:
@@ -275,6 +359,12 @@ class Battle:
     # (反動硬直・ひるみの解除、ねむり/こおりの残りターン処理、まひの判定、こんらんの自傷など)
     def can_act(self, pokemon: Pokemon) -> bool:
         status = pokemon.current_status
+        ability = self.get_ability(pokemon)
+
+        # なまけ: 行動した次のターンはなまけて行動できない（反動硬直のターンと重なった場合は硬直も解除される）
+        if not ability.on_before_action(self, pokemon):
+            status.must_recharge = False
+            return False
 
         # 反動硬直中（はかいこうせん等を使った直後）は必ず行動不能。このターン限りなので解除する
         if status.must_recharge:
@@ -284,6 +374,8 @@ class Battle:
         # ひるみは1ターンだけの行動不能。判定と同時に解除する
         if status.is_flinched:
             status.is_flinched = False
+            # ふくつのこころ: ひるむと素早さが上がる
+            ability.on_flinched(self, pokemon)
             return False
 
         condition = status.status_condition
@@ -292,7 +384,8 @@ class Battle:
             if status.sleep_turns_remaining <= 0:
                 status.status_condition = None
             else:
-                status.sleep_turns_remaining -= 1
+                # はやおきなら残りターンが2倍の速さで減る
+                status.sleep_turns_remaining -= ability.sleep_turn_decrement
                 return False
 
         if condition == "freeze":
@@ -320,7 +413,10 @@ class Battle:
             if self.is_fainted(pokemon):
                 continue
             condition = pokemon.current_status.status_condition
-            if condition == "poison":
+            # ポイズンヒール・たいねつは、どく・やけどのダメージの代わりに独自の処理をする
+            if condition in ("poison", "burn") and self.get_ability(pokemon).on_residual_status(self, pokemon, condition):
+                pass
+            elif condition == "poison":
                 damage = max(1, int(pokemon.status.hp * POISON_DAMAGE_RATIO))
                 self.apply_damage(pokemon, damage)
             elif condition == "burn":
@@ -334,23 +430,27 @@ class Battle:
 
     # 天候を変える（5ターン継続）。にほんばれ・あまごい・すなあらし・あられから呼ばれる
     # 使ったポケモンが対応する岩（あついいわ・しめったいわ・つめたいいわ）を持っていれば8ターン継続する
-    def set_weather(self, weather, user: Pokemon = None):
+    # permanent=True（すなおこし・ゆきふらし）なら、第4世代仕様でターン経過では終わらない（残りターンをNoneにする）
+    def set_weather(self, weather, user: Pokemon = None, permanent: bool = False):
         self.weather = weather
         self.weather_turns_remaining = WEATHER_DURATION
-        if user is not None:
+        if permanent:
+            self.weather_turns_remaining = None
+        elif user is not None:
             self.weather_turns_remaining = user.held_item.get_weather_duration(weather, WEATHER_DURATION)
 
     # 天候の残りターンを1減らし、0になったら天候を晴天(なし)に戻す
     def tick_weather(self):
-        if self.weather is None:
+        if self.weather is None or self.weather_turns_remaining is None:
             return
         self.weather_turns_remaining -= 1
         if self.weather_turns_remaining <= 0:
             self.weather = None
 
-    # すなあらし・あられの間、免疫タイプ以外に毎ターン終了時ダメージを与える
+    # すなあらし・あられの間、免疫タイプ・特性（すながくれ等）以外に毎ターン終了時ダメージを与える
     def apply_end_of_turn_weather_damage(self):
-        immune_type_ids = WEATHER_IMMUNE_TYPE_IDS.get(self.weather)
+        weather = self.get_effective_weather()
+        immune_type_ids = WEATHER_IMMUNE_TYPE_IDS.get(weather)
         if immune_type_ids is None:
             return
 
@@ -359,8 +459,17 @@ class Battle:
                 continue
             if pokemon.type1 in immune_type_ids or pokemon.type2 in immune_type_ids:
                 continue
+            if weather in self.get_ability(pokemon).weather_immunities:
+                continue
             damage = max(1, int(pokemon.status.hp * WEATHER_DAMAGE_RATIO))
             self.apply_damage(pokemon, damage)
+
+    # ターン終了時に発動する特性（あめうけざら・アイスボディ・かんそうはだ・うるおいボディ・かそく）
+    def apply_end_of_turn_abilities(self):
+        for pokemon in (self.pokemon1, self.pokemon2):
+            if self.is_fainted(pokemon):
+                continue
+            self.get_ability(pokemon).on_end_of_turn(self, pokemon)
 
     # ここ
     # attackerが持つ技のうちPPが残っているものからランダムに1つ選ぶ。全て0ならわるあがきを選ぶ
@@ -409,11 +518,14 @@ class Battle:
             return self.pokemon2, self.pokemon1
         return random.sample([self.pokemon1, self.pokemon2], 2)
 
-    # 素早さランク・持ち物（こだわりスカーフ1.5倍・くろいてっきゅう1/2）・まひ(1/4)を反映した、行動順の判定に使う素早さを返す
+    # 素早さランク・持ち物（こだわりスカーフ1.5倍・くろいてっきゅう1/2）・特性（すいすい等）・まひ(1/4)を反映した、
+    # 行動順の判定に使う素早さを返す
     def get_effective_speed(self, pokemon: Pokemon) -> int:
+        ability = self.get_ability(pokemon)
         speed = int(pokemon.status.spd * stage_multiplier(self.get_stages(pokemon).spd))
         speed = int(speed * pokemon.held_item.get_speed_multiplier())
-        if pokemon.current_status.status_condition == "paralysis":
+        speed = int(speed * ability.get_speed_multiplier(self, pokemon))
+        if pokemon.current_status.status_condition == "paralysis" and not ability.ignores_paralysis_speed_drop:
             speed = int(speed * PARALYSIS_SPEED_MULTIPLIER)
         return speed
 
@@ -437,13 +549,18 @@ class Battle:
     # 天候・命中率/回避率ランクを考慮した実際の命中率を返す
     # hitrate=0は「必ず命中する」という既存の規約なので、必中にしたい場合はそのまま流用できる
     def get_effective_hitrate(self, move: BaseMove, attacker: Pokemon, defender: Pokemon) -> int:
+        # ノーガード: 自分が出す技・自分が受ける技は必ず命中する
+        if self.is_no_guard_active(attacker, defender):
+            return 0
+
+        weather = self.get_effective_weather()
         base_hitrate = move.hitrate
         if move.id == THUNDER_ID:
-            if self.weather == "rain":
+            if weather == "rain":
                 base_hitrate = 0
-            elif self.weather == "sun":
+            elif weather == "sun":
                 base_hitrate = 50
-        elif move.id == BLIZZARD_ID and self.weather == "hail":
+        elif move.id == BLIZZARD_ID and weather == "hail":
             base_hitrate = 0
 
         if base_hitrate == 0:
@@ -463,8 +580,16 @@ class Battle:
         effective_hitrate *= attacker.held_item.get_accuracy_multiplier(attacker, defender)
         effective_hitrate *= defender.held_item.get_received_accuracy_multiplier()
 
+        # 特性による命中率の補正（はりきり・すながくれ・ゆきがくれ）
+        effective_hitrate *= self.get_ability(attacker).get_accuracy_multiplier(attacker, move)
+        effective_hitrate *= self.get_target_ability(defender, attacker).get_evasion_multiplier(self, defender)
+
         # hitrate=0は「必中」を表す既存の規約と衝突しないよう、下限を1にクランプする
         return max(1, min(100, round(effective_hitrate)))
+
+    # attacker・defenderのどちらかがノーガードかどうか
+    def is_no_guard_active(self, attacker: Pokemon, defender: Pokemon) -> bool:
+        return self.get_ability(attacker).always_hits or self.get_ability(defender).always_hits
 
     # move.min_hits/max_hitsから今回のヒット回数を決める
     # 2〜5回攻撃(ボーンラッシュ等)は3/8, 3/8, 1/8, 1/8という第4世代仕様の確率分布、それ以外(固定回数)はそのまま使う
@@ -476,7 +601,8 @@ class Battle:
     # attackerがdefenderにmoveを撃つ。命中判定→(変化技でなければ)ダメージ計算・適用の順で行い、結果を返す
     # 複数回攻撃技は命中判定を1回だけ行い、そのあと決めたヒット回数分ダメージを繰り返し与える（相手が瀕死になったら打ち切り）
     def use_move(self, attacker: Pokemon, defender: Pokemon, move: BaseMove) -> dict:
-        result = {"hit": False, "damage": 0, "effectiveness": 1.0, "hit_count": 0, "charging": False, "blocked_by_protect": False}
+        result = {"hit": False, "damage": 0, "effectiveness": 1.0, "hit_count": 0, "charging": False,
+                  "blocked_by_protect": False, "blocked_by_ability": False}
 
         # 1ターン目（溜め開始）かどうか。charging_moveが同じ技を指していれば、今回は2ターン目(攻撃)
         is_releasing_charge = attacker.current_status.charging_move is move
@@ -500,7 +626,7 @@ class Battle:
             attacker.current_status.choice_locked_move = move
 
         # ソーラービームは晴れの間だけ、溜めターンを省略していきなり攻撃する
-        skip_charge_turn = move.id == SOLAR_BEAM_ID and self.weather == "sun"
+        skip_charge_turn = move.id == SOLAR_BEAM_ID and self.get_effective_weather() == "sun"
 
         # パワフルハーブを持っていれば、1回だけ溜めターンを省略する（晴れのソーラービーム等、元々溜めない場合は消費しない）
         if (move.requires_charge_turn and not is_releasing_charge and not skip_charge_turn
@@ -509,7 +635,7 @@ class Battle:
 
         if move.requires_charge_turn and not is_releasing_charge and not skip_charge_turn:
             # 溜めターン: PPだけ消費し、攻撃せずに次のターンに備える（あなをほる等は回避状態にもなる）
-            move.current_pp = max(0, move.current_pp - 1)
+            self.consume_pp(attacker, defender, move)
             attacker.current_status.charging_move = move
             if move.charge_is_invulnerable:
                 attacker.current_status.is_invulnerable = True
@@ -522,7 +648,7 @@ class Battle:
             attacker.current_status.is_invulnerable = False
         else:
             # PPは命中/失敗に関わらず、使った時点で1消費する
-            move.current_pp = max(0, move.current_pp - 1)
+            self.consume_pp(attacker, defender, move)
 
         # はかいこうせん等は命中・失敗に関わらず、使った時点で次ターンの反動硬直が確定する
         if move.requires_recharge:
@@ -540,18 +666,32 @@ class Battle:
 
         return result
 
+    # moveのPPを1消費する。相手に向けた技で、相手がプレッシャーならさらに1消費する
+    def consume_pp(self, attacker: Pokemon, defender: Pokemon, move: BaseMove):
+        pp_cost = 1
+        if self.get_ability(defender).increases_opponent_pp_usage and self.is_move_blocked_by_protect(move, attacker):
+            pp_cost += 1
+        move.current_pp = max(0, move.current_pp - pp_cost)
+
     # use_moveのうち、命中判定以降（回避状態・まもる・命中・ダメージ・追加効果）の処理
     def _resolve_move_hit(self, attacker: Pokemon, defender: Pokemon, move: BaseMove, result: dict) -> dict:
         # 相手に向けた技かどうか（自分自身・場に向けた変化技は、相手の回避状態やまもるの影響を受けない）
         targets_opponent = self.is_move_blocked_by_protect(move, attacker)
 
-        # 相手が回避状態（あなをほる等で溜め中）なら、命中率に関わらず必ず外れる
-        if defender.current_status.is_invulnerable and targets_opponent:
+        # 相手が回避状態（あなをほる等で溜め中）なら、命中率に関わらず必ず外れる（ノーガードなら当たる）
+        if defender.current_status.is_invulnerable and targets_opponent and not self.is_no_guard_active(attacker, defender):
             return result
 
         # 相手がまもる・みきりで守っていれば、命中率に関わらず技が防がれる
         if defender.current_status.is_protected and targets_opponent:
             result["blocked_by_protect"] = True
+            return result
+
+        # ちくでん・ふゆう・がんじょう等、相手の特性で技が無効化される（かたやぶりなら無視する）
+        attacker_ability = self.get_ability(attacker)
+        defender_ability = self.get_target_ability(defender, attacker)
+        if targets_opponent and defender_ability.on_try_hit(self, attacker, defender, move):
+            result["blocked_by_ability"] = True
             return result
 
         if not check_hit(self.get_effective_hitrate(move, attacker, defender)):
@@ -569,7 +709,8 @@ class Battle:
         # 変化技(CATEGORY_STATUS)はダメージを与えないので、物理・特殊技の時だけダメージ計算する
         if move.category != CATEGORY_STATUS:
             screen_active = self.is_screen_active(defender, move)
-            ignore_ghost_immunity = defender.current_status.is_identified
+            # みやぶるで見破られている、または攻撃側がきもったまなら、ノーマル/かくとう技がゴーストタイプに当たる
+            ignore_ghost_immunity = defender.current_status.is_identified or attacker_ability.ignores_ghost_immunity
             effectiveness = get_move_effectiveness(move, defender, ignore_ghost_immunity)
             hit_count = self.roll_hit_count(move)
             for _ in range(hit_count):
@@ -580,9 +721,12 @@ class Battle:
                 defender_item = defender.held_item
                 received_multiplier = defender_item.get_received_damage_multiplier(defender, move, effectiveness)
 
+                # いかりのつぼの判定のため、急所判定はダメージ計算の外で行う
+                is_critical = roll_critical(attacker, move, attacker_ability, defender_ability)
                 damage = calculate_damage(
-                    attacker, defender, move, self.weather, screen_active, ignore_ghost_immunity,
+                    attacker, defender, move, self.get_effective_weather(), screen_active, ignore_ghost_immunity,
                     self.get_stages(attacker), self.get_stages(defender), received_multiplier,
+                    attacker_ability, defender_ability, is_critical,
                 )
                 if received_multiplier != 1.0 and damage > 0:
                     defender_item.on_received_damage_reduced(self, defender)
@@ -592,6 +736,9 @@ class Battle:
                 self.apply_damage(defender, damage)
                 total_damage += damage
                 result["hit_count"] += 1
+
+                if is_critical and damage > 0 and not self.is_fainted(defender):
+                    self.get_ability(defender).on_critical_hit_received(self, defender)
 
             result["damage"] = total_damage
             result["effectiveness"] = effectiveness
@@ -633,6 +780,8 @@ class Battle:
     def consume_item(self, pokemon: Pokemon):
         pokemon.consumed_item = pokemon.item
         pokemon.item = None
+        # かるわざ: 持ち物を消費すると素早さが上がる
+        self.get_ability(pokemon).on_item_consumed(self, pokemon)
 
     # 場に出ている両者について、条件を満たしていれば持ち物（きのみ・しろいハーブ）を発動させる
     def activate_held_items_on_field(self):
@@ -697,11 +846,15 @@ class Battle:
         setattr(stages, stat, new_stage)
 
     # chanceの確率でstat_nameのランクをstage_amountだけ変える（かみくだくの防御ダウンなどで使う）
-    def try_apply_stat_change(self, target, stat_name, stage_amount, chance):
-        if random.random() < chance:
-            self.change_stage(target, stat_name, stage_amount)
-            return True
-        return False
+    # sourceは効果の発生元。相手(source)にランクを下げられる場合は、クリアボディ等の特性で防がれる
+    def try_apply_stat_change(self, target, stat_name, stage_amount, chance, source=None):
+        return self.try_apply_stat_multi_change(target, [(stat_name, stage_amount)], chance, source)
+
+    # 相手(source)によるstat_nameのランクダウンが、targetの特性で防がれるかどうか
+    def is_stat_drop_prevented(self, target, stat_name, stage_amount, source) -> bool:
+        if stage_amount >= 0 or source is None or source is target:
+            return False
+        return self.get_target_ability(target, source).prevents_stat_drop(stat_name)
 
     # みやぶるでtargetを「見破った」状態にする。以後、相手の回避ランクを無視して命中判定し、
     # ノーマル/かくとう技に対するゴーストタイプの無効化も無視する（対象が場を退くと解除）
@@ -750,9 +903,12 @@ class Battle:
         self.attempt_protect_family_move(attacker, is_endure=True)
 
     # chanceの確率で複数の能力ランクを同時に変える（げんしのちからのような複合効果用。1回の判定で全部まとめて適用する）
-    def try_apply_stat_multi_change(self, target, stat_changes, chance):
+    # 特性で防がれた能力だけは変化しない
+    def try_apply_stat_multi_change(self, target, stat_changes, chance, source=None):
         if random.random() < chance:
             for stat_name, stage_amount in stat_changes:
+                if self.is_stat_drop_prevented(target, stat_name, stage_amount, source):
+                    continue
                 self.change_stage(target, stat_name, stage_amount)
             return True
         return False
@@ -760,7 +916,11 @@ class Battle:
     # chanceの確率でtargetに状態異常を付与する（既に何か状態異常が付いている場合は上書きしない）
     # ねむり・こんらんは残りターン数もあわせて設定する
     # こんらんだけはstatus_conditionとは別枠で管理し、他の状態異常と重複できる（既にこんらん中なら上書きしない）
-    def try_apply_status(self, target, condition, chance):
+    # sourceは状態異常にした相手。めんえき等の特性で防がれる判定（かたやぶり）と、シンクロの発動に使う
+    def try_apply_status(self, target, condition, chance, source=None):
+        if not self.can_receive_status(target, condition, source):
+            return False
+
         if condition == "confusion":
             if target.current_status.confusion_turns_remaining > 0:
                 return False
@@ -776,18 +936,25 @@ class Battle:
             target.current_status.status_condition = condition
             if condition == "sleep":
                 target.current_status.sleep_turns_remaining = random.randint(1, 3)
+            self.get_ability(target).on_status_inflicted(self, target, condition, source)
             return True
         return False
 
     # chanceの確率でtargetをひるませる（そのターンだけ行動不能。start_battle側で判定・解除する）
-    def try_apply_flinch(self, target, chance):
+    # せいしんりょくならひるまない（sourceがかたやぶりなら無視する）
+    def try_apply_flinch(self, target, chance, source=None):
+        if self.get_target_ability(target, source).prevents_flinch:
+            return False
         if random.random() < chance:
             target.current_status.is_flinched = True
             return True
         return False
 
     # attacker自身がdamageのratio分だけ反動ダメージを受ける（フレアドライブなど）
+    # いしあたまなら反動を受けない
     def apply_recoil(self, attacker, damage, ratio):
+        if self.get_ability(attacker).prevents_recoil:
+            return
         recoil_damage = max(1, int(damage * ratio))
         self.apply_damage(attacker, recoil_damage)
 
@@ -797,10 +964,13 @@ class Battle:
         self.apply_damage(attacker, recoil_damage)
 
     # attacker自身がdamageのratio分だけHPを回復する（ギガドレインなど）
-    # おおきなねっこを持っていれば回復量が1.3倍になる
-    def apply_drain(self, attacker, damage, ratio):
+    # おおきなねっこを持っていれば回復量が1.3倍になる。吸った相手(target)がヘドロえきなら、回復する代わりに同じ量のダメージを受ける
+    def apply_drain(self, attacker, damage, ratio, target=None):
         heal_amount = int(damage * ratio)
         heal_amount = int(heal_amount * attacker.held_item.get_drain_multiplier())
+        if target is not None and self.get_ability(target).damages_drainer:
+            self.apply_damage(attacker, heal_amount)
+            return
         max_hp = attacker.status.hp
         attacker.current_status.current_hp = min(max_hp, attacker.current_status.current_hp + heal_amount)
 
@@ -861,8 +1031,7 @@ class Battle:
         attacker.current_status.stockpile_count += 1
         self.try_apply_stat_multi_change(attacker, [("defense", 1), ("spdef", 1)], 1.0)
 
-    # いえき: targetの特性を消す（交代するまで）
-    # 注意: 特性の効果自体がまだ実装されていないため、今は状態を記録するだけで対戦結果には影響しない
+    # いえき: targetの特性を消す（交代するまで）。消されている間、get_abilityは「特性なし」(NO_ABILITY)を返す
     def perform_suppress_ability(self, target: Pokemon):
         target.current_status.is_ability_suppressed = True
 
@@ -888,7 +1057,8 @@ class Battle:
     def perform_transform(self, attacker: Pokemon, target: Pokemon):
         attacker.type1 = target.type1
         attacker.type2 = target.type2
-        attacker.ability = target.ability
+        # 特性ごとの状態（もらいびの発動済み等）は引き継がず、同じ特性の新しいインスタンスを持つ
+        attacker.ability = create_ability(target.ability.id)
 
         attacker.status = PokemonStatus(
             hp=attacker.status.hp,  # HPは変身前のまま変わらない

@@ -2,6 +2,8 @@ import random
 from dataclasses import dataclass
 from typing import List, Optional
 
+from ability.abilityfactory import create_ability
+from ability.base_ability import BaseAbility
 from item.base_item import NO_ITEM, BaseItem
 from item.itemfactory import create_item
 from move.base_move import BaseMove
@@ -60,6 +62,8 @@ class CurrentStatus:
     stockpile_count: int = 0
     # いえきで特性を消された状態。交代すると解除される
     is_ability_suppressed: bool = False
+    # トレースで相手の特性をコピーする前の、元の特性（トレースのインスタンス）。場を退くと元に戻す
+    ability_before_trace: Optional[BaseAbility] = None
     # こだわりハチマキ・こだわりメガネ・こだわりスカーフで固定された技のインスタンス。Noneなら固定されていない。
     # 交代すると解除される
     choice_locked_move: Optional[BaseMove] = None
@@ -79,8 +83,8 @@ class Pokemon:
         self.name: str = entry["name"]
         self.type1: int = entry["type1"]
         self.type2: Optional[int] = entry["type2"]
-        # 種族が持ちうる特性の中からこの個体の特性をランダムに1つ選ぶ
-        self.ability: int = random.choice(entry["ability"])
+        # 種族が持ちうる特性の中からこの個体の特性をランダムに1つ選び、特性クラスのインスタンスとして持つ
+        self.ability: BaseAbility = create_ability(random.choice(entry["ability"]))
         self.status: PokemonStatus = _parse_status(set_data["status"])
         self.current_status: CurrentStatus = CurrentStatus(current_hp=self.status.hp)
         # 持っている持ち物のインスタンス。きのみ等を使い切ると(消費すると)Noneになる

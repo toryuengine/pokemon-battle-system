@@ -40,7 +40,8 @@ class SitrusBerry(BaseItem):
             battle.consume_item(pokemon)
 
 
-# ピンチ実（チイラのみ・ヤタピのみ・カムラのみ）: HPが1/4以下になったらstat_nameの能力ランク+1（既に+6なら発動しない）
+# ピンチ実（チイラのみ・ヤタピのみ・カムラのみ）: HPが1/4以下（くいしんぼうなら1/2以下）になったら
+# stat_nameの能力ランク+1（既に+6なら発動しない）
 class PinchBerry(BaseItem):
     def __init__(self, id: int, stat_name: str):
         super().__init__(id)
@@ -48,7 +49,8 @@ class PinchBerry(BaseItem):
 
     def activate(self, battle, pokemon):
         stages = battle.get_stages(pokemon)
-        if (pokemon.current_status.current_hp <= int(pokemon.status.hp * PINCH_BERRY_HP_RATIO)
+        hp_ratio = battle.get_ability(pokemon).pinch_berry_hp_ratio or PINCH_BERRY_HP_RATIO
+        if (pokemon.current_status.current_hp <= int(pokemon.status.hp * hp_ratio)
                 and getattr(stages, self.stat_name) < 6):
             battle.change_stage(pokemon, self.stat_name, 1)
             battle.consume_item(pokemon)

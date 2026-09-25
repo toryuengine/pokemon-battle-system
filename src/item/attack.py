@@ -77,4 +77,4 @@ class FlinchItem(BaseItem):
         if battle.is_fainted(defender):
             return
         if not any(effect[0] == "flinch" for effect in move.effects):
-            battle.try_apply_flinch(defender, FLINCH_ITEM_CHANCE)
+            battle.try_apply_flinch(defender, FLINCH_ITEM_CHANCE, source=attacker)

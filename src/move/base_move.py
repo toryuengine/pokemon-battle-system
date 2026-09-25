@@ -94,35 +94,41 @@ class BaseMove:
         self.effects = []
 
     # 命中していれば、self.effectsの内容を順番にBattleへ適用する
+    # 状態異常・能力ランク・ひるみは、特性（クリアボディ・シンクロ等）の判定のため効果の発生元(attacker)も渡す
     def apply_effect(self, battle, attacker, defender, damage=0):
+        # てんのめぐみ: 追加効果の発動率が上がる（確定で発動する効果は1.0のまま）
+        chance_multiplier = battle.get_ability(attacker).secondary_chance_multiplier
+
         for effect in self.effects:
             kind = effect[0]
 
             if kind == "status":
                 _, target_key, condition, chance = effect
                 target = attacker if target_key == "self" else defender
-                battle.try_apply_status(target, condition, chance)
+                battle.try_apply_status(target, condition, min(1.0, chance * chance_multiplier), source=attacker)
 
             elif kind == "status_random":
                 _, target_key, conditions, chance = effect
                 target = attacker if target_key == "self" else defender
-                if random.random() < chance:
-                    battle.try_apply_status(target, random.choice(conditions), 1.0)
+                if random.random() < min(1.0, chance * chance_multiplier):
+                    battle.try_apply_status(target, random.choice(conditions), 1.0, source=attacker)
 
             elif kind == "stat":
                 _, target_key, stat_name, stages, chance = effect
                 target = attacker if target_key == "self" else defender
-                battle.try_apply_stat_change(target, stat_name, stages, chance)
+                battle.try_apply_stat_change(target, stat_name, stages, min(1.0, chance * chance_multiplier),
+                                             source=attacker)
 
             elif kind == "stat_multi":
                 _, target_key, stat_changes, chance = effect
                 target = attacker if target_key == "self" else defender
-                battle.try_apply_stat_multi_change(target, stat_changes, chance)
+                battle.try_apply_stat_multi_change(target, stat_changes, min(1.0, chance * chance_multiplier),
+                                                   source=attacker)
 
             elif kind == "flinch":
                 _, target_key, chance = effect
                 target = attacker if target_key == "self" else defender
-                battle.try_apply_flinch(target, chance)
+                battle.try_apply_flinch(target, min(1.0, chance * chance_multiplier), source=attacker)
 
             elif kind == "recoil":
                 _, ratio = effect
@@ -134,15 +140,16 @@ class BaseMove:
 
             elif kind == "drain":
                 _, ratio = effect
-                battle.apply_drain(attacker, damage, ratio)
+                battle.apply_drain(attacker, damage, ratio, defender)
 
             elif kind == "heal":
                 _, ratio = effect
                 # こうごうせい・あさのひざし・つきのひかりは天候によって回復量が変わる
                 if self.id in (13, 251, 253):
-                    if battle.weather == "sun":
+                    weather = battle.get_effective_weather()
+                    if weather == "sun":
                         ratio = 2 / 3
-                    elif battle.weather in ("rain", "sandstorm", "hail"):
+                    elif weather in ("rain", "sandstorm", "hail"):
                         ratio = 1 / 4
                 battle.apply_heal(attacker, ratio)
 
