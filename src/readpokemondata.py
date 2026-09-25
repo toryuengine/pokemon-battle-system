@@ -7,6 +7,7 @@ _pokemon_data = None
 _move_data = None
 _type_data = None
 _type_chart_data = None
+_ability_data = None
 
 
 def load_pokemon_data(path=DATA_DIR / "pokemon.json"):
@@ -39,3 +40,11 @@ def load_type_chart_data(path=DATA_DIR / "type_chart.json"):
         with open(path, encoding="utf-8") as f:
             _type_chart_data = json.load(f)
     return _type_chart_data
+
+
+def load_ability_data(path=DATA_DIR / "ability.json"):
+    global _ability_data
+    if _ability_data is None:
+        with open(path, encoding="utf-8") as f:
+            _ability_data = json.load(f)
+    return _ability_data
