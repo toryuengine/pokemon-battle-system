@@ -58,6 +58,13 @@ class CurrentStatus:
     stockpile_count: int = 0
     # いえきで特性を消された状態。交代すると解除される
     is_ability_suppressed: bool = False
+    # こだわりハチマキ・こだわりメガネ・こだわりスカーフで固定された技のインスタンス。Noneなら固定されていない。
+    # 交代すると解除される
+    choice_locked_move: Optional[BaseMove] = None
+    # 同じ技を連続で使った回数（メトロノームの威力補正に使う）。1回目は0、違う技を使うと0に戻る。交代すると解除される
+    consecutive_move_count: int = 0
+    # このターンに既に行動（または行動を試みた）かどうか（フォーカスレンズの判定に使う）。毎ターン開始時にリセットする
+    has_moved_this_turn: bool = False
 
 
 class Pokemon:
@@ -74,7 +81,10 @@ class Pokemon:
         self.ability: int = random.choice(entry["ability"])
         self.status: PokemonStatus = _parse_status(set_data["status"])
         self.current_status: CurrentStatus = CurrentStatus(current_hp=self.status.hp)
-        self.item: int = set_data["item"]
+        # 持っている持ち物のID。きのみ等を使い切ると(消費すると)Noneになる
+        self.item: Optional[int] = set_data["item"]
+        # 最後に消費した持ち物のID（リサイクルで取り戻す対象）。まだ何も消費していなければNone
+        self.consumed_item: Optional[int] = None
 
         self.moves: List[BaseMove] = []
         for move_id in set_data["move"]:
