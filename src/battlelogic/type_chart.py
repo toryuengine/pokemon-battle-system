@@ -1,9 +1,12 @@
+from battlelogic.item import IRON_BALL
 from readpokemondata import load_type_chart_data, load_type_data
 
 # みやぶるでゴースト無効化を無視する対象タイプ（ノーマル/かくとう技がゴーストタイプに無効化される仕様の解除用）
 TYPE_ID_NORMAL = 0
 TYPE_ID_FIGHTING = 6
 TYPE_ID_GHOST = 13
+TYPE_ID_GROUND = 8
+TYPE_ID_FLYING = 9
 
 _name_to_id = None
 
@@ -48,16 +51,23 @@ def get_effectiveness(attack_type, defend_type1, defend_type2=None) -> float:
 # moveがis_typeless(わるあがき等)なら常に等倍。そうでなければ通常通りタイプ相性を計算する
 # ignore_ghost_immunity=True（みやぶる済みの相手）かつノーマル/かくとう技の場合は、
 # 相手のゴーストタイプを無いものとして相性を計算する（ゴースト無効化の解除）
+# 相手がくろいてっきゅうを持っている場合、じめん技は相手のひこうタイプを無いものとして相性を計算する
 def get_move_effectiveness(move, defender, ignore_ghost_immunity=False) -> float:
     if move.is_typeless:
         return 1.0
 
     attack_id = resolve_type_id(move.type)
 
+    ignored_type_ids = set()
     if ignore_ghost_immunity and attack_id in (TYPE_ID_NORMAL, TYPE_ID_FIGHTING):
+        ignored_type_ids.add(TYPE_ID_GHOST)
+    if attack_id == TYPE_ID_GROUND and defender.item == IRON_BALL:
+        ignored_type_ids.add(TYPE_ID_FLYING)
+
+    if ignored_type_ids:
         defend_types = [
             t for t in (defender.type1, defender.type2)
-            if t is not None and t != TYPE_ID_GHOST
+            if t is not None and t not in ignored_type_ids
         ]
         if not defend_types:
             return 1.0

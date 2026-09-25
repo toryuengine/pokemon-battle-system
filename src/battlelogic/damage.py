@@ -1,5 +1,11 @@
 import random
 
+from battlelogic.item import (
+    get_item_attack_stat_multiplier,
+    get_item_crit_stage_bonus,
+    get_item_damage_multiplier,
+    get_item_power_multiplier,
+)
 from battlelogic.stat_stage import stage_multiplier
 from battlelogic.type_chart import get_move_effectiveness, resolve_type_id
 from move.base_move import CATEGORY_PHYSICAL, CATEGORY_STATUS
@@ -8,9 +14,9 @@ from move.base_move import CATEGORY_PHYSICAL, CATEGORY_STATUS
 # 便宜上レベル100固定で計算する（両者同条件なので相対的なダメージ比較には影響しない）
 LEVEL = 100
 
-# 急所の発生率。通常は1/16、急所に当たりやすい技(high_crit)は1/8
-NORMAL_CRIT_CHANCE = 1 / 16
-HIGH_CRIT_CHANCE = 1 / 8
+# 急所ランクごとの急所の発生率（第4世代仕様）。通常は1/16、急所に当たりやすい技(high_crit)や
+# ピントレンズ等の持ち物でランクが1つずつ上がる（4以上は1/2で頭打ち）
+CRIT_CHANCE_BY_STAGE = [1 / 16, 1 / 8, 1 / 4, 1 / 3, 1 / 2]
 # 第4世代の急所ダメージ倍率（第6世代以降の1.5倍とは異なる）
 CRIT_MULTIPLIER = 2.0
 
@@ -86,9 +92,16 @@ def calculate_confusion_damage(pokemon, stages=None) -> int:
     return max(1, int(base_damage * random_factor))
 
 
+# 急所ランクから急所の発生率を返す
+def get_crit_chance(crit_stage: int) -> float:
+    return CRIT_CHANCE_BY_STAGE[min(crit_stage, len(CRIT_CHANCE_BY_STAGE) - 1)]
+
+
 # attacker_stages/defender_stagesは両者のStatStages。省略時はランク補正なし（0段階）として計算する
+# 持ち物の効果のうち、ポケモン自身の持ち物だけで決まるもの（ちからのハチマキ・こだわりハチマキ・いのちのたま等）は
+# ここで反映する。メトロノーム・半減実のように対戦中の状態が絡む倍率は、Battle側からextra_multiplierで渡す
 def calculate_damage(attacker, defender, move, weather=None, screen_active=False, ignore_ghost_immunity=False,
-                     attacker_stages=None, defender_stages=None) -> int:
+                     attacker_stages=None, defender_stages=None, extra_multiplier=1.0) -> int:
     # 変化技(CATEGORY_STATUS)はダメージを与えない
     if move.category == CATEGORY_STATUS:
         return 0
@@ -100,8 +113,8 @@ def calculate_damage(attacker, defender, move, weather=None, screen_active=False
         return defender.current_status.current_hp
 
     # 急所判定はランク補正の扱いに影響するため、実数値を決める前に行う
-    crit_chance = HIGH_CRIT_CHANCE if move.high_crit else NORMAL_CRIT_CHANCE
-    is_critical = random.random() < crit_chance
+    crit_stage = (1 if move.high_crit else 0) + get_item_crit_stage_bonus(attacker)
+    is_critical = random.random() < get_crit_chance(crit_stage)
 
     # 物理技(CATEGORY_PHYSICAL)はatk/defense、それ以外(特殊)はspatk/spdefを使う
     if move.category == CATEGORY_PHYSICAL:
@@ -116,6 +129,7 @@ def calculate_damage(attacker, defender, move, weather=None, screen_active=False
         defense_stage = defender_stages.spdef if defender_stages else 0
 
     attack_stat = apply_stage_to_stat(attack_stat, attack_stage, is_critical, is_attack_side=True)
+    attack_stat = int(attack_stat * get_item_attack_stat_multiplier(attacker, move))
     defense_stat = max(1, apply_stage_to_stat(defense_stat, defense_stage, is_critical, is_attack_side=False))
 
     # すなあらしの間、いわタイプの特防は1.5倍になる
@@ -127,6 +141,8 @@ def calculate_damage(attacker, defender, move, weather=None, screen_active=False
     # じゅうでん状態なら、でんき技の威力が2倍になる
     if attacker.current_status.charge_turns_remaining > 0 and move.type == "でんき":
         power *= 2
+
+    power = int(power * get_item_power_multiplier(attacker, move))
 
     base_damage = (2 * LEVEL / 5 + 2) * power * attack_stat / defense_stat
     base_damage = base_damage / 50 + 2
@@ -144,5 +160,8 @@ def calculate_damage(attacker, defender, move, weather=None, screen_active=False
     # リフレクター/ひかりのかべによる軽減。急所に当たった場合は壁を無視する
     screen_multiplier = 0.5 if (screen_active and not is_critical) else 1.0
 
-    damage = base_damage * stab * effectiveness * weather_multiplier * crit_multiplier * screen_multiplier * random_factor
+    item_multiplier = get_item_damage_multiplier(attacker, effectiveness) * extra_multiplier
+
+    damage = (base_damage * stab * effectiveness * weather_multiplier * crit_multiplier * screen_multiplier
+              * item_multiplier * random_factor)
     return int(damage)

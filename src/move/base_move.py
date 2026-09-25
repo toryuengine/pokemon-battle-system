@@ -151,7 +151,7 @@ class BaseMove:
 
             elif kind == "set_weather":
                 _, weather = effect
-                battle.set_weather(weather)
+                battle.set_weather(weather, attacker)
 
             elif kind == "set_hazard":
                 _, hazard_type = effect
@@ -159,7 +159,7 @@ class BaseMove:
 
             elif kind == "set_screen":
                 _, screen_type = effect
-                battle.set_screen(battle.get_trainer(attacker), screen_type)
+                battle.set_screen(battle.get_trainer(attacker), screen_type, attacker)
 
             elif kind == "mimic":
                 battle.perform_mimic(attacker, defender, self)
