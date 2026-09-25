@@ -75,6 +75,18 @@ class BaseMove:
         # まもる・みきりで防がれない、相手に向けた技（ほえる等）はサブクラス側でTrueに上書きする
         self.bypasses_protect = False
 
+        # 溜め中で回避状態の相手にも当たる場合の、相手が溜めている技のID（じしん→あなをほる等）。
+        # 当たった場合は威力が2倍になる。サブクラス側で上書きする
+        self.hits_during_charge_move_ids = ()
+
+        # 使った後2〜3ターン技が固定され、終わるとこんらんする技（げきりん・あばれる）はサブクラス側でTrueに上書きする
+        self.is_rampage = False
+
+        # 相手の防御を半分にして計算する技（第4世代のだいばくはつ）はサブクラス側でTrueに上書きする
+        self.halves_target_defense = False
+        # 場にしめりけのポケモンがいると失敗する（自分も瀕死にならない）技（だいばくはつ）はサブクラス側でTrueに上書きする
+        self.is_explosive = False
+
         # 追加効果のデータ一覧。何もしない技は空リストのまま
         # 各要素の形式:
         #   ("status", target, condition, chance)            例: ("status", "target", "poison", 0.3)
@@ -134,12 +146,19 @@ class BaseMove:
         #   ("attract",)    性別が違う相手をメロメロ状態にする（メロメロ）
         #   ("trick_room",) 5ターンの間、素早さの遅い順に行動する（トリックルーム）
         #   ("acupressure",) ランダムな能力ランクを+2する（つぼをつく）
+        #   ("eat_berry",)  相手のきのみを奪って食べ、その効果を自分が得る（むしくい・ついばむ）
         # target は "self"（attacker） か "target"（defender）
         self.effects = []
 
-    # ダメージ計算に使う威力。使う状況によって威力が変わる技（なげつける・はきだす）はサブクラス側で上書きする
-    def get_power(self, attacker) -> int:
+    # ダメージ計算に使う威力。使う状況によって威力が変わる技（なげつける・はきだす・からげんき等）はサブクラス側で上書きする
+    # battleはみらいよちのように対戦の外から計算する場合にNoneになりうる
+    def get_power(self, battle, attacker, defender) -> int:
         return self.power
+
+    # 技を出す直前（回避状態・まもる・特性による無効化の判定より前）に呼ばれる。
+    # 天候でタイプが変わる技（ウェザーボール）等はサブクラス側で上書きする
+    def prepare_for_use(self, battle, attacker, defender):
+        pass
 
     # 命中判定の直前に呼ばれる。技を出す条件を満たしていなければFalseを返し、技は失敗する（PPは消費済み）
     # なげつける（持ち物が無い）・はきだす/のみこむ（たくわえていない）等はサブクラス側で上書きする
@@ -349,6 +368,9 @@ class BaseMove:
 
             elif kind == "acupressure":
                 battle.perform_acupressure(attacker)
+
+            elif kind == "eat_berry":
+                battle.perform_eat_berry(attacker, defender)
 
     def __repr__(self):
         parts = []

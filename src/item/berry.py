@@ -10,6 +10,8 @@ RESIST_BERRY_MULTIPLIER = 0.5
 # cures_conditionsには回復できる状態異常（status_condition）のタプルを渡す（Noneなら全ての状態異常を回復する）。
 # cures_confusionにはこんらんを回復できるかを渡す
 class StatusCureBerry(BaseItem):
+    is_berry = True
+
     def __init__(self, id: int, cures_conditions=(), cures_confusion=False):
         super().__init__(id)
         self.cures_conditions = cures_conditions
@@ -38,6 +40,8 @@ class StatusCureBerry(BaseItem):
 
 # オボンのみ: HPが半分以下になったら最大HPの1/4回復する
 class SitrusBerry(BaseItem):
+    is_berry = True
+
     def activate(self, battle, pokemon):
         status = pokemon.current_status
         max_hp = pokemon.status.hp
@@ -54,6 +58,8 @@ class SitrusBerry(BaseItem):
 # ピンチ実（チイラのみ・ヤタピのみ・カムラのみ）: HPが1/4以下（くいしんぼうなら1/2以下）になったら
 # stat_nameの能力ランク+1（既に+6なら発動しない）
 class PinchBerry(BaseItem):
+    is_berry = True
+
     def __init__(self, id: int, stat_name: str):
         super().__init__(id)
         self.stat_name = stat_name
@@ -74,6 +80,8 @@ class PinchBerry(BaseItem):
 # 半減実（オッカのみ等）: resist_typeの効果抜群の技を受けたとき、ダメージを半分にして消費する
 # 複数回攻撃なら最初の1発だけ（1発目で消費されるため）
 class ResistBerry(BaseItem):
+    is_berry = True
+
     def __init__(self, id: int, resist_type: str):
         super().__init__(id)
         self.resist_type = resist_type

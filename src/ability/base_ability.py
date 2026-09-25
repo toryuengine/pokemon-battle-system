@@ -38,6 +38,8 @@ class BaseAbility:
     ignores_paralysis_speed_drop = False
     # どんかん: メロメロ状態にならない
     prevents_infatuation = False
+    # しめりけ: 場にいる間、だいばくはつが失敗する
+    prevents_self_destruct = False
 
     # 天候ダメージを受けない天候（すながくれ: {"sandstorm"}、ゆきがくれ・アイスボディ: {"hail"}）
     weather_immunities = frozenset()

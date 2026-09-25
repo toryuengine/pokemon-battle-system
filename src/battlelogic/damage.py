@@ -107,9 +107,10 @@ def roll_critical(attacker, move, attacker_ability=NO_ABILITY, defender_ability=
 # 半減実のように発動すると消費される（Battle側で状態を変える必要がある）倍率は、Battle側からextra_multiplierで渡す
 # attacker_ability/defender_abilityは両者の特性（いえきで消されている・かたやぶりで無視される場合はNO_ABILITY）。
 # is_criticalを省略すると、ここで急所判定を行う（Battle側はいかりのつぼの判定のため、事前にroll_criticalで決めて渡す）
+# battleは状況によって威力が変わる技（しおみず・しっぺがえし等）の威力判定に使う。省略時は技の基本の威力で計算する
 def calculate_damage(attacker, defender, move, weather=None, screen_active=False, ignore_ghost_immunity=False,
                      attacker_stages=None, defender_stages=None, extra_multiplier=1.0,
-                     attacker_ability=NO_ABILITY, defender_ability=NO_ABILITY, is_critical=None) -> int:
+                     attacker_ability=NO_ABILITY, defender_ability=NO_ABILITY, is_critical=None, battle=None) -> int:
     # 変化技(CATEGORY_STATUS)はダメージを与えない
     if move.category == CATEGORY_STATUS:
         return 0
@@ -143,11 +144,15 @@ def calculate_damage(attacker, defender, move, weather=None, screen_active=False
     defense_stat = max(1, apply_stage_to_stat(defense_stat, defense_stage, is_critical, is_attack_side=False))
     defense_stat = max(1, int(defense_stat * defender_ability.get_defense_stat_multiplier(defender, move)))
 
+    # だいばくはつは相手の防御を半分にして計算する（第4世代仕様）
+    if move.halves_target_defense:
+        defense_stat = max(1, defense_stat // 2)
+
     # すなあらしの間、いわタイプの特防は1.5倍になる
     if move.category != CATEGORY_PHYSICAL and weather == "sandstorm" and TYPE_ID_ROCK in (defender.type1, defender.type2):
         defense_stat = int(defense_stat * 1.5)
 
-    power = get_hp_based_power(attacker) if move.has_hp_based_power else move.get_power(attacker)
+    power = get_hp_based_power(attacker) if move.has_hp_based_power else move.get_power(battle, attacker, defender)
     # テクニシャン等は持ち物・じゅうでんの補正前の威力で判定する
     ability_power_multiplier = (attacker_ability.get_power_multiplier(attacker, move, power)
                                 * defender_ability.get_received_power_multiplier(defender, move))

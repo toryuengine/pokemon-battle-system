@@ -1,5 +1,5 @@
 import random
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Optional
 
 from ability.abilityfactory import create_ability
@@ -118,6 +118,16 @@ class CurrentStatus:
     # メロメロにした相手（Noneならメロメロ状態ではない）。行動するたびに1/2の確率で動けない。
     # 自分かその相手が場を退くと解除される（バトンタッチでも引き継がない）
     infatuated_by: Optional["Pokemon"] = None
+    # このターンに攻撃技で自分の本体にダメージを与えた相手（Noneならこのターンはダメージを受けていない）。
+    # ゆきなだれ・リベンジの威力、きあいパンチの失敗の判定に使う。毎ターン開始時にBattle側でリセットする
+    # (みがわりが受けた攻撃・こんらんの自傷・ターン終了時のダメージは含まない)
+    damaged_by_this_turn: Optional["Pokemon"] = None
+    # 場に出てから使った技のID（とっておきの成否判定に使う）。交代すると空に戻る（バトンタッチでも引き継がない）
+    used_move_ids: set = field(default_factory=set)
+    # げきりん・あばれるで固定されている技のインスタンスと、固定の残りターン数（この技を出す回数）。
+    # 固定が終わるとこんらんする。行動できなかった・交代した場合は、こんらんせずに固定が解ける
+    rampage_move: Optional[BaseMove] = None
+    rampage_turns_remaining: int = 0
 
 
 class Pokemon:

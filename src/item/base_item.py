@@ -33,6 +33,8 @@ class BaseItem:
     locks_move = False
     # くろいてっきゅうのように、ひこうタイプでも地面にいる扱いになる持ち物はサブクラス側でTrueに上書きする
     forces_grounded = False
+    # きのみかどうか（むしくい・ついばむで奪って食べられる）。きのみのクラス側でTrueに上書きする
+    is_berry = False
 
     def __init__(self, id: int):
         self.id = id

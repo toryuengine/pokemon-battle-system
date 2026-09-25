@@ -13,5 +13,5 @@ class SpitUp(BaseMove):
     def try_execute(self, battle, attacker, defender) -> bool:
         return attacker.current_status.stockpile_count > 0
 
-    def get_power(self, attacker) -> int:
+    def get_power(self, battle, attacker, defender) -> int:
         return SPIT_UP_POWER_PER_STOCKPILE * attacker.current_status.stockpile_count

@@ -19,5 +19,5 @@ class Fling(BaseMove):
         battle.consume_item(attacker)
         return True
 
-    def get_power(self, attacker) -> int:
+    def get_power(self, battle, attacker, defender) -> int:
         return self.flung_item.fling_power if self.flung_item is not None else self.power
