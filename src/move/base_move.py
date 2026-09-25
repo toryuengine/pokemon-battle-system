@@ -123,6 +123,9 @@ class BaseMove:
         #   ("trick",)      自分と相手の持ち物を入れ替える（トリック）
         #   ("spite",)      相手が直前に使った技のPPを4減らす（うらみ）
         #   ("recycle",)    最後に消費した持ち物を取り戻す（リサイクル）
+        #   ("substitute",) 最大HPの1/4を払って身代わりを作る（みがわり）
+        #   ("psych_up",)   相手の能力ランクを自分にコピーする（じこあんじ）
+        #   ("power_trick",) 自分の攻撃と防御の実数値を入れ替える（パワートリック）
         # target は "self"（attacker） か "target"（defender）
         self.effects = []
 
@@ -305,6 +308,15 @@ class BaseMove:
 
             elif kind == "recycle":
                 battle.perform_recycle(attacker)
+
+            elif kind == "substitute":
+                battle.perform_substitute(attacker)
+
+            elif kind == "psych_up":
+                battle.perform_psych_up(attacker, defender)
+
+            elif kind == "power_trick":
+                battle.perform_power_trick(attacker)
 
     def __repr__(self):
         parts = []

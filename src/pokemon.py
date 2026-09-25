@@ -97,6 +97,10 @@ class CurrentStatus:
     is_grudge_active: bool = False
     # でんじふゆうの残りターン数。0より大きい間はじめん技・まきびし・どくびしを受けない
     magnet_rise_turns_remaining: int = 0
+    # みがわりの残りHP。0より大きい間は身代わりがいる。交代すると消える（バトンタッチでは引き継ぐ）
+    substitute_hp: int = 0
+    # パワートリックで攻撃と防御の実数値を入れ替えている状態。交代すると元に戻る（バトンタッチでは引き継ぐ）
+    is_power_trick_active: bool = False
 
 
 class Pokemon:

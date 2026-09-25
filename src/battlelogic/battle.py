@@ -82,6 +82,11 @@ FUTURE_SIGHT_DELAY = 3
 SWALLOW_HEAL_RATIOS = {1: 1 / 4, 2: 1 / 2, 3: 1.0}
 # アンコールで固定できない技（アンコール自身）。まねっこ・ものまね・わるあがきも固定できない
 ENCORE_ID = 164
+# みがわりで払うHPの、最大HPに対する割合
+SUBSTITUTE_HP_RATIO = 1 / 4
+# 相手に向けた効果のうち、みがわりを無視して届くもの（第4世代仕様: ほえる・ちょうはつ・アンコール・かなしばり・
+# いちゃもん・うらみ・ゴーストタイプののろい）
+SUBSTITUTE_BYPASS_EFFECT_KINDS = {"force_switch", "taunt", "encore", "disable", "torment", "spite", "curse"}
 
 
 class Battle:
@@ -99,6 +104,10 @@ class Battle:
         # 天候（None/"sun"/"rain"/"sandstorm"/"hail"）と残りターン数
         self.weather = None
         self.weather_turns_remaining = 0
+
+        # 今処理している攻撃を、みがわりが受け止めた相手（Noneなら無し）。攻撃で身代わりが壊れた場合も、
+        # その攻撃の追加効果・持ち物の効果（おうじゃのしるし等）は本体に届かないため、攻撃の処理中だけ保持する
+        self.substitute_absorbed_target = None
 
     # 双方が回復技しか選ばない等でHPが減らないケースがあるため、無限ループ防止に上限を設ける
     MAX_TURNS = 1000
@@ -243,7 +252,9 @@ class Battle:
             "trapped_by": outgoing_status.trapped_by,
             "magnet_rise_turns_remaining": outgoing_status.magnet_rise_turns_remaining,
             "is_ability_suppressed": outgoing_status.is_ability_suppressed,
+            "substitute_hp": outgoing_status.substitute_hp,
         } if baton_pass else None
+        passed_power_trick = baton_pass and outgoing_status.is_power_trick_active
 
         # しぜんかいふく等、場を退く時に発動する特性（瀕死で退く場合は発動しない）
         if not self.is_fainted(outgoing):
@@ -285,6 +296,9 @@ class Battle:
         if passed_status is not None:
             for name, value in passed_status.items():
                 setattr(trainer.active.current_status, name, value)
+        # パワートリックをバトンタッチで引き継いだ場合は、交代先の攻撃と防御の実数値を入れ替える
+        if passed_power_trick:
+            self.perform_power_trick(trainer.active)
         self.apply_entry_hazards(trainer)
         if not self.is_fainted(trainer.active):
             if activate_ability:
@@ -701,7 +715,8 @@ class Battle:
     # 複数回攻撃技は命中判定を1回だけ行い、そのあと決めたヒット回数分ダメージを繰り返し与える（相手が瀕死になったら打ち切り）
     def use_move(self, attacker: Pokemon, defender: Pokemon, move: BaseMove) -> dict:
         result = {"hit": False, "damage": 0, "effectiveness": 1.0, "hit_count": 0, "charging": False,
-                  "blocked_by_protect": False, "blocked_by_ability": False}
+                  "blocked_by_protect": False, "blocked_by_ability": False, "blocked_by_substitute": False,
+                  "hit_substitute": False}
 
         # 1ターン目（溜め開始）かどうか。charging_moveが同じ技を指していれば、今回は2ターン目(攻撃)
         is_releasing_charge = attacker.current_status.charging_move is move
@@ -819,6 +834,12 @@ class Battle:
         if not move.try_execute(self, attacker, defender):
             return result
 
+        # みがわりがいる相手には、相手に向けた変化技（ほえる・ちょうはつ等を除く）が効かず、
+        # 吸収技（ギガドレイン・ゆめくい等）も失敗する（第4世代仕様）
+        if targets_opponent and self.has_substitute(defender) and self.is_move_blocked_by_substitute(move, attacker):
+            result["blocked_by_substitute"] = True
+            return result
+
         if not check_hit(self.get_effective_hitrate(move, attacker, defender)):
             return result
 
@@ -838,13 +859,20 @@ class Battle:
             ignore_ghost_immunity = defender.current_status.is_identified or attacker_ability.ignores_ghost_immunity
             effectiveness = get_move_effectiveness(move, defender, ignore_ghost_immunity)
             hit_count = self.roll_hit_count(move)
+            # 最後のヒットをみがわりが受け止めたかどうか（受け止めていれば、追加効果は本体に届かない）
+            last_hit_absorbed = False
             for _ in range(hit_count):
                 if self.is_fainted(defender):
                     break
 
+                # みがわりがいれば、攻撃は身代わりが受ける（複数回攻撃で途中で壊れたら、残りは本体に当たる）
+                hits_substitute = self.has_substitute(defender)
+
                 # 半減実は効果抜群の対応タイプの技を受けたときに1回だけ発動する（複数回攻撃なら最初の1回だけ）
+                # みがわりが受けた攻撃では発動しない
                 defender_item = defender.held_item
-                received_multiplier = defender_item.get_received_damage_multiplier(defender, move, effectiveness)
+                received_multiplier = (1.0 if hits_substitute
+                                       else defender_item.get_received_damage_multiplier(defender, move, effectiveness))
 
                 # いかりのつぼの判定のため、急所判定はダメージ計算の外で行う
                 is_critical = roll_critical(attacker, move, attacker_ability, defender_ability)
@@ -855,6 +883,14 @@ class Battle:
                 )
                 if received_multiplier != 1.0 and damage > 0:
                     defender_item.on_received_damage_reduced(self, defender)
+
+                last_hit_absorbed = hits_substitute
+                if hits_substitute:
+                    # 身代わりのHPを超えた分のダメージは本体に届かない（反動・かいがらのすずは身代わりに与えた分で計算する）
+                    total_damage += self.apply_substitute_damage(defender, damage)
+                    result["hit_count"] += 1
+                    result["hit_substitute"] = True
+                    continue
 
                 damage = self.apply_survival_effects(defender, damage)
 
@@ -872,9 +908,13 @@ class Battle:
             if result["hit_count"] > 0 and self.is_fainted(defender):
                 self.apply_faint_retaliation(attacker, defender, move)
 
-            # テクスチャー2が参照できるよう、受けた技のタイプを記録しておく
-            if result["hit_count"] > 0:
+            # テクスチャー2が参照できるよう、受けた技のタイプを記録しておく（みがわりが受けた場合は本体は受けていない）
+            if result["hit_count"] > 0 and not last_hit_absorbed:
                 defender.current_status.last_hit_by_type = move.type
+
+            # 身代わりが受け止めた攻撃の追加効果・持ち物の効果は、相手本体には届かない
+            if last_hit_absorbed:
+                self.substitute_absorbed_target = defender
 
             # かいがらのすず・いのちのたま・おうじゃのしるし等、ダメージを与えた後に発動する持ち物
             # (とんぼがえりで交代する前に発動させるため、追加効果より先に処理する)
@@ -883,6 +923,7 @@ class Battle:
 
         # 命中していれば、技固有の追加効果を発動させる（無い技はBaseMoveのデフォルトで何もしない）
         move.apply_effect(self, attacker, defender, total_damage)
+        self.substitute_absorbed_target = None
 
         return result
 
@@ -998,17 +1039,29 @@ class Battle:
     def is_move_blocked_by_protect(self, move: BaseMove, attacker: Pokemon = None) -> bool:
         if move.category != CATEGORY_STATUS:
             return True
-        for effect in move.effects:
-            kind = effect[0]
-            if kind in ("status", "status_random", "stat", "stat_multi", "flinch") and effect[1] == "target":
-                return True
-            # いたみわけ・いえき等は相手のHP・特性・技・持ち物を直接書き換えるので、相手に向けた効果として防がれる
-            if kind in ("pain_split", "suppress_ability", "force_switch", "taunt", "encore", "disable", "torment",
-                        "nightmare", "mean_look", "trick", "spite"):
-                return True
-            if kind == "curse" and attacker is not None and self.is_ghost_type(attacker):
-                return True
+        return any(self.is_opponent_directed_effect(effect, attacker) for effect in move.effects)
+
+    # 変化技の効果が「相手」に向けたものかどうか（まもる・みがわりで防がれる対象の判定に使う）
+    def is_opponent_directed_effect(self, effect, attacker: Pokemon = None) -> bool:
+        kind = effect[0]
+        if kind in ("status", "status_random", "stat", "stat_multi", "flinch") and effect[1] == "target":
+            return True
+        # いたみわけ・いえき等は相手のHP・特性・技・持ち物を直接書き換えるので、相手に向けた効果として防がれる
+        if kind in ("pain_split", "suppress_ability", "force_switch", "taunt", "encore", "disable", "torment",
+                    "nightmare", "mean_look", "trick", "spite"):
+            return True
+        if kind == "curse" and attacker is not None and self.is_ghost_type(attacker):
+            return True
         return False
+
+    # 相手に向けたmoveが、みがわりで防がれるかどうか（相手にみがわりがいるかどうかは呼び出し側で判定する）
+    # ダメージ技は身代わりが受ける（防がれるのではない）ので対象外だが、吸収技は第4世代仕様で失敗する
+    # 変化技は、相手に向けた効果がほえる・ちょうはつ等のみがわりを無視する効果だけなら防がれない
+    def is_move_blocked_by_substitute(self, move: BaseMove, attacker: Pokemon = None) -> bool:
+        if move.category != CATEGORY_STATUS:
+            return any(effect[0] == "drain" for effect in move.effects)
+        return any(self.is_opponent_directed_effect(effect, attacker) and effect[0] not in SUBSTITUTE_BYPASS_EFFECT_KINDS
+                   for effect in move.effects)
 
     # まもる・みきり・こらえるの連続使用による成功率の減衰を判定し、成功していればis_protected/is_enduringを立てる
     # 本編仕様: 初回100%、以降連続成功するたびに1/3倍。失敗、またはこれら以外の技を使うと0に戻る
@@ -1036,6 +1089,8 @@ class Battle:
     # chanceの確率で複数の能力ランクを同時に変える（げんしのちからのような複合効果用。1回の判定で全部まとめて適用する）
     # 特性で防がれた能力だけは変化しない
     def try_apply_stat_multi_change(self, target, stat_changes, chance, source=None):
+        if self.is_shielded_by_substitute(target, source):
+            return False
         if random.random() < chance:
             for stat_name, stage_amount in stat_changes:
                 if self.is_stat_drop_prevented(target, stat_name, stage_amount, source):
@@ -1049,6 +1104,8 @@ class Battle:
     # こんらんだけはstatus_conditionとは別枠で管理し、他の状態異常と重複できる（既にこんらん中なら上書きしない）
     # sourceは状態異常にした相手。めんえき等の特性で防がれる判定（かたやぶり）と、シンクロの発動に使う
     def try_apply_status(self, target, condition, chance, source=None):
+        if self.is_shielded_by_substitute(target, source):
+            return False
         if not self.can_receive_status(target, condition, source):
             return False
 
@@ -1074,6 +1131,8 @@ class Battle:
     # chanceの確率でtargetをひるませる（そのターンだけ行動不能。start_battle側で判定・解除する）
     # せいしんりょくならひるまない（sourceがかたやぶりなら無視する）
     def try_apply_flinch(self, target, chance, source=None):
+        if self.is_shielded_by_substitute(target, source):
+            return False
         if self.get_target_ability(target, source).prevents_flinch:
             return False
         if random.random() < chance:
@@ -1219,6 +1278,8 @@ class Battle:
             spdef=target.status.spdef,
             spd=target.status.spd,
         )
+        # 実数値ごと置き換えるので、変身前のパワートリックの入れ替えは無くなる（相手の入れ替え後の実数値をコピーする）
+        attacker.current_status.is_power_trick_active = False
 
         copied_moves = []
         for move in target.moves:
@@ -1281,6 +1342,10 @@ class Battle:
         status.is_destiny_bond_active = False
         status.is_grudge_active = False
         status.magnet_rise_turns_remaining = 0
+        status.substitute_hp = 0
+        # パワートリックで入れ替えた攻撃と防御の実数値を元に戻す
+        if status.is_power_trick_active:
+            self.perform_power_trick(pokemon)
 
     # 場に出ている両者の、ちょうはつ・アンコール・かなしばり・でんじふゆうの残りターンを1減らす
     def tick_volatile_statuses(self):
@@ -1340,6 +1405,8 @@ class Battle:
 
     # はたきおとす: 相手の持ち物をはたき落とす（対戦中は戻らず、リサイクルでも取り戻せない）。ねんちゃくなら落とせない
     def perform_knock_off(self, attacker: Pokemon, target: Pokemon):
+        if self.is_shielded_by_substitute(target, attacker):
+            return
         if target.item is None or self.get_target_ability(target, attacker).prevents_item_removal:
             return
         target.item = None
@@ -1368,7 +1435,7 @@ class Battle:
     # なげつける: 投げつけた持ち物（技を出した時点で手放し済み）の追加効果を、相手に与える
     # (きのみ・しろいハーブは相手が食べた・使った扱いになり、どくどくだまはどく、おうじゃのしるし・するどいキバはひるませる)
     def apply_flung_item_effect(self, target: Pokemon, item, source: Pokemon):
-        if item is None or self.is_fainted(target):
+        if item is None or self.is_fainted(target) or self.is_shielded_by_substitute(target, source):
             return
         item.on_flung(self, target, source)
 
@@ -1376,7 +1443,7 @@ class Battle:
     # 既に締め付けられていれば、ターン数は延長しない
     def perform_bind(self, attacker: Pokemon, target: Pokemon):
         status = target.current_status
-        if self.is_fainted(target) or status.bound_turns_remaining > 0:
+        if self.is_fainted(target) or status.bound_turns_remaining > 0 or self.is_shielded_by_substitute(target, attacker):
             return
         turns = random.choices([2, 3, 4, 5], weights=[3, 3, 1, 1])[0]
         status.bound_turns_remaining = attacker.held_item.get_binding_turns(turns)
@@ -1525,3 +1592,50 @@ class Battle:
                 continue
             damage = self.apply_survival_effects(target, trainer.future_sight_damage)
             self.apply_damage(target, damage)
+
+    # ---- みがわり・じこあんじ・パワートリック ----
+
+    # pokemonの前に身代わりがいるかどうか
+    def has_substitute(self, pokemon: Pokemon) -> bool:
+        return pokemon.current_status.substitute_hp > 0
+
+    # 相手(source)からtargetへの効果（状態異常・能力ランクダウン・ひるみ・はたきおとす等）が、みがわりで防がれるかどうか
+    # 身代わりがいる間に加え、今処理している攻撃を身代わりが受け止めた場合（その攻撃で壊れた場合を含む）も防ぐ
+    # いかく等の特性も、効果の発生元(source)が相手なら防がれる
+    def is_shielded_by_substitute(self, target: Pokemon, source: Pokemon = None) -> bool:
+        if source is None or source is target:
+            return False
+        return self.has_substitute(target) or target is self.substitute_absorbed_target
+
+    # みがわり: 最大HPの1/4（端数切り捨て）を払って、そのHPを持つ身代わりを作る
+    # 既に身代わりがいる、残りHPが払うHP以下（使うと瀕死になる）、払うHPが0（最大HP1のヌケニン等）なら失敗する
+    def perform_substitute(self, attacker: Pokemon):
+        status = attacker.current_status
+        cost = int(attacker.status.hp * SUBSTITUTE_HP_RATIO)
+        if self.has_substitute(attacker) or cost <= 0 or status.current_hp <= cost:
+            return
+        self.apply_damage(attacker, cost)
+        status.substitute_hp = cost
+
+    # 身代わりにdamageを与え、実際に身代わりが受けたダメージ（身代わりの残りHPが上限）を返す。残りHPが0になると身代わりは壊れる
+    def apply_substitute_damage(self, target: Pokemon, damage: int) -> int:
+        status = target.current_status
+        absorbed = min(damage, status.substitute_hp)
+        status.substitute_hp -= absorbed
+        return absorbed
+
+    # じこあんじ: targetの能力ランク（命中率・回避率を含む）を、そのままattackerにコピーする
+    # (まもる・みがわりに防がれない。第4世代仕様で、急所ランクはコピーしない)
+    def perform_psych_up(self, attacker: Pokemon, target: Pokemon):
+        copied = StatStages(**vars(self.get_stages(target)))
+        if attacker is self.pokemon1:
+            self.stages1 = copied
+        else:
+            self.stages2 = copied
+
+    # パワートリック: pokemonの攻撃と防御の実数値を入れ替える。もう一度使うと元に戻る
+    # 能力ランクは入れ替えない。入れ替えた状態は交代すると元に戻る（バトンタッチでは引き継ぐ）
+    def perform_power_trick(self, pokemon: Pokemon):
+        status = pokemon.status
+        status.atk, status.defense = status.defense, status.atk
+        pokemon.current_status.is_power_trick_active = not pokemon.current_status.is_power_trick_active
