@@ -157,6 +157,7 @@ class Battle:
                 pokemon.current_status.is_enduring = False
                 pokemon.current_status.is_flinched = False
                 pokemon.current_status.has_moved_this_turn = False
+                pokemon.current_status.damaged_by_this_turn = None
 
             move1 = self.select_move(self.pokemon1) #技のインスタンスが入っている
             move2 = self.select_move(self.pokemon2) #技のインスタンスが入っている
@@ -169,6 +170,9 @@ class Battle:
             # まとめて判定する。行動不能ならその技は不発のまま次に進む
             if self.can_act(first_mover, first_move):
                 self.use_move(first_mover, second_mover, first_move)
+            else:
+                # げきりん・あばれるの固定中に行動できなければ、こんらんせずに固定が解ける
+                self.end_rampage(first_mover)
             first_mover.current_status.has_moved_this_turn = True
             # HPが減った・状態異常になった・能力が下がった等で、きのみ・しろいハーブが発動する
             self.activate_held_items_on_field()
@@ -187,6 +191,8 @@ class Battle:
 
             if self.can_act(second_mover, second_move):
                 self.use_move(second_mover, current_opponent, second_move)
+            else:
+                self.end_rampage(second_mover)
             second_mover.current_status.has_moved_this_turn = True
             self.activate_held_items_on_field()
             self.resolve_faints()
@@ -607,6 +613,9 @@ class Battle:
         status = attacker.current_status
         if status.charging_move is not None:
             return status.charging_move
+        # げきりん・あばれるで固定されていれば、固定が終わるまでその技を出し続ける
+        if status.rampage_move is not None:
+            return status.rampage_move
 
         # アンコールで固定されていれば、その技しか選べない（PPが尽きるか技構成から消えたらアンコールが解ける）
         encore_move = status.encore_move
@@ -762,10 +771,12 @@ class Battle:
 
         # 1ターン目（溜め開始）かどうか。charging_moveが同じ技を指していれば、今回は2ターン目(攻撃)
         is_releasing_charge = attacker.current_status.charging_move is move
+        # げきりん・あばれるの2ターン目以降かどうか（固定中はPPを消費せず、アンコール等の判定も受けない）
+        is_continuing_rampage = attacker.current_status.rampage_move is move
 
         # 技を選んだ後、行動する前にアンコール・かなしばり・ちょうはつ・いちゃもんを受けた場合の処理
         # (わるあがきや溜め技の2ターン目のように、技構成から選んだのではない技は対象外)
-        if not is_releasing_charge and any(m is move for m in attacker.moves):
+        if not is_releasing_charge and not is_continuing_rampage and any(m is move for m in attacker.moves):
             # アンコールされていれば、選んでいた技の代わりに固定された技を使う
             encore_move = attacker.current_status.encore_move
             if encore_move is not None and encore_move.current_pp > 0:
@@ -783,6 +794,9 @@ class Battle:
 
         # まねっこがコピーできるよう、使った技のIDを記録しておく
         attacker.current_status.last_move_used_id = move.id
+        # とっておきの判定用に、場に出てから技構成の中のどの技を使ったかを記録しておく
+        if any(m is move for m in attacker.moves):
+            attacker.current_status.used_move_ids.add(move.id)
 
         # まもる・みきり・こらえる以外の技を使ったら、連続成功カウンタをリセットする
         if move.id not in PROTECT_FAMILY_MOVE_IDS:
@@ -813,6 +827,9 @@ class Battle:
             # 2ターン目: 溜め状態・回避状態を解除して攻撃に移る（PPは1ターン目で消費済みなのでここでは減らさない）
             attacker.current_status.charging_move = None
             attacker.current_status.is_invulnerable = False
+        elif is_continuing_rampage:
+            # げきりん・あばれるの2ターン目以降は、PPを消費しない
+            pass
         else:
             # PPは命中/失敗に関わらず、使った時点で1消費する
             self.consume_pp(attacker, defender, move)
@@ -821,9 +838,18 @@ class Battle:
         if move.requires_recharge:
             attacker.current_status.must_recharge = True
 
-        # おきみやげ等は命中・失敗に関わらず、使った時点で自分が瀕死になる（第4世代仕様）
+        # だいばくはつは、場にしめりけのポケモンがいると失敗する（PPは消費し、自分も瀕死にならない）
+        if move.is_explosive and self.is_explosion_prevented(attacker):
+            return result
+
+        # おきみやげ・だいばくはつ等は命中・失敗に関わらず、使った時点で自分が瀕死になる（第4世代仕様）
         if move.user_faints_on_use:
             attacker.current_status.current_hp = 0
+
+        # げきりん・あばれるは、最初に使った時点で2〜3ターンの間その技に固定される
+        if move.is_rampage and not is_continuing_rampage:
+            attacker.current_status.rampage_move = move
+            attacker.current_status.rampage_turns_remaining = random.randint(2, 3)
 
         if move.calls_own_random_move:
             # ねごと: 自分の他の技をランダムに1つ呼び出して使う
@@ -838,7 +864,32 @@ class Battle:
         if move.type == "でんき" and move.category != CATEGORY_STATUS:
             attacker.current_status.charge_turns_remaining = 0
 
+        # げきりん・あばれるの固定ターンを1減らし、最後のターンを終えたら疲れてこんらんする
+        # (外れた・まもるで防がれた場合も固定は続く)
+        if attacker.current_status.rampage_move is move:
+            attacker.current_status.rampage_turns_remaining -= 1
+            if attacker.current_status.rampage_turns_remaining <= 0:
+                self.end_rampage(attacker)
+                if not self.is_fainted(attacker):
+                    self.try_apply_status(attacker, "confusion", 1.0)
+
         return result
+
+    # げきりん・あばれるによる技の固定を解除する（こんらんはさせない）
+    def end_rampage(self, pokemon: Pokemon):
+        pokemon.current_status.rampage_move = None
+        pokemon.current_status.rampage_turns_remaining = 0
+
+    # 場にいるどちらかのポケモンがしめりけなら、だいばくはつは失敗する（使う側がかたやぶりなら相手のしめりけは無視する）
+    def is_explosion_prevented(self, attacker: Pokemon) -> bool:
+        opponent = self.get_opponent(attacker)
+        return (self.get_ability(attacker).prevents_self_destruct
+                or self.get_target_ability(opponent, attacker).prevents_self_destruct)
+
+    # defenderが回避状態（溜め中）でも、moveが当たるかどうか（じしん→あなをほる、なみのり→ダイビング）
+    def hits_charging_target(self, move: BaseMove, defender: Pokemon) -> bool:
+        charging_move = defender.current_status.charging_move
+        return charging_move is not None and charging_move.id in move.hits_during_charge_move_ids
 
     # moveのPPを1消費する。相手に向けた技で、相手がプレッシャーならさらに1消費する
     def consume_pp(self, attacker: Pokemon, defender: Pokemon, move: BaseMove):
@@ -849,11 +900,17 @@ class Battle:
 
     # use_moveのうち、命中判定以降（回避状態・まもる・命中・ダメージ・追加効果）の処理
     def _resolve_move_hit(self, attacker: Pokemon, defender: Pokemon, move: BaseMove, result: dict) -> dict:
+        # ウェザーボールのタイプ等、技を出す直前に決まる性質をここで確定させる
+        move.prepare_for_use(self, attacker, defender)
+
         # 相手に向けた技かどうか（自分自身・場に向けた変化技は、相手の回避状態やまもるの影響を受けない）
         targets_opponent = self.is_move_blocked_by_protect(move, attacker)
 
-        # 相手が回避状態（あなをほる等で溜め中）なら、命中率に関わらず必ず外れる（ノーガードなら当たる）
-        if defender.current_status.is_invulnerable and targets_opponent and not self.is_no_guard_active(attacker, defender):
+        # 相手が回避状態（あなをほる等で溜め中）なら、命中率に関わらず必ず外れる
+        # (ノーガードなら当たる。じしん→あなをほる等、溜めている技に対応する技も当たる)
+        if (defender.current_status.is_invulnerable and targets_opponent
+                and not self.is_no_guard_active(attacker, defender)
+                and not self.hits_charging_target(move, defender)):
             return result
 
         # 相手がまもる・みきりで守っていれば、命中率に関わらず技が防がれる（ほえる等、まもるを無視する技は除く）
@@ -921,7 +978,7 @@ class Battle:
                 damage = calculate_damage(
                     attacker, defender, move, self.get_effective_weather(), screen_active, ignore_ghost_immunity,
                     self.get_stages(attacker), self.get_stages(defender), received_multiplier,
-                    attacker_ability, defender_ability, is_critical,
+                    attacker_ability, defender_ability, is_critical, battle=self,
                 )
                 if received_multiplier != 1.0 and damage > 0:
                     defender_item.on_received_damage_reduced(self, defender)
@@ -939,6 +996,9 @@ class Battle:
                 self.apply_damage(defender, damage)
                 total_damage += damage
                 result["hit_count"] += 1
+                # ゆきなだれ・リベンジ・きあいパンチの判定用に、このターン誰から本体にダメージを受けたかを記録する
+                if damage > 0:
+                    defender.current_status.damaged_by_this_turn = attacker
 
                 if is_critical and damage > 0 and not self.is_fainted(defender):
                     self.get_ability(defender).on_critical_hit_received(self, defender)
@@ -1391,6 +1451,8 @@ class Battle:
         status.yawn_turns_remaining = 0
         status.perish_turns_remaining = 0
         status.infatuated_by = None
+        status.used_move_ids = set()
+        self.end_rampage(pokemon)
         # パワートリックで入れ替えた攻撃と防御の実数値を元に戻す
         if status.is_power_trick_active:
             self.perform_power_trick(pokemon)
@@ -1464,6 +1526,20 @@ class Battle:
             return
         target.item = None
         self.on_item_lost(target)
+
+    # むしくい・ついばむ: 相手の持っているきのみを奪って食べ、その効果を自分が得る（HP等の発動条件に関係なく食べる）
+    # 相手がねんちゃくなら奪えない（第4世代仕様）。食べられたきのみは相手のリサイクルでも取り戻せない
+    # 半減実のように、食べても効果が無いきのみは奪うだけになる
+    def perform_eat_berry(self, attacker: Pokemon, target: Pokemon):
+        if self.is_shielded_by_substitute(target, attacker):
+            return
+        berry = target.item
+        if berry is None or not berry.is_berry or self.get_target_ability(target, attacker).prevents_item_removal:
+            return
+        target.item = None
+        self.on_item_lost(target)
+        if not self.is_fainted(attacker):
+            berry.on_flung(self, attacker, attacker)
 
     # トリック: 自分と相手の持ち物を入れ替える。両者とも持ち物が無い、または相手がねんちゃくなら失敗する
     # 入れ替えた後は、こだわり系の持ち物による技の固定を解除する（受け取った側は次に使った技に固定される）
@@ -1608,6 +1684,8 @@ class Battle:
         called_move = random.choice(candidates)
         if called_move.requires_recharge:
             attacker.current_status.must_recharge = True
+        if called_move.is_explosive and self.is_explosion_prevented(attacker):
+            return result
         if called_move.user_faints_on_use:
             attacker.current_status.current_hp = 0
         if called_move.is_delayed_attack:
