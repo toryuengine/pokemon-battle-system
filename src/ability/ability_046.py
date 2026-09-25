@@ -1,5 +1,4 @@
 from ability.base_ability import BaseAbility
-from battlelogic.item import IRON_BALL
 from move.base_move import CATEGORY_STATUS
 
 
@@ -14,4 +13,4 @@ class Levitate(BaseAbility):
     def on_try_hit(self, battle, attacker, defender, move) -> bool:
         if move.is_typeless or move.type != "じめん" or move.category == CATEGORY_STATUS:
             return False
-        return defender.item != IRON_BALL
+        return not defender.held_item.forces_grounded

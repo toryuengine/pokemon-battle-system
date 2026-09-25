@@ -4,6 +4,8 @@ from typing import List, Optional
 
 from ability.abilityfactory import create_ability
 from ability.base_ability import BaseAbility
+from item.base_item import NO_ITEM, BaseItem
+from item.itemfactory import create_item
 from move.base_move import BaseMove
 from move.movefactory import create_move
 from readpokemondata import load_pokemon_data
@@ -85,14 +87,19 @@ class Pokemon:
         self.ability: BaseAbility = create_ability(random.choice(entry["ability"]))
         self.status: PokemonStatus = _parse_status(set_data["status"])
         self.current_status: CurrentStatus = CurrentStatus(current_hp=self.status.hp)
-        # 持っている持ち物のID。きのみ等を使い切ると(消費すると)Noneになる
-        self.item: Optional[int] = set_data["item"]
-        # 最後に消費した持ち物のID（リサイクルで取り戻す対象）。まだ何も消費していなければNone
-        self.consumed_item: Optional[int] = None
+        # 持っている持ち物のインスタンス。きのみ等を使い切ると(消費すると)Noneになる
+        self.item: Optional[BaseItem] = create_item(set_data["item"]) if set_data["item"] is not None else None
+        # 最後に消費した持ち物（リサイクルで取り戻す対象）。まだ何も消費していなければNone
+        self.consumed_item: Optional[BaseItem] = None
 
         self.moves: List[BaseMove] = []
         for move_id in set_data["move"]:
             self.moves.append(create_move(move_id))
+
+    # 持ち物の効果を呼び出すときに使う。持ち物を持っていなければ効果なしのNO_ITEMを返すので、呼び出し側でNoneチェックが要らない
+    @property
+    def held_item(self) -> BaseItem:
+        return self.item if self.item is not None else NO_ITEM
 
     def __repr__(self):
         return (
