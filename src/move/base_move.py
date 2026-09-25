@@ -80,6 +80,7 @@ class BaseMove:
         #   ("identify",)  相手を見破る。相手の回避ランクを無視し、ゴーストタイプの無効化も無視する（みやぶる）
         #   ("protect",)   このターンの間、相手の技をほぼ全て防ぐ（まもる・みきり）。連続成功で成功率が下がる
         #   ("endure",)    このターンの間、瀕死になるはずの攻撃をHP1で耐える（こらえる）。連続成功で成功率が下がる
+        #   ("pain_split",) 自分と相手の残りHPを合計し、半分ずつ分け合う（いたみわけ）
         # target は "self"（attacker） か "target"（defender）
         self.effects = []
 
@@ -171,6 +172,9 @@ class BaseMove:
 
             elif kind == "endure":
                 battle.perform_endure(attacker)
+
+            elif kind == "pain_split":
+                battle.perform_pain_split(attacker, defender)
 
     def __repr__(self):
         parts = []

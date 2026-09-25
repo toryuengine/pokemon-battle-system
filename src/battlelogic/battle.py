@@ -541,6 +541,9 @@ class Battle:
             kind = effect[0]
             if kind in ("status", "status_random", "stat", "stat_multi", "flinch") and effect[1] == "target":
                 return True
+            # いたみわけは相手のHPを直接書き換えるので、相手に向けた効果として防がれる
+            if kind == "pain_split":
+                return True
         return False
 
     # まもる・みきり・こらえるの連続使用による成功率の減衰を判定し、成功していればis_protected/is_enduringを立てる
@@ -616,6 +619,13 @@ class Battle:
         max_hp = attacker.status.hp
         heal_amount = int(max_hp * ratio)
         attacker.current_status.current_hp = min(max_hp, attacker.current_status.current_hp + heal_amount)
+
+    # いたみわけ: attackerとtargetの残りHPを合計し、半分(端数切り捨て)ずつ分け合う
+    # 分け合った値が最大HPを超える側は最大HPまでしか回復しない
+    def perform_pain_split(self, attacker: Pokemon, target: Pokemon):
+        shared_hp = (attacker.current_status.current_hp + target.current_status.current_hp) // 2
+        attacker.current_status.current_hp = min(attacker.status.hp, shared_hp)
+        target.current_status.current_hp = min(target.status.hp, shared_hp)
 
     # まねっこ: targetが直前に使った技を、attackerの技構成の中のmimic_move(まねっこ自身)の枠にコピーする
     # コピーした技のPPは固定5。targetがまだ技を使っていない場合や、コピー不可の技(わるあがき)なら失敗する
