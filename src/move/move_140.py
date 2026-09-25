@@ -1,9 +1,10 @@
 from move.base_move import BaseMove
 
 
-# ほえる
+# ほえる: 相手を手持ちの他のポケモンに強制的に交代させる。まもる・みきりを無視する
 class Roar(BaseMove):
     def __init__(self):
-        super().__init__(id=140)  # 交代・拘束・特殊なターン管理などが必要な効果は未実装
-        self.effects = []
+        super().__init__(id=140)
+        self.effects = [("force_switch",)]
         self.priority = -6
+        self.bypasses_protect = True

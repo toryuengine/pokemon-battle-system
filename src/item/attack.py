@@ -78,3 +78,7 @@ class FlinchItem(BaseItem):
             return
         if not any(effect[0] == "flinch" for effect in move.effects):
             battle.try_apply_flinch(defender, FLINCH_ITEM_CHANCE, source=attacker)
+
+    # なげつけるで投げつけられた相手を必ずひるませる
+    def on_flung(self, battle, target, source):
+        battle.try_apply_flinch(target, 1.0, source=source)

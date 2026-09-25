@@ -8,3 +8,7 @@ class ToxicOrb(BaseItem):
         # めんえき等の特性でどくにならないポケモンには効果がない
         if pokemon.current_status.status_condition is None and battle.can_receive_status(pokemon, "poison"):
             pokemon.current_status.status_condition = "poison"
+
+    # なげつけるで投げつけられた相手をどく状態にする（ターン終了時の発動と同じく、通常のどく扱い）
+    def on_flung(self, battle, target, source):
+        battle.try_apply_status(target, "poison", 1.0, source=source)

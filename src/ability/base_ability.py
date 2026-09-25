@@ -30,6 +30,10 @@ class BaseAbility:
     increases_opponent_pp_usage = False
     # ふゆう: 地面にいない扱い（じめん技・まきびし・どくびしを受けない）
     is_levitating = False
+    # ねんちゃく: はたきおとす・トリックで持ち物を奪われない
+    prevents_item_removal = False
+    # きゅうばん: ほえるで交代させられない
+    prevents_forced_switch = False
     # はやあし: まひによる素早さの低下を受けない
     ignores_paralysis_speed_drop = False
 

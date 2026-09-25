@@ -1,5 +1,27 @@
 from readpokemondata import load_item_data
 
+# なげつけるで投げた時の威力（第4世代仕様）。持ち物ID（data/item.jsonのキー）→ 威力。ここに無い持ち物は10
+FLING_POWERS = {
+    2: 30,  # くろいヘドロ
+    7: 30,  # しんぴのしずく
+    8: 30,  # かいがらのすず
+    9: 30,  # いのちのたま
+    10: 60,  # あついいわ
+    11: 30,  # ひかりのねんど
+    15: 30,  # おうじゃのしるし
+    24: 80,  # せんせいのツメ
+    27: 80,  # するどいツメ
+    28: 90,  # ねばりのかぎづめ
+    29: 90,  # ふといホネ
+    36: 30,  # どくどくだま
+    41: 130,  # くろいてっきゅう
+    44: 30,  # するどいキバ
+    46: 60,  # しめったいわ
+    49: 30,  # メトロノーム
+    53: 40,  # つめたいいわ
+}
+DEFAULT_FLING_POWER = 10
+
 
 # 持ち物の基底クラス。Battle・ダメージ計算は、持ち物の種類を見て分岐するのではなく、
 # 各タイミングでここに定義したフック（メソッド）を呼び出す。デフォルトは全て「何もしない」なので、
@@ -18,6 +40,17 @@ class BaseItem:
 
     def __repr__(self):
         return f"{type(self).__name__}(id={self.id!r}, name={self.name!r})"
+
+    # ---- なげつける ----
+
+    # なげつけるで投げた時の威力
+    @property
+    def fling_power(self) -> int:
+        return FLING_POWERS.get(self.id, DEFAULT_FLING_POWER)
+
+    # なげつけるで投げつけられたtargetに与える効果（sourceは投げたポケモン）。デフォルトは威力分のダメージのみ
+    def on_flung(self, battle, target, source):
+        pass
 
     # ---- ダメージ計算（attacker側の持ち物） ----
 
@@ -96,6 +129,10 @@ class BaseItem:
     # 持ち主が張った壁（リフレクター・ひかりのかべ）の継続ターン数
     def get_screen_duration(self, duration: int) -> int:
         return duration
+
+    # 持ち主が使ったしめつけ系の技（まきつく等）で相手を締め付けるターン数
+    def get_binding_turns(self, turns: int) -> int:
+        return turns
 
     # ---- 状態変化への反応・ターン終了時 ----
 

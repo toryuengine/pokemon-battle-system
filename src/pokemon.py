@@ -71,6 +71,32 @@ class CurrentStatus:
     consecutive_move_count: int = 0
     # このターンに既に行動（または行動を試みた）かどうか（フォーカスレンズの判定に使う）。毎ターン開始時にリセットする
     has_moved_this_turn: bool = False
+    # たくわえるで実際に上がった防御・特防のランク（はきだす・のみこむで、この分だけ元に戻す）。交代すると0に戻る
+    stockpile_defense_boost: int = 0
+    stockpile_spdef_boost: int = 0
+    # しめつけ系の技（まきつく・すなじごく・うずしお）で締め付けられている残りターン数と、締め付けている相手。
+    # 残りターンの間、毎ターン終了時に最大HPの1/16を失う。締め付けている相手が場を退くと解除される
+    bound_turns_remaining: int = 0
+    bound_by: Optional["Pokemon"] = None
+    # くろいまなざしで逃げられなくした相手（Noneなら逃げられる）。その相手が場を退くと解除される
+    trapped_by: Optional["Pokemon"] = None
+    # ちょうはつの残りターン数。0より大きい間は変化技を選べない
+    taunt_turns_remaining: int = 0
+    # アンコールで固定された技のインスタンスと残りターン数。固定されている間はこの技しか選べない
+    encore_move: Optional[BaseMove] = None
+    encore_turns_remaining: int = 0
+    # かなしばりで使えなくされた技のインスタンスと残りターン数
+    disabled_move: Optional[BaseMove] = None
+    disable_turns_remaining: int = 0
+    # いちゃもんを受けた状態。同じ技を2回続けて選べない
+    is_tormented: bool = False
+    # あくむを受けた状態。ねむっている間、毎ターン終了時に最大HPの1/4を失う（目覚めると解除される）
+    has_nightmare: bool = False
+    # みちづれ・おんねんの状態。次に自分が行動しようとするまで有効
+    is_destiny_bond_active: bool = False
+    is_grudge_active: bool = False
+    # でんじふゆうの残りターン数。0より大きい間はじめん技・まきびし・どくびしを受けない
+    magnet_rise_turns_remaining: int = 0
 
 
 class Pokemon:
