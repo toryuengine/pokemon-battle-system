@@ -88,6 +88,24 @@ SUBSTITUTE_HP_RATIO = 1 / 4
 # いちゃもん・うらみ・ゴーストタイプののろい）
 SUBSTITUTE_BYPASS_EFFECT_KINDS = {"force_switch", "taunt", "encore", "disable", "torment", "spite", "curse"}
 
+# ねをはる・アクアリングの毎ターンの回復量と、やどりぎのタネで毎ターン奪うHP（いずれも最大HPに対する割合）
+INGRAIN_HEAL_RATIO = 1 / 16
+AQUA_RING_HEAL_RATIO = 1 / 16
+LEECH_SEED_DRAIN_RATIO = 1 / 8
+TYPE_ID_GRASS = 4
+# あくびは使ったターンと次のターンの終わりに1ずつ減り、0になった時点でねむる
+YAWN_DURATION = 2
+# ほろびのうたは使ったターンの終わりにカウント3になり、以降毎ターン1ずつ減ってカウント0になったターンの終わりに瀕死になる
+# (使ったターンを含めて4回目のターン終了時)
+PERISH_SONG_DURATION = 4
+# メロメロ状態で動けなくなる確率
+INFATUATION_IMMOBILIZE_CHANCE = 1 / 2
+# トリックルームは使ったターンを含めて5ターン続く
+TRICK_ROOM_DURATION = 5
+# つぼをつくで上がるランクと、その対象になる能力
+ACUPRESSURE_STAGES = 2
+ACUPRESSURE_STATS = ("atk", "defense", "spatk", "spdef", "spd", "accuracy", "evasion")
+
 
 class Battle:
     # 現在HPはBattleではなくPokemon側(current_status.current_hp)で管理する
@@ -104,6 +122,9 @@ class Battle:
         # 天候（None/"sun"/"rain"/"sandstorm"/"hail"）と残りターン数
         self.weather = None
         self.weather_turns_remaining = 0
+
+        # トリックルームの残りターン数（0なら無し）。0より大きい間は、同じ優先度の中で素早さの遅い順に行動する
+        self.trick_room_turns_remaining = 0
 
         # 今処理している攻撃を、みがわりが受け止めた相手（Noneなら無し）。攻撃で身代わりが壊れた場合も、
         # その攻撃の追加効果・持ち物の効果（おうじゃのしるし等）は本体に届かないため、攻撃の処理中だけ保持する
@@ -179,7 +200,9 @@ class Battle:
             if self.is_battle_over():
                 break
 
-            # 毎ターン終了時のどく・やけど・のろい・あくむ・しめつけのダメージ
+            # 毎ターン終了時のねをはる・アクアリングの回復、やどりぎのタネの吸収、どく・やけど・のろい・あくむ・しめつけのダメージ
+            self.apply_end_of_turn_recovery()
+            self.apply_end_of_turn_leech_seed()
             self.apply_end_of_turn_status_damage()
             self.activate_held_items_on_field()
             self.resolve_faints()
@@ -194,8 +217,11 @@ class Battle:
             self.tick_weather()
             self.tick_screens()
             self.tick_charge()
-            # ちょうはつ・アンコール・かなしばり・でんじふゆうの残りターン
+            self.tick_trick_room()
+            # ちょうはつ・アンコール・かなしばり・でんじふゆう・あくびの残りターン
             self.tick_volatile_statuses()
+            # ほろびのうたのカウント
+            self.apply_perish_song()
             # どくどくだまはターンの最後に発動する
             self.apply_end_of_turn_orbs()
             self.activate_held_items_on_field()
@@ -244,7 +270,8 @@ class Battle:
         outgoing = trainer.active
         outgoing_status = outgoing.current_status
 
-        # バトンタッチで引き継ぐ状態（第4世代仕様: 能力ランク・こんらん・のろい・くろいまなざし・でんじふゆう・いえき）
+        # バトンタッチで引き継ぐ状態（第4世代仕様: 能力ランク・こんらん・のろい・くろいまなざし・でんじふゆう・いえき・
+        # みがわり・ねをはる・アクアリング・やどりぎのタネ・ほろびのうた）
         passed_stages = self.get_stages(outgoing) if baton_pass else None
         passed_status = {
             "confusion_turns_remaining": outgoing_status.confusion_turns_remaining,
@@ -253,6 +280,10 @@ class Battle:
             "magnet_rise_turns_remaining": outgoing_status.magnet_rise_turns_remaining,
             "is_ability_suppressed": outgoing_status.is_ability_suppressed,
             "substitute_hp": outgoing_status.substitute_hp,
+            "is_ingrained": outgoing_status.is_ingrained,
+            "has_aqua_ring": outgoing_status.has_aqua_ring,
+            "is_seeded": outgoing_status.is_seeded,
+            "perish_turns_remaining": outgoing_status.perish_turns_remaining,
         } if baton_pass else None
         passed_power_trick = baton_pass and outgoing_status.is_power_trick_active
 
@@ -278,7 +309,7 @@ class Battle:
         outgoing_status.consecutive_move_count = 0
         # 交代・拘束・技の制限に関する状態も、場を退くと解除される
         self.clear_volatile_statuses(outgoing)
-        # 退いた個体が締め付けていた・逃げられなくしていた相手は解放される
+        # 退いた個体が締め付けていた・逃げられなくしていた・メロメロにしていた相手は解放される
         opponent_trainer = self.trainer2 if trainer is self.trainer1 else self.trainer1
         opponent_status = opponent_trainer.active.current_status
         if opponent_status.bound_by is outgoing:
@@ -286,6 +317,8 @@ class Battle:
             opponent_status.bound_by = None
         if opponent_status.trapped_by is outgoing:
             opponent_status.trapped_by = None
+        if opponent_status.infatuated_by is outgoing:
+            opponent_status.infatuated_by = None
 
         trainer.active_index = new_index
         new_stages = passed_stages if passed_stages is not None else StatStages()
@@ -334,9 +367,10 @@ class Battle:
                 # 本来は2層で「もうどく」（悪化していくどく）になるが、簡略化して通常のどく扱いにしている
                 pokemon.current_status.status_condition = "poison"
 
-    # pokemonが地面にいるかどうか（まきびし・どくびしを受けるか）。くろいてっきゅうを持っていれば常に地面にいる扱い
+    # pokemonが地面にいるかどうか（まきびし・どくびしを受けるか）。くろいてっきゅうを持っている、
+    # またはねをはるで根を張っていれば常に地面にいる扱い
     def is_grounded(self, pokemon: Pokemon) -> bool:
-        if pokemon.held_item.forces_grounded:
+        if pokemon.is_forced_grounded:
             return True
         if pokemon.current_status.magnet_rise_turns_remaining > 0:
             return False
@@ -478,6 +512,10 @@ class Battle:
                 self.apply_damage(pokemon, calculate_confusion_damage(pokemon, self.get_stages(pokemon)))
                 return False
 
+        # メロメロ状態なら、1/2の確率で動けない
+        if status.infatuated_by is not None and random.random() < INFATUATION_IMMOBILIZE_CHANCE:
+            return False
+
         if condition == "paralysis" and random.random() < PARALYSIS_FULL_PARA_CHANCE:
             return False
 
@@ -609,6 +647,7 @@ class Battle:
         return True
 
     # まず技の優先度を比較し、同じ優先度なら素早さを比較して先攻・後攻を決める（同速なら五分五分でランダム）
+    # トリックルームの間は、同じ優先度の中で素早さの遅い方が先に行動する（せんせいのツメは今まで通り先に行動できる）
     def get_attacker_and_defender(self, move1: BaseMove, move2: BaseMove):
         if move1.priority != move2.priority:
             if move1.priority > move2.priority:
@@ -625,6 +664,9 @@ class Battle:
 
         speed1 = self.get_effective_speed(self.pokemon1)
         speed2 = self.get_effective_speed(self.pokemon2)
+        # トリックルームの間は、素早さの遅い方が先に行動する
+        if self.trick_room_turns_remaining > 0:
+            speed1, speed2 = -speed1, -speed2
         if speed1 > speed2:
             return self.pokemon1, self.pokemon2
         if speed2 > speed1:
@@ -1048,7 +1090,7 @@ class Battle:
             return True
         # いたみわけ・いえき等は相手のHP・特性・技・持ち物を直接書き換えるので、相手に向けた効果として防がれる
         if kind in ("pain_split", "suppress_ability", "force_switch", "taunt", "encore", "disable", "torment",
-                    "nightmare", "mean_look", "trick", "spite"):
+                    "nightmare", "mean_look", "trick", "spite", "leech_seed", "yawn", "attract"):
             return True
         if kind == "curse" and attacker is not None and self.is_ghost_type(attacker):
             return True
@@ -1343,11 +1385,18 @@ class Battle:
         status.is_grudge_active = False
         status.magnet_rise_turns_remaining = 0
         status.substitute_hp = 0
+        status.is_ingrained = False
+        status.has_aqua_ring = False
+        status.is_seeded = False
+        status.yawn_turns_remaining = 0
+        status.perish_turns_remaining = 0
+        status.infatuated_by = None
         # パワートリックで入れ替えた攻撃と防御の実数値を元に戻す
         if status.is_power_trick_active:
             self.perform_power_trick(pokemon)
 
-    # 場に出ている両者の、ちょうはつ・アンコール・かなしばり・でんじふゆうの残りターンを1減らす
+    # 場に出ている両者の、ちょうはつ・アンコール・かなしばり・でんじふゆう・あくびの残りターンを1減らす
+    # あくびの残りターンが0になったら、その時点でねむり状態にする（既に他の状態異常になっていればねむらない）
     def tick_volatile_statuses(self):
         for pokemon in (self.pokemon1, self.pokemon2):
             status = pokemon.current_status
@@ -1363,6 +1412,10 @@ class Battle:
                     status.disabled_move = None
             if status.magnet_rise_turns_remaining > 0:
                 status.magnet_rise_turns_remaining -= 1
+            if status.yawn_turns_remaining > 0:
+                status.yawn_turns_remaining -= 1
+                if status.yawn_turns_remaining <= 0 and not self.is_fainted(pokemon):
+                    self.try_apply_status(pokemon, "sleep", 1.0)
 
     # pokemonが直前に使った技を、技構成の中から探す（まだ技を使っていない、わるあがき・コピーで消えた技ならNone）
     def find_last_used_move(self, pokemon: Pokemon):
@@ -1378,7 +1431,7 @@ class Battle:
     def is_floating_against_ground_move(self, defender: Pokemon, move: BaseMove) -> bool:
         if move.is_typeless or move.type != "じめん" or move.category == CATEGORY_STATUS:
             return False
-        return defender.current_status.magnet_rise_turns_remaining > 0 and not defender.held_item.forces_grounded
+        return defender.current_status.magnet_rise_turns_remaining > 0 and not defender.is_forced_grounded
 
     # pokemonが持ち物を失った（消費以外で手放した）ときの処理。かるわざは、はたきおとす・トリックで持ち物を失っても発動する
     def on_item_lost(self, pokemon: Pokemon):
@@ -1457,15 +1510,17 @@ class Battle:
             return
         target.current_status.trapped_by = attacker
 
-    # pokemonが自分の意思で交代できない状態か（くろいまなざし・しめつけ系の技）。手動で交代する仕組みを作る時に使う
+    # pokemonが自分の意思で交代できない状態か（くろいまなざし・しめつけ系の技・ねをはる）。手動で交代する仕組みを作る時に使う
     def is_trapped(self, pokemon: Pokemon) -> bool:
         status = pokemon.current_status
-        return status.trapped_by is not None or status.bound_turns_remaining > 0
+        return status.trapped_by is not None or status.bound_turns_remaining > 0 or status.is_ingrained
 
     # ほえる: 相手を強制的に交代させる。交代先は手持ちの生きている個体からランダムに選ぶ
-    # 交代できる個体がいない、または相手がきゅうばんなら失敗する
+    # 交代できる個体がいない、相手がきゅうばん、またはねをはるで根を張っていれば失敗する
     def perform_force_switch(self, attacker: Pokemon, target: Pokemon):
         if self.is_fainted(target) or self.get_target_ability(target, attacker).prevents_forced_switch:
+            return
+        if target.current_status.is_ingrained:
             return
         trainer = self.get_trainer(target)
         candidates = [index for index, pokemon in enumerate(trainer.party)
@@ -1534,9 +1589,9 @@ class Battle:
             return
         move.current_pp = max(0, move.current_pp - SPITE_PP_REDUCTION)
 
-    # でんじふゆう: 5ターンの間、じめん技・まきびし・どくびしを受けなくなる。既に浮いていれば失敗する
+    # でんじふゆう: 5ターンの間、じめん技・まきびし・どくびしを受けなくなる。既に浮いている、またはねをはるで根を張っていれば失敗する
     def perform_magnet_rise(self, attacker: Pokemon):
-        if attacker.current_status.magnet_rise_turns_remaining > 0:
+        if attacker.current_status.magnet_rise_turns_remaining > 0 or attacker.current_status.is_ingrained:
             return
         attacker.current_status.magnet_rise_turns_remaining = MAGNET_RISE_DURATION
 
@@ -1639,3 +1694,127 @@ class Battle:
         status = pokemon.status
         status.atk, status.defense = status.defense, status.atk
         pokemon.current_status.is_power_trick_active = not pokemon.current_status.is_power_trick_active
+
+    # ---- 毎ターンの回復・吸収（ねをはる・アクアリング・やどりぎのタネ） ----
+
+    # pokemonのHPをamountだけ回復する（最大HPを超えない）
+    def restore_hp(self, pokemon: Pokemon, amount: int):
+        pokemon.current_status.current_hp = min(pokemon.status.hp, pokemon.current_status.current_hp + amount)
+
+    # ねをはる: 根を張り、毎ターン終了時に最大HPの1/16を回復する。自分の意思で交代できず、ほえるも受けなくなり、
+    # 地面にいる扱いになる（ひこうタイプ・ふゆうでもじめん技が当たる）。既に根を張っていれば失敗する
+    def perform_ingrain(self, attacker: Pokemon):
+        attacker.current_status.is_ingrained = True
+
+    # アクアリング: 毎ターン終了時に最大HPの1/16を回復する。既にアクアリングを張っていれば失敗する
+    def perform_aqua_ring(self, attacker: Pokemon):
+        attacker.current_status.has_aqua_ring = True
+
+    # やどりぎのタネ: 相手に種を植え、毎ターン終了時に相手の最大HPの1/8を奪って自分の場のポケモンを回復する
+    # くさタイプ、既に種を植えられている相手には失敗する（みがわり・まもるで防がれる）
+    def perform_leech_seed(self, target: Pokemon):
+        if self.is_fainted(target) or TYPE_ID_GRASS in (target.type1, target.type2):
+            return
+        target.current_status.is_seeded = True
+
+    # ターン終了時の、アクアリング・ねをはるの回復（おおきなねっこを持っていれば回復量1.3倍）
+    def apply_end_of_turn_recovery(self):
+        for pokemon in (self.pokemon1, self.pokemon2):
+            if self.is_fainted(pokemon):
+                continue
+            status = pokemon.current_status
+            multiplier = pokemon.held_item.get_drain_multiplier()
+            if status.has_aqua_ring:
+                self.restore_hp(pokemon, max(1, int(int(pokemon.status.hp * AQUA_RING_HEAL_RATIO) * multiplier)))
+            if status.is_ingrained:
+                self.restore_hp(pokemon, max(1, int(int(pokemon.status.hp * INGRAIN_HEAL_RATIO) * multiplier)))
+
+    # ターン終了時の、やどりぎのタネの吸収。種を植えられた側が最大HPの1/8（残りHPが上限）を失い、
+    # 同じ量だけ相手の場のポケモンが回復する（おおきなねっこなら1.3倍。植えられた側がヘドロえきなら、回復する代わりにダメージを受ける）
+    # 種を植えた個体が交代していても、今相手の場に出ている個体が回復する
+    def apply_end_of_turn_leech_seed(self):
+        for pokemon in (self.pokemon1, self.pokemon2):
+            if not pokemon.current_status.is_seeded or self.is_fainted(pokemon):
+                continue
+            receiver = self.get_opponent(pokemon)
+            drained = min(pokemon.current_status.current_hp, max(1, int(pokemon.status.hp * LEECH_SEED_DRAIN_RATIO)))
+            self.apply_damage(pokemon, drained)
+            if self.is_fainted(receiver):
+                continue
+            amount = int(drained * receiver.held_item.get_drain_multiplier())
+            if self.get_ability(pokemon).damages_drainer:
+                self.apply_damage(receiver, amount)
+            else:
+                self.restore_hp(receiver, amount)
+
+    # ---- あくび・ほろびのうた・メロメロ ----
+
+    # あくび: 相手をねむけ状態にし、次のターンの終わりにねむらせる
+    # 相手が既に状態異常・ねむけ状態、またはねむり状態にならない（ふみん等。かたやぶりなら無視）なら失敗する
+    # (みがわり・まもるで防がれる)
+    def perform_yawn(self, attacker: Pokemon, target: Pokemon):
+        status = target.current_status
+        if self.is_fainted(target) or status.status_condition is not None or status.yawn_turns_remaining > 0:
+            return
+        if not self.can_receive_status(target, "sleep", attacker):
+            return
+        status.yawn_turns_remaining = YAWN_DURATION
+
+    # ほろびのうた: 使った本人を含む場の全員に、ほろびのカウントを付ける（カウント0になったターンの終わりに瀕死）
+    # 既にカウントがある個体はカウントし直さない。使った本人以外は、ぼうおんで防げる（かたやぶりなら無視）
+    # まもる・みがわりには防がれない
+    def perform_perish_song(self, attacker: Pokemon, move: BaseMove):
+        for pokemon in (attacker, self.get_opponent(attacker)):
+            status = pokemon.current_status
+            if self.is_fainted(pokemon) or status.perish_turns_remaining > 0:
+                continue
+            if pokemon is not attacker and self.get_target_ability(pokemon, attacker).on_try_hit(self, attacker, pokemon, move):
+                continue
+            status.perish_turns_remaining = PERISH_SONG_DURATION
+
+    # ターン終了時、ほろびのうたのカウントを1減らし、0になった個体を瀕死にする
+    def apply_perish_song(self):
+        for pokemon in (self.pokemon1, self.pokemon2):
+            status = pokemon.current_status
+            if status.perish_turns_remaining <= 0 or self.is_fainted(pokemon):
+                continue
+            status.perish_turns_remaining -= 1
+            if status.perish_turns_remaining <= 0:
+                status.current_hp = 0
+
+    # メロメロ: 性別が違う相手をメロメロ状態にし、行動するたびに1/2の確率で動けなくする
+    # どちらかが性別不明、同じ性別、相手が既にメロメロ状態、またはどんかん（かたやぶりなら無視）なら失敗する
+    # (みがわり・まもるで防がれる)
+    def perform_attract(self, attacker: Pokemon, target: Pokemon):
+        if attacker.gender is None or target.gender is None or attacker.gender == target.gender:
+            return
+        if target.current_status.infatuated_by is not None:
+            return
+        if self.get_target_ability(target, attacker).prevents_infatuation:
+            return
+        target.current_status.infatuated_by = attacker
+
+    # ---- トリックルーム・つぼをつく ----
+
+    # トリックルーム: 使ったターンを含めて5ターンの間、同じ優先度の中で素早さの遅い順に行動する。効果中に使うと解除される
+    def perform_trick_room(self):
+        if self.trick_room_turns_remaining > 0:
+            self.trick_room_turns_remaining = 0
+        else:
+            self.trick_room_turns_remaining = TRICK_ROOM_DURATION
+
+    # トリックルームの残りターンを1減らす
+    def tick_trick_room(self):
+        if self.trick_room_turns_remaining > 0:
+            self.trick_room_turns_remaining -= 1
+
+    # つぼをつく: 攻撃・防御・特攻・特防・素早さ・命中率・回避率のうち、+6でないものからランダムに1つ選んでランクを+2する
+    # 全て+6なら失敗する。第4世代仕様で、自分にみがわりがいると失敗する
+    def perform_acupressure(self, attacker: Pokemon):
+        if self.has_substitute(attacker):
+            return
+        stages = self.get_stages(attacker)
+        candidates = [stat for stat in ACUPRESSURE_STATS if getattr(stages, stat) < 6]
+        if not candidates:
+            return
+        self.change_stage(attacker, random.choice(candidates), ACUPRESSURE_STAGES)

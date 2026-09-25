@@ -126,6 +126,14 @@ class BaseMove:
         #   ("substitute",) 最大HPの1/4を払って身代わりを作る（みがわり）
         #   ("psych_up",)   相手の能力ランクを自分にコピーする（じこあんじ）
         #   ("power_trick",) 自分の攻撃と防御の実数値を入れ替える（パワートリック）
+        #   ("ingrain",)    根を張り、毎ターン最大HPの1/16を回復する。交代できなくなる（ねをはる）
+        #   ("aqua_ring",)  毎ターン最大HPの1/16を回復する（アクアリング）
+        #   ("leech_seed",) 相手に種を植え、毎ターン最大HPの1/8を奪って自分の場のポケモンを回復する（やどりぎのタネ）
+        #   ("yawn",)       相手をねむけ状態にし、次のターンの終わりにねむらせる（あくび）
+        #   ("perish_song",) 場の全員が、カウント0になったターンの終わりに瀕死になる（ほろびのうた）
+        #   ("attract",)    性別が違う相手をメロメロ状態にする（メロメロ）
+        #   ("trick_room",) 5ターンの間、素早さの遅い順に行動する（トリックルーム）
+        #   ("acupressure",) ランダムな能力ランクを+2する（つぼをつく）
         # target は "self"（attacker） か "target"（defender）
         self.effects = []
 
@@ -317,6 +325,30 @@ class BaseMove:
 
             elif kind == "power_trick":
                 battle.perform_power_trick(attacker)
+
+            elif kind == "ingrain":
+                battle.perform_ingrain(attacker)
+
+            elif kind == "aqua_ring":
+                battle.perform_aqua_ring(attacker)
+
+            elif kind == "leech_seed":
+                battle.perform_leech_seed(defender)
+
+            elif kind == "yawn":
+                battle.perform_yawn(attacker, defender)
+
+            elif kind == "perish_song":
+                battle.perform_perish_song(attacker, self)
+
+            elif kind == "attract":
+                battle.perform_attract(attacker, defender)
+
+            elif kind == "trick_room":
+                battle.perform_trick_room()
+
+            elif kind == "acupressure":
+                battle.perform_acupressure(attacker)
 
     def __repr__(self):
         parts = []

@@ -101,6 +101,23 @@ class CurrentStatus:
     substitute_hp: int = 0
     # パワートリックで攻撃と防御の実数値を入れ替えている状態。交代すると元に戻る（バトンタッチでは引き継ぐ）
     is_power_trick_active: bool = False
+    # ねをはるで根を張った状態。毎ターン終了時に最大HPの1/16を回復し、自分の意思で交代できず、ほえるも受けない。
+    # 地面にいる扱いになる。交代すると解除される（バトンタッチでは引き継ぐ）
+    is_ingrained: bool = False
+    # アクアリングを張った状態。毎ターン終了時に最大HPの1/16を回復する。交代すると解除される（バトンタッチでは引き継ぐ）
+    has_aqua_ring: bool = False
+    # やどりぎのタネを植えられた状態。毎ターン終了時に最大HPの1/8を奪われ、相手の場のポケモンが回復する。
+    # 植えられた側が交代すると解除される（バトンタッチでは引き継ぐ）
+    is_seeded: bool = False
+    # あくびによる「ねむけ」の残りターン数（0ならねむけ無し）。使ったターンと次のターンの終わりに1ずつ減り、
+    # 0になった時点でねむり状態になる。交代すると解除される（バトンタッチでも引き継がない）
+    yawn_turns_remaining: int = 0
+    # ほろびのうたの残りターン数（0ならかかっていない）。毎ターン終了時に1ずつ減り、0になると瀕死になる。
+    # 交代すると解除される（バトンタッチでは引き継ぐ）
+    perish_turns_remaining: int = 0
+    # メロメロにした相手（Noneならメロメロ状態ではない）。行動するたびに1/2の確率で動けない。
+    # 自分かその相手が場を退くと解除される（バトンタッチでも引き継がない）
+    infatuated_by: Optional["Pokemon"] = None
 
 
 class Pokemon:
@@ -113,6 +130,8 @@ class Pokemon:
         self.name: str = entry["name"]
         self.type1: int = entry["type1"]
         self.type2: Optional[int] = entry["type2"]
+        # 性別（"male"/"female"。Noneなら性別不明）。pokemon.jsonの個体データに"gender"があればそれを使う
+        self.gender: Optional[str] = set_data.get("gender")
         # 種族が持ちうる特性の中からこの個体の特性をランダムに1つ選び、特性クラスのインスタンスとして持つ
         self.ability: BaseAbility = create_ability(random.choice(entry["ability"]))
         self.status: PokemonStatus = _parse_status(set_data["status"])
@@ -130,6 +149,11 @@ class Pokemon:
     @property
     def held_item(self) -> BaseItem:
         return self.item if self.item is not None else NO_ITEM
+
+    # ひこうタイプ・ふゆうでも地面にいる扱いになるか（くろいてっきゅうを持っている、またはねをはるで根を張っている）
+    @property
+    def is_forced_grounded(self) -> bool:
+        return self.held_item.forces_grounded or self.current_status.is_ingrained
 
     def __repr__(self):
         return (

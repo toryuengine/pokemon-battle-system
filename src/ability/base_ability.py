@@ -36,6 +36,8 @@ class BaseAbility:
     prevents_forced_switch = False
     # はやあし: まひによる素早さの低下を受けない
     ignores_paralysis_speed_drop = False
+    # どんかん: メロメロ状態にならない
+    prevents_infatuation = False
 
     # 天候ダメージを受けない天候（すながくれ: {"sandstorm"}、ゆきがくれ・アイスボディ: {"hail"}）
     weather_immunities = frozenset()

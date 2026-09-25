@@ -5,4 +5,4 @@ from move.base_move import BaseMove
 class LeechSeed(BaseMove):
     def __init__(self):
         super().__init__(id=6)
-        self.effects = []
+        self.effects = [("leech_seed",)]

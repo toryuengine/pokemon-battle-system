@@ -50,7 +50,7 @@ def get_effectiveness(attack_type, defend_type1, defend_type2=None) -> float:
 # moveがis_typeless(わるあがき等)なら常に等倍。そうでなければ通常通りタイプ相性を計算する
 # ignore_ghost_immunity=True（みやぶる済みの相手）かつノーマル/かくとう技の場合は、
 # 相手のゴーストタイプを無いものとして相性を計算する（ゴースト無効化の解除）
-# 相手がくろいてっきゅうを持っている場合、じめん技は相手のひこうタイプを無いものとして相性を計算する
+# 相手がくろいてっきゅうを持っている、またはねをはるで根を張っている場合、じめん技は相手のひこうタイプを無いものとして相性を計算する
 def get_move_effectiveness(move, defender, ignore_ghost_immunity=False) -> float:
     if move.is_typeless:
         return 1.0
@@ -60,7 +60,7 @@ def get_move_effectiveness(move, defender, ignore_ghost_immunity=False) -> float
     ignored_type_ids = set()
     if ignore_ghost_immunity and attack_id in (TYPE_ID_NORMAL, TYPE_ID_FIGHTING):
         ignored_type_ids.add(TYPE_ID_GHOST)
-    if attack_id == TYPE_ID_GROUND and defender.held_item.forces_grounded:
+    if attack_id == TYPE_ID_GROUND and defender.is_forced_grounded:
         ignored_type_ids.add(TYPE_ID_FLYING)
 
     if ignored_type_ids:
