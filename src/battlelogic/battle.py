@@ -159,45 +159,40 @@ class Battle:
                 pokemon.current_status.has_moved_this_turn = False
                 pokemon.current_status.damaged_by_this_turn = None
 
-            move1 = self.select_move(self.pokemon1) #技のインスタンスが入っている
-            move2 = self.select_move(self.pokemon2) #技のインスタンスが入っている
-            first_mover, second_mover = self.get_attacker_and_defender(move1, move2)  # 優先度→素早さで先行後攻を取得
-            first_move = move1 if first_mover is self.pokemon1 else move2
-            second_move = move2 if first_mover is self.pokemon1 else move1
-            second_trainer = self.trainer1 if second_mover is self.pokemon1 else self.trainer2
+            # 手動で交代するかどうかを先に決め、交代しない側だけが技を選ぶ
+            switch1 = self.choose_switch(self.trainer1)
+            switch2 = self.choose_switch(self.trainer2)
+            move1 = self.select_move(self.pokemon1) if switch1 is None else None #技のインスタンスが入っている
+            move2 = self.select_move(self.pokemon2) if switch2 is None else None #技のインスタンスが入っている
 
-            # can_actが反動硬直・ひるみ・状態異常（ねむり/こおり/まひ/こんらん）による行動不能を
-            # まとめて判定する。行動不能ならその技は不発のまま次に進む
-            if self.can_act(first_mover, first_move):
-                self.use_move(first_mover, second_mover, first_move)
+            if switch1 is not None or switch2 is not None:
+                # 片方だけが交代する場合の、技を出す側（両者が交代するなら誰も技を出さない）
+                mover = self.pokemon1 if move1 is not None else self.pokemon2
+                mover_move = move1 if move1 is not None else move2
+                # 交代は技より先に行う（おいうちは交代する相手に、交代の前に当たる）
+                if self.perform_manual_switches(switch1, switch2, move1, move2):
+                    break
+                # 技を出す側が、おいうちで既に行動した・反動等で瀕死になり入れ替わった場合は、もう行動しない
+                if (mover_move is not None and not mover.current_status.has_moved_this_turn
+                        and mover in (self.pokemon1, self.pokemon2)):
+                    if self.execute_move_action(mover, mover_move):
+                        break
             else:
-                # げきりん・あばれるの固定中に行動できなければ、こんらんせずに固定が解ける
-                self.end_rampage(first_mover)
-            first_mover.current_status.has_moved_this_turn = True
-            # HPが減った・状態異常になった・能力が下がった等で、きのみ・しろいハーブが発動する
-            self.activate_held_items_on_field()
-            # 瀕死になった側がいれば手持ちから次の1体に自動で交代させる（設置技もここで発動する）
-            self.resolve_faints()
-            if self.is_battle_over():
-                break
+                first_mover, second_mover = self.get_attacker_and_defender(move1, move2)  # 優先度→素早さで先行後攻を取得
+                first_move = move1 if first_mover is self.pokemon1 else move2
+                second_move = move2 if first_mover is self.pokemon1 else move1
+                second_trainer = self.trainer1 if second_mover is self.pokemon1 else self.trainer2
 
-            # 後攻側(second_mover)がこの攻撃で瀕死になり別の個体に交代していたら、
-            # 交代してきたばかりの個体は今ターンもう行動できない
-            if second_trainer.active is not second_mover:
-                continue
+                if self.execute_move_action(first_mover, first_move):
+                    break
 
-            # 先攻側が反動等で自滅して交代していた場合に備えて、攻撃対象は今現在の相手を改めて取得する
-            current_opponent = self.pokemon1 if second_mover is self.pokemon2 else self.pokemon2
+                # 後攻側(second_mover)がこの攻撃で瀕死になり別の個体に交代していたら、
+                # 交代してきたばかりの個体は今ターンもう行動できない
+                if second_trainer.active is not second_mover:
+                    continue
 
-            if self.can_act(second_mover, second_move):
-                self.use_move(second_mover, current_opponent, second_move)
-            else:
-                self.end_rampage(second_mover)
-            second_mover.current_status.has_moved_this_turn = True
-            self.activate_held_items_on_field()
-            self.resolve_faints()
-            if self.is_battle_over():
-                break
+                if self.execute_move_action(second_mover, second_move):
+                    break
 
             # みらいよちの攻撃
             self.apply_future_sight()
@@ -258,6 +253,79 @@ class Battle:
         if switched_trainers:
             self.activate_switch_in_abilities([trainer.active for trainer in switched_trainers])
             self.activate_held_items_on_field()
+
+    # pokemonがmoveを出し、その結果（持ち物の発動・瀕死による交代）を処理する。対戦が終わればTrueを返す
+    # 攻撃対象は、先に行動した側が反動等で自滅して交代していた場合に備えて、今現在の相手を取得する
+    def execute_move_action(self, pokemon: Pokemon, move: BaseMove) -> bool:
+        # can_actが反動硬直・ひるみ・状態異常（ねむり/こおり/まひ/こんらん）による行動不能を
+        # まとめて判定する。行動不能ならその技は不発のまま次に進む
+        if self.can_act(pokemon, move):
+            self.use_move(pokemon, self.get_opponent(pokemon), move)
+        else:
+            # げきりん・あばれるの固定中に行動できなければ、こんらんせずに固定が解ける
+            self.end_rampage(pokemon)
+        pokemon.current_status.has_moved_this_turn = True
+        # HPが減った・状態異常になった・能力が下がった等で、きのみ・しろいハーブが発動する
+        self.activate_held_items_on_field()
+        # 瀕死になった側がいれば手持ちから次の1体に自動で交代させる（設置技もここで発動する）
+        self.resolve_faints()
+        return self.is_battle_over()
+
+    # ---- 手動の交代 ----
+
+    # pokemonが自分の意思で交代できるかどうか。溜め中・げきりん等の固定中・反動で動けないターンは交代できず、
+    # くろいまなざし・しめつけ系の技・ねをはる・相手のありじごく/じりょくでも交代できない
+    def can_switch_out(self, pokemon: Pokemon) -> bool:
+        status = pokemon.current_status
+        if status.charging_move is not None or status.rampage_move is not None or status.must_recharge:
+            return False
+        if self.is_trapped(pokemon):
+            return False
+        opponent = self.get_opponent(pokemon)
+        if not self.is_fainted(opponent) and self.get_ability(opponent).traps_opponent(self, pokemon):
+            return False
+        return True
+
+    # trainerがこのターン手動で交代するなら、交代先の手持ちのインデックスを返す（交代しないならNone）
+    # 交代の判断はtrainer.switch_policyに任せ、交代できない状態・交代先として不正なインデックスなら交代しない
+    def choose_switch(self, trainer: Trainer):
+        if trainer.switch_policy is None or not self.can_switch_out(trainer.active):
+            return None
+        candidates = trainer.find_switch_candidates()
+        if not candidates:
+            return None
+        index = trainer.switch_policy(self, trainer)
+        if index not in candidates:
+            return None
+        return index
+
+    # 手動の交代を、技より先に行う。対戦が終われば（おいうちで決着がついた等）Trueを返す
+    # 相手がおいうちを選んでいれば、交代する前に威力2倍のおいうちを受ける（瀕死になれば交代しない）
+    # 両者が交代する場合は、素早さが高い方から交代する（同速ならランダム）
+    def perform_manual_switches(self, switch1, switch2, move1, move2) -> bool:
+        switches = [(self.trainer1, self.pokemon1, switch1, move2), (self.trainer2, self.pokemon2, switch2, move1)]
+        switches = [entry for entry in switches if entry[2] is not None]
+        switches.sort(key=lambda entry: (self.get_effective_speed(entry[1]), random.random()), reverse=True)
+
+        for trainer, outgoing, new_index, opponent_move in switches:
+            if opponent_move is not None and opponent_move.hits_switching_target:
+                opponent = self.get_opponent(outgoing)
+                outgoing.current_status.is_switching_out = True
+                battle_over = self.execute_move_action(opponent, opponent_move)
+                outgoing.current_status.is_switching_out = False
+                if battle_over:
+                    return True
+                # おいうちで瀕死になった場合は、resolve_faintsで次の個体が出ているので交代しない
+                if trainer.active is not outgoing:
+                    continue
+
+            self.switch_in(trainer, new_index)
+            self.activate_held_items_on_field()
+            # 交代先が設置技で瀕死になれば、手持ちから次の1体を出す
+            self.resolve_faints()
+            if self.is_battle_over():
+                return True
+        return False
 
     # 場に出たpokemonsの特性を、素早さが高い順に発動させる（同速ならランダム）
     def activate_switch_in_abilities(self, pokemons):
@@ -1392,7 +1460,7 @@ class Battle:
         attacker.moves = copied_moves
 
     # とんぼがえり: 攻撃したpokemon自身が、手持ちの生きている次の1体に強制的に交代する
-    # (プレイヤー判断が無いので、resolve_faintsと同じ選び方＝手持ち順で最初に見つかった生存個体にする)
+    # (交代先はswitch_policyには聞かず、resolve_faintsと同じ選び方＝手持ち順で最初に見つかった生存個体にする)
     # 手持ちに他に生きている個体がいなければ何もしない（交代せず攻撃だけで終わる）
     def perform_self_switch(self, pokemon: Pokemon):
         trainer = self.get_trainer(pokemon)
@@ -1579,14 +1647,13 @@ class Battle:
         status.bound_by = attacker
 
     # くろいまなざし: 相手を逃げられなくする（使ったポケモンが場を退くまで）。既に逃げられない状態なら失敗する
-    # 注意: 交代はプレイヤーの判断ではなく瀕死時・とんぼがえり等による自動交代のみなので、今は実質的な効果は無い
-    # (とんぼがえり・バトンタッチ・ほえるによる交代は、第4世代仕様でも防げない)
+    # 逃げられない間は手動で交代できない（とんぼがえり・バトンタッチ・ほえるによる交代は、第4世代仕様でも防げない）
     def perform_mean_look(self, attacker: Pokemon, target: Pokemon):
         if target.current_status.trapped_by is not None:
             return
         target.current_status.trapped_by = attacker
 
-    # pokemonが自分の意思で交代できない状態か（くろいまなざし・しめつけ系の技・ねをはる）。手動で交代する仕組みを作る時に使う
+    # pokemonが自分の意思で交代できない状態か（くろいまなざし・しめつけ系の技・ねをはる）。相手の特性による拘束はcan_switch_outで判定する
     def is_trapped(self, pokemon: Pokemon) -> bool:
         status = pokemon.current_status
         return status.trapped_by is not None or status.bound_turns_remaining > 0 or status.is_ingrained

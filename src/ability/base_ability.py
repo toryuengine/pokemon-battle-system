@@ -77,6 +77,10 @@ class BaseAbility:
     def on_before_action(self, battle, pokemon) -> bool:
         return True
 
+    # 場の相手(opponent)を、自分の意思で交代できなくするかどうか（ありじごく・じりょく）
+    def traps_opponent(self, battle, opponent) -> bool:
+        return False
+
     # ひるんで行動できなかった時
     def on_flinched(self, battle, pokemon):
         pass
