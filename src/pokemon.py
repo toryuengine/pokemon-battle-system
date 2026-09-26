@@ -122,6 +122,10 @@ class CurrentStatus:
     # ゆきなだれ・リベンジの威力、きあいパンチの失敗の判定に使う。毎ターン開始時にBattle側でリセットする
     # (みがわりが受けた攻撃・こんらんの自傷・ターン終了時のダメージは含まない)
     damaged_by_this_turn: Optional["Pokemon"] = None
+    # このターンに本体が攻撃技で最後に受けたダメージ量と、その技の分類（物理/特殊）。damaged_by_this_turnと同じ条件で記録し、
+    # 毎ターン開始時にリセットする。カウンター・ミラーコート・メタルバーストが返すダメージに使う（複数回攻撃は最後の1回分）
+    last_damage_taken_this_turn: int = 0
+    last_damage_category_this_turn: Optional[int] = None
     # 手動で交代しようとしている最中（おいうちを交代前に受ける間だけTrue）
     is_switching_out: bool = False
     # 場に出てから使った技のID（とっておきの成否判定に使う）。交代すると空に戻る（バトンタッチでも引き継がない）

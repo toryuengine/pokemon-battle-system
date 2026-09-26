@@ -158,6 +158,8 @@ class Battle:
                 pokemon.current_status.is_flinched = False
                 pokemon.current_status.has_moved_this_turn = False
                 pokemon.current_status.damaged_by_this_turn = None
+                pokemon.current_status.last_damage_taken_this_turn = 0
+                pokemon.current_status.last_damage_category_this_turn = None
 
             # 手動で交代するかどうかを先に決め、交代しない側だけが技を選ぶ
             switch1 = self.choose_switch(self.trainer1)
@@ -1038,7 +1040,8 @@ class Battle:
                 # 半減実は効果抜群の対応タイプの技を受けたときに1回だけ発動する（複数回攻撃なら最初の1回だけ）
                 # みがわりが受けた攻撃では発動しない
                 defender_item = defender.held_item
-                received_multiplier = (1.0 if hits_substitute
+                # 固定ダメージ技（カウンター等）は半減実で軽減されない
+                received_multiplier = (1.0 if hits_substitute or move.has_fixed_damage
                                        else defender_item.get_received_damage_multiplier(defender, move, effectiveness))
 
                 # いかりのつぼの判定のため、急所判定はダメージ計算の外で行う
@@ -1065,8 +1068,11 @@ class Battle:
                 total_damage += damage
                 result["hit_count"] += 1
                 # ゆきなだれ・リベンジ・きあいパンチの判定用に、このターン誰から本体にダメージを受けたかを記録する
+                # (カウンター・ミラーコート・メタルバースト用に、受けたダメージ量と技の分類も記録する)
                 if damage > 0:
                     defender.current_status.damaged_by_this_turn = attacker
+                    defender.current_status.last_damage_taken_this_turn = damage
+                    defender.current_status.last_damage_category_this_turn = move.category
 
                 if is_critical and damage > 0 and not self.is_fainted(defender):
                     self.get_ability(defender).on_critical_hit_received(self, defender)

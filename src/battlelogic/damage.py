@@ -93,9 +93,9 @@ def get_crit_chance(crit_stage: int) -> float:
 
 
 # 急所に当たるかどうかを判定する。急所ランクは技(high_crit)・持ち物・特性（きょううん）で上がり、
-# 受ける側の特性がカブトアーマー・シェルアーマーなら急所に当たらない
+# 受ける側の特性がカブトアーマー・シェルアーマーなら急所に当たらない（固定ダメージ技も急所に当たらない）
 def roll_critical(attacker, move, attacker_ability=NO_ABILITY, defender_ability=NO_ABILITY) -> bool:
-    if defender_ability.prevents_critical_hit:
+    if defender_ability.prevents_critical_hit or move.has_fixed_damage:
         return False
     crit_stage = ((1 if move.high_crit else 0) + attacker.held_item.get_crit_stage_bonus(attacker)
                   + attacker_ability.crit_stage_bonus)
@@ -120,6 +120,12 @@ def calculate_damage(attacker, defender, move, weather=None, screen_active=False
         if get_move_effectiveness(move, defender, ignore_ghost_immunity) == 0:
             return 0
         return defender.current_status.current_hp
+
+    # カウンター等の固定ダメージ技: タイプ相性が0倍(無効)なら失敗、それ以外は技が決めた量のダメージをそのまま与える
+    if move.has_fixed_damage:
+        if get_move_effectiveness(move, defender, ignore_ghost_immunity) == 0:
+            return 0
+        return move.get_fixed_damage(battle, attacker, defender)
 
     # 急所判定はランク補正の扱いに影響するため、実数値を決める前に行う
     attacker_item = attacker.held_item
