@@ -45,6 +45,10 @@ class BaseMove:
         # 自分の残りHP割合によって威力が変わる技（じたばた等）はサブクラス側でTrueに上書きする
         self.has_hp_based_power = False
 
+        # 威力を使わず、get_fixed_damageで決まる量のダメージを与える技（カウンター等）はサブクラス側でTrueに上書きする。
+        # タイプ相性は無効(0倍)かどうかだけを見て、急所・タイプ一致・能力値・乱数等の補正は掛からない
+        self.has_fixed_damage = False
+
         # 1回の使用で何回ヒットするか。通常技は1〜1（1回のみ）
         # 固定2回攻撃（にどげり等）はmin_hits=max_hits=2、2〜5回攻撃（ボーンラッシュ等）はmin_hits=2, max_hits=5
         self.min_hits = 1
@@ -157,6 +161,10 @@ class BaseMove:
     # battleはみらいよちのように対戦の外から計算する場合にNoneになりうる
     def get_power(self, battle, attacker, defender) -> int:
         return self.power
+
+    # has_fixed_damageの技が与えるダメージ量。カウンター等はサブクラス側で上書きする
+    def get_fixed_damage(self, battle, attacker, defender) -> int:
+        return 0
 
     # 技を出す直前（回避状態・まもる・特性による無効化の判定より前）に呼ばれる。
     # 天候でタイプが変わる技（ウェザーボール）等はサブクラス側で上書きする
