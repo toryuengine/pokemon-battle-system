@@ -392,13 +392,14 @@ class Battle:
         # 交代・拘束・技の制限に関する状態も、場を退くと解除される
         self.clear_volatile_statuses(outgoing)
         # 退いた個体が締め付けていた・逃げられなくしていた・メロメロにしていた相手は解放される
+        # (くろいまなざしは、バトンタッチで退いた場合だけ第4世代仕様で交代先が引き続き逃げられなくする)
         opponent_trainer = self.trainer2 if trainer is self.trainer1 else self.trainer1
         opponent_status = opponent_trainer.active.current_status
         if opponent_status.bound_by is outgoing:
             opponent_status.bound_turns_remaining = 0
             opponent_status.bound_by = None
         if opponent_status.trapped_by is outgoing:
-            opponent_status.trapped_by = None
+            opponent_status.trapped_by = trainer.party[new_index] if baton_pass else None
         if opponent_status.infatuated_by is outgoing:
             opponent_status.infatuated_by = None
 
@@ -1674,7 +1675,8 @@ class Battle:
         status.bound_turns_remaining = attacker.held_item.get_binding_turns(turns)
         status.bound_by = attacker
 
-    # くろいまなざし: 相手を逃げられなくする（使ったポケモンが場を退くまで）。既に逃げられない状態なら失敗する
+    # くろいまなざし: 相手を逃げられなくする（使ったポケモンが場を退くまで。バトンタッチで退いた場合は交代先に引き継ぐ）。
+    # 既に逃げられない状態なら失敗する。まもるは無視するが、みがわりには防がれる
     # 逃げられない間は手動で交代できない（とんぼがえり・バトンタッチ・ほえるによる交代は、第4世代仕様でも防げない）
     def perform_mean_look(self, attacker: Pokemon, target: Pokemon):
         if target.current_status.trapped_by is not None:
