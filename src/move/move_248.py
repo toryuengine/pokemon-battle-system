@@ -5,4 +5,4 @@ from move.base_move import BaseMove
 class BugBuzz(BaseMove):
     def __init__(self):
         super().__init__(id=248)
-        self.effects = []
+        self.effects = [('stat', 'target', 'spdef', -1, 0.1)]

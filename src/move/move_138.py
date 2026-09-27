@@ -5,4 +5,4 @@ from move.base_move import BaseMove
 class TakeDown(BaseMove):
     def __init__(self):
         super().__init__(id=138)
-        self.effects = []
+        self.effects = [('recoil', 0.3333333333333333)]
