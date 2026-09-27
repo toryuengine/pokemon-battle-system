@@ -40,6 +40,8 @@ class BaseAbility:
     prevents_infatuation = False
     # しめりけ: 場にいる間、だいばくはつが失敗する
     prevents_self_destruct = False
+    # こんじょう: やけどによる物理技のダメージ半減を受けない
+    ignores_burn_damage_drop = False
 
     # 天候ダメージを受けない天候（すながくれ: {"sandstorm"}、ゆきがくれ・アイスボディ: {"hail"}）
     weather_immunities = frozenset()
