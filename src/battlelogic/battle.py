@@ -855,12 +855,11 @@ class Battle:
             if not self.is_move_selectable(attacker, move):
                 return result
 
-        # メトロノーム用に、同じ技を連続で使った回数を数える（溜め技の2ターン目は同じ1回の使用として数えない）
-        if not is_releasing_charge:
-            if attacker.current_status.last_move_used_id == move.id:
-                attacker.current_status.consecutive_move_count += 1
-            else:
-                attacker.current_status.consecutive_move_count = 0
+        # メトロノーム用に、同じ技を連続で使ったターン数を数える（溜め技の溜めターン・攻撃ターンもそれぞれ1ターンとして数える）
+        if attacker.current_status.last_move_used_id == move.id:
+            attacker.current_status.consecutive_move_count += 1
+        else:
+            attacker.current_status.consecutive_move_count = 0
 
         # まねっこがコピーできるよう、使った技のIDを記録しておく
         attacker.current_status.last_move_used_id = move.id
