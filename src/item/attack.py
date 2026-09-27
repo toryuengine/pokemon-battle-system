@@ -57,7 +57,7 @@ class ExpertBelt(BaseItem):
         return EXPERT_BELT_MULTIPLIER if effectiveness > 1 else 1.0
 
 
-# メトロノーム: 同じ技を連続で使うたびにダメージが1割ずつ上がる（最大2倍）
+# メトロノーム: 同じ技を連続で使い続けると、1ターンごとにダメージが1割ずつ上がる（最大2倍）
 # 連続使用回数はBattle側がcurrent_status.consecutive_move_countに記録している
 class Metronome(BaseItem):
     def get_damage_multiplier(self, attacker, effectiveness: float) -> float:
