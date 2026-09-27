@@ -2,9 +2,7 @@ from move.base_move import BaseMove
 
 
 # コメットパンチ
-class CometPunch(BaseMove):
+class MeteorMash(BaseMove):
     def __init__(self):
         super().__init__(id=266)
-        self.effects = []
-        self.min_hits = 2
-        self.max_hits = 5
+        self.effects = [('stat', 'self', 'atk', 1, 0.2)]
