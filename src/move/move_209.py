@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# どくどくのキバ
+# どくどくのキバ: 30%の確率で相手をもうどく状態にする
 class PoisonFang(BaseMove):
     def __init__(self):
         super().__init__(id=209)
-        self.effects = [('status', 'target', 'poison', 0.3)]
+        self.effects = [('status', 'target', 'toxic', 0.3)]
