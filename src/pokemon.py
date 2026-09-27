@@ -146,8 +146,9 @@ class Pokemon:
         self.name: str = entry["name"]
         self.type1: int = entry["type1"]
         self.type2: Optional[int] = entry["type2"]
-        # 性別（"male"/"female"。Noneなら性別不明）。pokemon.jsonの個体データに"gender"があればそれを使う
-        self.gender: Optional[str] = set_data.get("gender")
+        # 性別（"male"/"female"。Noneなら性別不明）。個体データに"gender"があればそれを使い、
+        # 無ければ種族のfemale_rate（メスになる確率。nullなら性別不明の種族）からこの時点でランダムに決める
+        self.gender: Optional[str] = set_data["gender"] if "gender" in set_data else _roll_gender(entry.get("female_rate"))
         # 種族が持ちうる特性の中からこの個体の特性をランダムに1つ選び、特性クラスのインスタンスとして持つ
         self.ability: BaseAbility = create_ability(random.choice(entry["ability"]))
         self.status: PokemonStatus = _parse_status(set_data["status"])
@@ -173,10 +174,17 @@ class Pokemon:
 
     def __repr__(self):
         return (
-            f"Pokemon(name={self.name!r}, type1={self.type1!r}, type2={self.type2!r}, "
+            f"Pokemon(name={self.name!r}, type1={self.type1!r}, type2={self.type2!r}, gender={self.gender!r}, "
             f"status={self.status!r}, item={self.item!r}, ability={self.ability!r}, "
             f"moves={self.moves!r})"
         )
+
+
+# 種族のメスになる確率から性別を決める。female_rateがNone（性別不明の種族）ならNoneを返す
+def _roll_gender(female_rate: Optional[float]) -> Optional[str]:
+    if female_rate is None:
+        return None
+    return "female" if random.random() < female_rate else "male"
 
 
 def _parse_status(status_data) -> PokemonStatus:
