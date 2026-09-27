@@ -4,7 +4,7 @@ from ability.base_ability import BaseAbility
 SYNCHRONIZED_CONDITIONS = {"poison", "paralysis", "burn"}
 
 
-# シンクロ: 相手にどく・まひ・やけどにされると、相手も同じ状態異常にする
+# シンクロ: 相手にどく・まひ・やけどにされると、相手も同じ状態異常にする（もうどくはもうどくのままうつす）
 class Synchronize(BaseAbility):
     def __init__(self):
         super().__init__(id=49)
@@ -12,4 +12,6 @@ class Synchronize(BaseAbility):
     def on_status_inflicted(self, battle, pokemon, condition, source):
         if source is None or source is pokemon or condition not in SYNCHRONIZED_CONDITIONS:
             return
+        if condition == "poison" and pokemon.current_status.toxic_counter > 0:
+            condition = "toxic"
         battle.try_apply_status(source, condition, 1.0)

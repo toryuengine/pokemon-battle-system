@@ -20,6 +20,9 @@ COPIED_MOVE_PP = 5
 
 # 状態異常の効果値（第4世代仕様）
 POISON_DAMAGE_RATIO = 1 / 8
+# もうどくのダメージは最大HPの(カウンタ)/16。カウンタは15で頭打ちになる
+TOXIC_DAMAGE_DENOMINATOR = 16
+TOXIC_COUNTER_MAX = 15
 BURN_DAMAGE_RATIO = 1 / 16
 PARALYSIS_FULL_PARA_CHANCE = 0.25
 FREEZE_THAW_CHANCE = 0.2
@@ -374,6 +377,9 @@ class Battle:
         # みやぶるの「見破られた」状態、まもる・みきり・こらえるの連続成功カウンタは、場を退くと解除される
         outgoing_status.is_identified = False
         outgoing_status.protect_stall_counter = 0
+        # もうどくは交代してももうどくのままだが、ダメージのカウンタは最初に戻る
+        if outgoing_status.toxic_counter > 0:
+            outgoing_status.toxic_counter = 1
         # こんらん・じゅうでん・のろい・たくわえる・いえきの効果も、場を退くと解除される
         outgoing_status.confusion_turns_remaining = 0
         outgoing_status.charge_turns_remaining = 0
@@ -440,8 +446,8 @@ class Battle:
                 # どくタイプが出ると、どくびしはその場から消滅する
                 trainer.toxic_spikes = 0
             elif pokemon.current_status.status_condition is None and self.can_receive_status(pokemon, "poison"):
-                # 本来は2層で「もうどく」（悪化していくどく）になるが、簡略化して通常のどく扱いにしている
-                pokemon.current_status.status_condition = "poison"
+                # 1層ならどく、2層ならもうどくになる
+                self.inflict_poison(pokemon, badly=trainer.toxic_spikes >= 2)
 
     # pokemonが地面にいるかどうか（まきびし・どくびしを受けるか）。くろいてっきゅうを持っている、
     # またはねをはるで根を張っていれば常に地面にいる扱い
@@ -606,9 +612,15 @@ class Battle:
             # ポイズンヒール・たいねつは、どく・やけどのダメージの代わりに独自の処理をする
             if condition in ("poison", "burn") and self.get_ability(pokemon).on_residual_status(self, pokemon, condition):
                 pass
+            elif condition == "poison" and pokemon.current_status.toxic_counter > 0:
+                damage = max(1, pokemon.status.hp * pokemon.current_status.toxic_counter // TOXIC_DAMAGE_DENOMINATOR)
+                self.apply_damage(pokemon, damage)
             elif condition == "poison":
                 damage = max(1, int(pokemon.status.hp * POISON_DAMAGE_RATIO))
                 self.apply_damage(pokemon, damage)
+            # もうどくのカウンタは、ポイズンヒールでダメージを受けなかったターンも増える
+            if condition == "poison" and 0 < pokemon.current_status.toxic_counter < TOXIC_COUNTER_MAX:
+                pokemon.current_status.toxic_counter += 1
             elif condition == "burn":
                 damage = max(1, int(pokemon.status.hp * BURN_DAMAGE_RATIO))
                 self.apply_damage(pokemon, damage)
@@ -1143,6 +1155,12 @@ class Battle:
     def cure_status(self, pokemon: Pokemon):
         pokemon.current_status.status_condition = None
         pokemon.current_status.sleep_turns_remaining = 0
+        pokemon.current_status.toxic_counter = 0
+
+    # pokemonをどく（badly=Trueならもうどく）にする。特性・既存の状態異常による判定は呼び出し側で行う
+    def inflict_poison(self, pokemon: Pokemon, badly: bool = False):
+        pokemon.current_status.status_condition = "poison"
+        pokemon.current_status.toxic_counter = 1 if badly else 0
 
     # ターン終了時の、たべのこし・くろいヘドロの回復/ダメージ
     def apply_end_of_turn_items(self):
@@ -1277,8 +1295,12 @@ class Battle:
     # chanceの確率でtargetに状態異常を付与する（既に何か状態異常が付いている場合は上書きしない）
     # ねむり・こんらんは残りターン数もあわせて設定する
     # こんらんだけはstatus_conditionとは別枠で管理し、他の状態異常と重複できる（既にこんらん中なら上書きしない）
+    # conditionが"toxic"ならもうどくにする（status_conditionは"poison"で、toxic_counterを1にする）
     # sourceは状態異常にした相手。めんえき等の特性で防がれる判定（かたやぶり）と、シンクロの発動に使う
     def try_apply_status(self, target, condition, chance, source=None):
+        badly_poisoned = condition == "toxic"
+        if badly_poisoned:
+            condition = "poison"
         if self.is_shielded_by_substitute(target, source):
             return False
         if not self.can_receive_status(target, condition, source):
@@ -1297,6 +1319,7 @@ class Battle:
             return False
         if random.random() < chance:
             target.current_status.status_condition = condition
+            target.current_status.toxic_counter = 1 if badly_poisoned else 0
             if condition == "sleep":
                 target.current_status.sleep_turns_remaining = random.randint(1, 3)
             self.get_ability(target).on_status_inflicted(self, target, condition, source)
@@ -1635,7 +1658,7 @@ class Battle:
         attacker.consumed_item = None
 
     # なげつける: 投げつけた持ち物（技を出した時点で手放し済み）の追加効果を、相手に与える
-    # (きのみ・しろいハーブは相手が食べた・使った扱いになり、どくどくだまはどく、おうじゃのしるし・するどいキバはひるませる)
+    # (きのみ・しろいハーブは相手が食べた・使った扱いになり、どくどくだまはもうどく、おうじゃのしるし・するどいキバはひるませる)
     def apply_flung_item_effect(self, target: Pokemon, item, source: Pokemon):
         if item is None or self.is_fainted(target) or self.is_shielded_by_substitute(target, source):
             return

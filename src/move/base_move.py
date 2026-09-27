@@ -96,7 +96,7 @@ class BaseMove:
 
         # 追加効果のデータ一覧。何もしない技は空リストのまま
         # 各要素の形式:
-        #   ("status", target, condition, chance)            例: ("status", "target", "poison", 0.3)
+        #   ("status", target, condition, chance)            例: ("status", "target", "poison", 0.3)（"toxic"ならもうどく）
         #   ("status_random", target, [condition, ...], chance) 複数候補からランダムに1つ付与
         #   ("stat", target, stat_name, stages, chance)       例: ("stat", "self", "spatk", -2, 1.0)
         #   ("stat_multi", target, [(stat_name, stages), ...], chance)  1回の判定で複数能力を同時に変化

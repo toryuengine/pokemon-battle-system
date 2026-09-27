@@ -26,6 +26,9 @@ class PokemonStatus:
 class CurrentStatus:
     current_hp: int
     status_condition: Optional[str] = None
+    # もうどくのカウンタ（status_conditionが"poison"のときだけ意味を持つ）。0なら通常のどく、1以上ならもうどくで、
+    # ターン終了時に最大HPの(カウンタ)/16を失い、カウンタが1増える。交代すると1に戻る（もうどくのまま）
+    toxic_counter: int = 0
     # ひるみはそのターン限りの一時的な状態なので、行動チェック後にBattle側でリセットする
     is_flinched: bool = False
     # はかいこうせん等を使った次のターンは反動で行動不能。行動チェック後にBattle側でリセットする
