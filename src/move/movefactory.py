@@ -265,7 +265,7 @@ from move.move_262 import RockWrecker
 from move.move_263 import Conversion2
 from move.move_264 import EggLay
 from move.move_265 import ExtremeSpeed
-from move.move_266 import CometPunch
+from move.move_266 import MeteorMash
 
 _MOVE_CLASSES = {
     0: LeafStorm,
@@ -534,7 +534,7 @@ _MOVE_CLASSES = {
     263: Conversion2,
     264: EggLay,
     265: ExtremeSpeed,
-    266: CometPunch,
+    266: MeteorMash,
 }
 
 
