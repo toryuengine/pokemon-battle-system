@@ -14,6 +14,8 @@ LEVEL = 100
 CRIT_CHANCE_BY_STAGE = [1 / 16, 1 / 8, 1 / 4, 1 / 3, 1 / 2]
 # 第4世代の急所ダメージ倍率（第6世代以降の1.5倍とは異なる）
 CRIT_MULTIPLIER = 2.0
+# やけど状態のポケモンが出す物理技のダメージ倍率（第4世代仕様。こんじょうなら受けない）
+BURN_DAMAGE_MULTIPLIER = 0.5
 
 TYPE_ID_ROCK = 12
 
@@ -169,8 +171,12 @@ def calculate_damage(attacker, defender, move, weather=None, screen_active=False
 
     power = int(power * attacker_item.get_power_multiplier(attacker, move) * ability_power_multiplier)
 
-    base_damage = (2 * LEVEL / 5 + 2) * power * attack_stat / defense_stat
-    base_damage = base_damage / 50 + 2
+    base_damage = (2 * LEVEL / 5 + 2) * power * attack_stat / defense_stat / 50
+    # やけど状態なら物理技のダメージが半分になる。第4世代の計算式では最後の+2より前に掛かる
+    if (move.category == CATEGORY_PHYSICAL and attacker.current_status.status_condition == "burn"
+            and not attacker_ability.ignores_burn_damage_drop):
+        base_damage *= BURN_DAMAGE_MULTIPLIER
+    base_damage += 2
 
     # タイプを持たない技(わるあがき等)はタイプ一致による強化(STAB)も無い
     is_stab = not move.is_typeless and resolve_type_id(move.type) in (attacker.type1, attacker.type2)
