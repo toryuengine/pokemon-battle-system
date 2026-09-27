@@ -122,7 +122,7 @@ class BaseAbility:
         return 1.0
 
     # 技の威力に掛かる倍率。powerは持ち物等の補正前の威力（じたばた等は残りHPから決めた値）
-    def get_power_multiplier(self, attacker, move, power) -> float:
+    def get_power_multiplier(self, attacker, defender, move, power) -> float:
         return 1.0
 
     # 受ける技の威力に掛かる倍率

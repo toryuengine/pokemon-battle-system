@@ -25,7 +25,7 @@ SUPER_EFFECTIVE_REDUCTION = 0.75
 class PinchTypeBoostAbility(BaseAbility):
     boosted_type = None
 
-    def get_power_multiplier(self, attacker, move, power) -> float:
+    def get_power_multiplier(self, attacker, defender, move, power) -> float:
         if move.is_typeless or move.type != self.boosted_type:
             return 1.0
         if attacker.current_status.current_hp <= attacker.status.hp * PINCH_HP_RATIO:

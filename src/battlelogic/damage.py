@@ -160,7 +160,7 @@ def calculate_damage(attacker, defender, move, weather=None, screen_active=False
 
     power = get_hp_based_power(attacker) if move.has_hp_based_power else move.get_power(battle, attacker, defender)
     # テクニシャン等は持ち物・じゅうでんの補正前の威力で判定する
-    ability_power_multiplier = (attacker_ability.get_power_multiplier(attacker, move, power)
+    ability_power_multiplier = (attacker_ability.get_power_multiplier(attacker, defender, move, power)
                                 * defender_ability.get_received_power_multiplier(defender, move))
 
     # じゅうでん状態なら、でんき技の威力が2倍になる

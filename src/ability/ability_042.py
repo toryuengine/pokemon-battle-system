@@ -9,7 +9,7 @@ class Technician(BaseAbility):
     def __init__(self):
         super().__init__(id=42)
 
-    def get_power_multiplier(self, attacker, move, power) -> float:
+    def get_power_multiplier(self, attacker, defender, move, power) -> float:
         if power <= TECHNICIAN_POWER_THRESHOLD:
             return TECHNICIAN_MULTIPLIER
         return 1.0
