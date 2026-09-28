@@ -13,8 +13,10 @@ class QuickClaw(BaseItem):
 
 
 # くろいてっきゅう: 素早さ半減。ひこうタイプでも地面にいる扱いになり、じめん技・まきびし・どくびしを受ける
+# 持ち主がぶきようでも効果は無くならない（第4世代仕様）
 class IronBall(BaseItem):
     forces_grounded = True
+    ignores_klutz = True
 
     def get_speed_multiplier(self) -> float:
         return IRON_BALL_SPEED_MULTIPLIER

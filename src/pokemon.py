@@ -166,9 +166,20 @@ class Pokemon:
             self.moves.append(create_move(move_id))
 
     # 持ち物の効果を呼び出すときに使う。持ち物を持っていなければ効果なしのNO_ITEMを返すので、呼び出し側でNoneチェックが要らない
+    # ぶきようで持ち物の効果が無くなっている間もNO_ITEMを返す
     @property
     def held_item(self) -> BaseItem:
-        return self.item if self.item is not None else NO_ITEM
+        if self.item is None or self.is_item_disabled:
+            return NO_ITEM
+        return self.item
+
+    # ぶきようで、持っている持ち物の効果が無くなっているか（いえきで特性を消されていればぶきようも働かない）
+    # 持ち物の受け渡し（トリック・はたきおとす等）はself.itemを直接見るので、ぶきようでも行える
+    @property
+    def is_item_disabled(self) -> bool:
+        if self.item is None or self.item.ignores_klutz:
+            return False
+        return self.ability.ignores_held_item and not self.current_status.is_ability_suppressed
 
     # ひこうタイプ・ふゆうでも地面にいる扱いになるか（くろいてっきゅうを持っている、またはねをはるで根を張っている）
     @property

@@ -42,6 +42,8 @@ class BaseAbility:
     prevents_self_destruct = False
     # こんじょう: やけどによる物理技のダメージ半減を受けない
     ignores_burn_damage_drop = False
+    # ぶきよう: 持っている持ち物の効果が無くなる（Pokemon.held_itemで判定する）
+    ignores_held_item = False
 
     # 天候ダメージを受けない天候（すながくれ: {"sandstorm"}、ゆきがくれ・アイスボディ: {"hail"}）
     weather_immunities = frozenset()

@@ -35,6 +35,8 @@ class BaseItem:
     forces_grounded = False
     # きのみかどうか（むしくい・ついばむで奪って食べられる）。きのみのクラス側でTrueに上書きする
     is_berry = False
+    # 持ち主がぶきようでも効果が無くならない持ち物（くろいてっきゅう）はサブクラス側でTrueに上書きする
+    ignores_klutz = False
 
     def __init__(self, id: int):
         self.id = id
