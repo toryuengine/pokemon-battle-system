@@ -709,10 +709,10 @@ class Battle:
             status.encore_turns_remaining = 0
 
         # こだわり系の持ち物で技が固定されていれば、その技しか選べない（PPが尽きたらわるあがき）
-        # まねっこ等で固定された技が技構成から消えていれば、固定を解除する
+        # まねっこ等で固定された技が技構成から消えた・こだわり系の持ち物の効果が無くなった（はたきおとす・ぶきよう等）なら、固定を解除する
         locked_move = status.choice_locked_move
         if locked_move is not None:
-            if any(move is locked_move for move in attacker.moves):
+            if attacker.held_item.locks_move and any(move is locked_move for move in attacker.moves):
                 if locked_move.current_pp > 0 and self.is_move_selectable(attacker, locked_move):
                     return locked_move
                 return Struggle()
