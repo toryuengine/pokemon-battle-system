@@ -170,6 +170,7 @@ class Battle:
                 pokemon.current_status.damaged_by_this_turn = None
                 pokemon.current_status.last_damage_taken_this_turn = 0
                 pokemon.current_status.last_damage_category_this_turn = None
+                pokemon.current_status.turns_on_field += 1
 
             # 手動で交代するかどうかを先に決め、交代しない側だけが技を選ぶ
             switch1 = self.choose_switch(self.trainer1)
@@ -1567,6 +1568,7 @@ class Battle:
         status.perish_turns_remaining = 0
         status.infatuated_by = None
         status.used_move_ids = set()
+        status.turns_on_field = 0
         self.end_rampage(pokemon)
         # パワートリックで入れ替えた攻撃と防御の実数値を元に戻す
         if status.is_power_trick_active:

@@ -133,6 +133,9 @@ class CurrentStatus:
     is_switching_out: bool = False
     # 場に出てから使った技のID（とっておきの成否判定に使う）。交代すると空に戻る（バトンタッチでも引き継がない）
     used_move_ids: set = field(default_factory=set)
+    # 場に出てから迎えたターン数。毎ターンの頭に1増え、場に出たターンは0、次のターンが1になる（ねこだましの成否判定に使う）。
+    # 交代すると0に戻る（バトンタッチでも引き継がない）
+    turns_on_field: int = 0
     # げきりん・あばれるで固定されている技のインスタンスと、固定の残りターン数（この技を出す回数）。
     # 固定が終わるとこんらんする。行動できなかった・交代した場合は、こんらんせずに固定が解ける
     rampage_move: Optional[BaseMove] = None
