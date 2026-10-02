@@ -46,6 +46,13 @@ WEATHER_IMMUNE_TYPE_IDS = {
 }
 WEATHER_DURATION = 5
 
+# タイプによって、その状態異常にならないタイプID（もうどくは"poison"として判定する）
+STATUS_IMMUNE_TYPE_IDS = {
+    "poison": {7, 16},  # どく、はがね
+    "burn": {1},  # ほのお
+    "freeze": {5},  # こおり
+}
+
 # 天候によって必ず命中する技・命中率が変わる技（idで個別に判定する）
 THUNDER_ID = 124  # かみなり
 BLIZZARD_ID = 82  # ふぶき
@@ -492,8 +499,12 @@ class Battle:
                 return None
         return self.weather
 
-    # pokemonがconditionの状態異常にかかるかどうか（特性による無効化）。sourceがかたやぶりなら特性を無視する
+    # pokemonがconditionの状態異常にかかるかどうか（タイプ・特性による無効化）
+    # sourceがかたやぶりなら特性は無視するが、タイプによる無効化は無視できない
     def can_receive_status(self, pokemon: Pokemon, condition: str, source: Pokemon = None) -> bool:
+        immune_type_ids = STATUS_IMMUNE_TYPE_IDS.get(condition, ())
+        if pokemon.type1 in immune_type_ids or pokemon.type2 in immune_type_ids:
+            return False
         return self.get_target_ability(pokemon, source).can_receive_status(self, pokemon, condition)
 
     # targetのトレーナー（罠等を管理している側）を返す
@@ -1011,6 +1022,15 @@ class Battle:
         if targets_opponent and self.is_floating_against_ground_move(defender, move):
             return result
 
+        # タイプ相性で効果が無い(0倍)相手には、ダメージ技は追加効果も含めて失敗する
+        # 変化技は、タイプ相性を見る技（でんじは→じめんタイプ）だけが失敗する
+        # (みやぶる済み・きもったまなら、ノーマル/かくとう技はゴーストタイプにも当たる)
+        ignore_ghost_immunity = defender.current_status.is_identified or attacker_ability.ignores_ghost_immunity
+        if (targets_opponent and (move.category != CATEGORY_STATUS or move.checks_type_immunity)
+                and get_move_effectiveness(move, defender, ignore_ghost_immunity) == 0):
+            result["effectiveness"] = 0.0
+            return result
+
         # なげつける（持ち物が無い）・はきだす（たくわえていない）等、技を出せる条件を満たしていなければ失敗する
         if not move.try_execute(self, attacker, defender):
             return result
@@ -1036,8 +1056,6 @@ class Battle:
         # 変化技(CATEGORY_STATUS)はダメージを与えないので、物理・特殊技の時だけダメージ計算する
         if move.category != CATEGORY_STATUS:
             screen_active = self.is_screen_active(defender, move)
-            # みやぶるで見破られている、または攻撃側がきもったまなら、ノーマル/かくとう技がゴーストタイプに当たる
-            ignore_ghost_immunity = defender.current_status.is_identified or attacker_ability.ignores_ghost_immunity
             effectiveness = get_move_effectiveness(move, defender, ignore_ghost_immunity)
             hit_count = self.roll_hit_count(move)
             # 最後のヒットをみがわりが受け止めたかどうか（受け止めていれば、追加効果は本体に届かない）
