@@ -109,6 +109,7 @@ class BaseMove:
         #   ("recoil_max_hp", ratio)  attacker(自分)が最大HPのratio分だけ反動を受ける（わるあがき用）
         #   ("drain", ratio)    attacker(自分)が与えたダメージの一部を回復する
         #   ("heal", ratio)     attacker(自分)が最大HPの一定割合を回復する
+        #   ("rest",)           HPを全回復し、状態異常を治してから2ターンねむる（ねむる）
         #   ("clear_stats",)    両者の能力ランクを全てリセットする（くろいきり等）
         #   ("belly_drum",)     最大HPの半分を削って攻撃ランクを最大(+6)にする（はらだいこ）
         #   ("curse",)          ゴーストタイプなら自分のHPを半分削って相手をのろい状態に、
@@ -239,6 +240,9 @@ class BaseMove:
                     elif weather in ("rain", "sandstorm", "hail"):
                         ratio = 1 / 4
                 battle.apply_heal(attacker, ratio)
+
+            elif kind == "rest":
+                battle.perform_rest(attacker)
 
             elif kind == "clear_stats":
                 battle.reset_all_stages()

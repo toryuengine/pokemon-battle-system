@@ -105,6 +105,8 @@ LEECH_SEED_DRAIN_RATIO = 1 / 8
 TYPE_ID_GRASS = 4
 # あくびは使ったターンと次のターンの終わりに1ずつ減り、0になった時点でねむる
 YAWN_DURATION = 2
+# ねむるでねむるターン数（行動できないターン数。はやおきなら半分）
+REST_SLEEP_TURNS = 2
 # ほろびのうたは使ったターンの終わりにカウント3になり、以降毎ターン1ずつ減ってカウント0になったターンの終わりに瀕死になる
 # (使ったターンを含めて4回目のターン終了時)
 PERISH_SONG_DURATION = 4
@@ -1387,6 +1389,14 @@ class Battle:
         max_hp = attacker.status.hp
         heal_amount = int(max_hp * ratio)
         attacker.current_status.current_hp = min(max_hp, attacker.current_status.current_hp + heal_amount)
+
+    # ねむる: HPを全回復し、今の状態異常（どく・まひ等）を治してから、REST_SLEEP_TURNSターンねむる
+    # こんらん等のstatus_condition以外の状態は治さない。失敗の条件はRest.try_executeで判定済み
+    def perform_rest(self, attacker: Pokemon):
+        self.cure_status(attacker)
+        attacker.current_status.status_condition = "sleep"
+        attacker.current_status.sleep_turns_remaining = REST_SLEEP_TURNS
+        attacker.current_status.current_hp = attacker.status.hp
 
     # いたみわけ: attackerとtargetの残りHPを合計し、半分(端数切り捨て)ずつ分け合う
     # 分け合った値が最大HPを超える側は最大HPまでしか回復しない
