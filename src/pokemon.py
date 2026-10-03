@@ -181,6 +181,9 @@ class Pokemon:
         # 最後に消費した持ち物（リサイクルで取り戻す対象）。まだ何も消費していなければNone
         self.consumed_item: Optional[BaseItem] = None
 
+        # 対戦中に使って相手に見られた技のID（対戦相手が知り得る情報。Battle.use_moveで記録する）
+        self.revealed_move_ids: set = set()
+
         self.moves: List[BaseMove] = []
         for move_id in set_data["move"]:
             self.moves.append(create_move(move_id))

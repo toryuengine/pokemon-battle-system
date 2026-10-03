@@ -138,6 +138,9 @@ class Battle:
         # トリックルームの残りターン数（0なら無し）。0より大きい間は、同じ優先度の中で素早さの遅い順に行動する
         self.trick_room_turns_remaining = 0
 
+        # 経過ターン数（1ターン目の技選択の時点で1）。判断する側に見せる情報・判断の取り違え防止に使う
+        self.turn = 0
+
         # 今処理している攻撃を、みがわりが受け止めた相手（Noneなら無し）。攻撃で身代わりが壊れた場合も、
         # その攻撃の追加効果・持ち物の効果（おうじゃのしるし等）は本体に届かないため、攻撃の処理中だけ保持する
         self.substitute_absorbed_target = None
@@ -162,6 +165,7 @@ class Battle:
         self.activate_held_items_on_field()
 
         for _ in range(self.MAX_TURNS):
+            self.turn += 1
             # まもる・みきり・こらえる・ひるみの効果は使ったそのターン限りなので、新しいターンの頭でリセットする
             # (後攻の技でひるんだ先攻側が、次のターンに行動不能にならないようにするため、ひるみもここで解除する)
             for pokemon in (self.pokemon1, self.pokemon2):
@@ -258,7 +262,7 @@ class Battle:
         switched_trainers = []
         for trainer in (self.trainer1, self.trainer2):
             while self.is_fainted(trainer.active) and not trainer.is_defeated():
-                next_index = trainer.find_next_alive_index()
+                next_index = self.choose_replacement(trainer)
                 if next_index is None:
                     break
                 self.switch_in(trainer, next_index, activate_ability=False)
@@ -268,6 +272,18 @@ class Battle:
         if switched_trainers:
             self.activate_switch_in_abilities([trainer.active for trainer in switched_trainers])
             self.activate_held_items_on_field()
+
+    # 瀕死・とんぼがえり・バトンタッチで交代するときの交代先のインデックス（交代できる個体がいなければNone）
+    # trainer.replacement_policyがあればそれに選ばせ、無い・不正なインデックスなら手持ち順で最初に見つかった生存個体にする
+    def choose_replacement(self, trainer: Trainer):
+        candidates = trainer.find_switch_candidates()
+        if not candidates:
+            return None
+        if trainer.replacement_policy is not None:
+            index = trainer.replacement_policy(self, trainer)
+            if index in candidates:
+                return index
+        return candidates[0]
 
     # pokemonがmoveを出し、その結果（持ち物の発動・瀕死による交代）を処理する。対戦が終わればTrueを返す
     # 攻撃対象は、先に行動した側が反動等で自滅して交代していた場合に備えて、今現在の相手を取得する
@@ -702,11 +718,36 @@ class Battle:
                 continue
             self.get_ability(pokemon).on_end_of_turn(self, pokemon)
 
-    # ここ
-    # attackerが持つ技のうちPPが残っているものからランダムに1つ選ぶ。全て0ならわるあがきを選ぶ
-    # 溜め中（ソーラービーム等の1ターン目を終えた状態）なら、選択せず溜めていた技を強制的に返す
-    # かなしばり・ちょうはつ・いちゃもんで選べない技は除き、アンコール中はその技しか選べない
+    # attackerがこのターンに出す技を選ぶ。溜め中・げきりん等の固定中・アンコール中・こだわり系の持ち物で技が固定されていれば
+    # その技を返し、そうでなければPPが残っていて選べる技の中から、トレーナーのmove_policy（無ければランダム）で1つ選ぶ。
+    # 選べる技が無ければわるあがきを選ぶ
     def select_move(self, attacker: Pokemon) -> BaseMove:
+        forced_move = self.get_forced_move(attacker)
+        if forced_move is not None:
+            return forced_move
+
+        usable_moves = self.get_usable_moves(attacker)
+        if not usable_moves:
+            return Struggle()
+
+        trainer = self.get_trainer(attacker)
+        if trainer.move_policy is not None and len(usable_moves) > 1:
+            chosen = trainer.move_policy(self, trainer, usable_moves)
+            if any(chosen is move for move in usable_moves):
+                return chosen
+        return random.choice(usable_moves)
+
+    # attackerがこのターンに選べる技の一覧（判断する側に見せる選択肢）。固定されていればその1つだけ、
+    # 選べる技が無ければわるあがきだけになる
+    def get_move_options(self, attacker: Pokemon) -> list:
+        forced_move = self.get_forced_move(attacker)
+        if forced_move is not None:
+            return [forced_move]
+        return self.get_usable_moves(attacker) or [Struggle()]
+
+    # 溜め中（ソーラービーム等の1ターン目を終えた状態）・げきりん等・アンコール・こだわり系の持ち物で技が固定されていれば、
+    # その技を返す（固定されていなければNone）。固定の条件が崩れていれば（PP切れ・はたきおとす等）ここで固定を解除する
+    def get_forced_move(self, attacker: Pokemon):
         status = attacker.current_status
         if status.charging_move is not None:
             return status.charging_move
@@ -731,15 +772,11 @@ class Battle:
                     return locked_move
                 return Struggle()
             status.choice_locked_move = None
+        return None
 
-        usable_moves = []
-        for move in attacker.moves:
-            if move.current_pp > 0 and self.is_move_selectable(attacker, move):
-                usable_moves.append(move)
-
-        if not usable_moves:
-            return Struggle()
-        return random.choice(usable_moves)
+    # attackerの技のうち、PPが残っていて、かなしばり・ちょうはつ・いちゃもんで選べなくなっていない技の一覧
+    def get_usable_moves(self, attacker: Pokemon) -> list:
+        return [move for move in attacker.moves if move.current_pp > 0 and self.is_move_selectable(attacker, move)]
 
     # かなしばり・ちょうはつ・いちゃもんの制限を受けず、pokemonがmoveを選べるかどうか（PPの残りは見ない）
     def is_move_selectable(self, pokemon: Pokemon, move: BaseMove) -> bool:
@@ -893,6 +930,8 @@ class Battle:
         # とっておきの判定用に、場に出てから技構成の中のどの技を使ったかを記録しておく
         if any(m is move for m in attacker.moves):
             attacker.current_status.used_move_ids.add(move.id)
+            # 相手から見て判明した技として記録する（交代しても消えない）
+            attacker.revealed_move_ids.add(move.id)
 
         # まもる・みきり・こらえる以外の技を使ったら、連続成功カウンタをリセットする
         if move.id not in PROTECT_FAMILY_MOVE_IDS:
@@ -1533,11 +1572,11 @@ class Battle:
         attacker.moves = copied_moves
 
     # とんぼがえり: 攻撃したpokemon自身が、手持ちの生きている次の1体に強制的に交代する
-    # (交代先はswitch_policyには聞かず、resolve_faintsと同じ選び方＝手持ち順で最初に見つかった生存個体にする)
+    # (交代先は瀕死時と同じくchoose_replacementで決める)
     # 手持ちに他に生きている個体がいなければ何もしない（交代せず攻撃だけで終わる）
     def perform_self_switch(self, pokemon: Pokemon):
         trainer = self.get_trainer(pokemon)
-        next_index = trainer.find_next_alive_index()
+        next_index = self.choose_replacement(trainer)
         if next_index is None:
             return
         self.switch_in(trainer, next_index)
@@ -1750,7 +1789,7 @@ class Battle:
     # バトンタッチ: 能力ランク等を引き継いで、手持ちの生きている次の1体に交代する（いなければ失敗）
     def perform_baton_pass(self, pokemon: Pokemon):
         trainer = self.get_trainer(pokemon)
-        next_index = trainer.find_next_alive_index()
+        next_index = self.choose_replacement(trainer)
         if next_index is None:
             return
         self.switch_in(trainer, next_index, baton_pass=True)

@@ -8,6 +8,14 @@ from pokemon import Pokemon
 # 毎ターンの技選択の前に(battle, trainer)で呼ばれ、交代先の手持ちのインデックスを返す（交代しないならNone）
 SwitchPolicy = Callable[["Battle", "Trainer"], Optional[int]]
 
+# 技選択の判断を決める関数の型。選べる技が2つ以上あるターンに(battle, trainer, 選べる技のリスト)で呼ばれ、
+# そのリストの中の技のインスタンスを返す（リストに無いものを返した場合はランダムに選ぶ）
+MovePolicy = Callable[["Battle", "Trainer", List["BaseMove"]], "BaseMove"]
+
+# 瀕死・とんぼがえり・バトンタッチで交代するときの交代先を決める関数の型。(battle, trainer)で呼ばれ、
+# 交代先の手持ちのインデックスを返す（交代先として不正なインデックスなら、手持ち順で最初の生存個体にする）
+ReplacementPolicy = Callable[["Battle", "Trainer"], int]
+
 
 # 毎ターンchanceの確率で、交代できる手持ちの中からランダムに1体選んで交代する判断
 def random_switch_policy(chance: float) -> SwitchPolicy:
@@ -22,10 +30,15 @@ def random_switch_policy(chance: float) -> SwitchPolicy:
 # 手持ちポケモンと、場に設置された罠（相手側からの設置技）を管理する
 class Trainer:
     # switch_policyは手動交代の判断。Noneなら自分の意思では交代しない（瀕死時・とんぼがえり等の自動交代のみ）
-    def __init__(self, party: List[Pokemon], switch_policy: Optional[SwitchPolicy] = None):
+    # move_policyは技選択の判断。Noneなら選べる技からランダムに選ぶ
+    # replacement_policyは瀕死時等の交代先の判断。Noneなら手持ち順で最初に見つかった生存個体にする
+    def __init__(self, party: List[Pokemon], switch_policy: Optional[SwitchPolicy] = None,
+                 move_policy: Optional[MovePolicy] = None, replacement_policy: Optional[ReplacementPolicy] = None):
         self.party = party
         self.active_index = 0
         self.switch_policy = switch_policy
+        self.move_policy = move_policy
+        self.replacement_policy = replacement_policy
 
         # 自分の場に設置されている罠。設置技はここを書き換える
         self.stealth_rock = False
