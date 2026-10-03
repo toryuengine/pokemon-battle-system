@@ -5,6 +5,7 @@ from move.base_move import BaseMove
 class Fly(BaseMove):
     def __init__(self):
         super().__init__(id=141)
+        self.makes_contact = True
         self.effects = []
         self.requires_charge_turn = True
         self.charge_is_invulnerable = True

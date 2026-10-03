@@ -8,6 +8,7 @@ GYRO_BALL_MAX_POWER = 150
 class GyroBall(BaseMove):
     def __init__(self):
         super().__init__(id=129)
+        self.makes_contact = True
         self.effects = []
 
     def get_power(self, battle, attacker, defender) -> int:

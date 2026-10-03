@@ -5,6 +5,7 @@ from move.base_move import BaseMove
 class FakeOut(BaseMove):
     def __init__(self):
         super().__init__(id=74)
+        self.makes_contact = True
         self.effects = [('flinch', 'target', 1.0)]
         self.priority = 1
 

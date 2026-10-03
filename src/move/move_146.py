@@ -10,6 +10,7 @@ PUNISHMENT_MAX_POWER = 200
 class Punishment(BaseMove):
     def __init__(self):
         super().__init__(id=146)
+        self.makes_contact = True
         self.effects = []
 
     def get_power(self, battle, attacker, defender) -> int:

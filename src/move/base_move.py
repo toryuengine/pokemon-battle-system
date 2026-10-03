@@ -98,6 +98,9 @@ class BaseMove:
         # 場にしめりけのポケモンがいると失敗する（自分も瀕死にならない）技（だいばくはつ）はサブクラス側でTrueに上書きする
         self.is_explosive = False
 
+        # 接触技（せいでんき・ほのおのからだ・ゆうばく等、接触技を受けると発動する特性の対象）はサブクラス側でTrueに上書きする
+        self.makes_contact = False
+
         # 追加効果のデータ一覧。何もしない技は空リストのまま
         # 各要素の形式:
         #   ("status", target, condition, chance)            例: ("status", "target", "poison", 0.3)（"toxic"ならもうどく）

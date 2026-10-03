@@ -982,6 +982,10 @@ class Battle:
         return (self.get_ability(attacker).prevents_self_destruct
                 or self.get_target_ability(opponent, attacker).prevents_self_destruct)
 
+    # 場にいるどちらかのポケモンがしめりけなら、ゆうばくは発動しない
+    def is_damp_active(self) -> bool:
+        return any(self.get_ability(pokemon).prevents_self_destruct for pokemon in (self.pokemon1, self.pokemon2))
+
     # defenderが回避状態（溜め中）でも、moveが当たるかどうか（じしん→あなをほる、なみのり→ダイビング）
     def hits_charging_target(self, move: BaseMove, defender: Pokemon) -> bool:
         charging_move = defender.current_status.charging_move
@@ -1109,6 +1113,13 @@ class Battle:
 
                 if is_critical and damage > 0 and not self.is_fainted(defender):
                     self.get_ability(defender).on_critical_hit_received(self, defender)
+
+                # せいでんき・ほのおのからだ・ゆうばく等、接触技を受けると発動する特性（かたやぶりの相手にも発動する）
+                if move.makes_contact and not self.is_fainted(attacker):
+                    self.get_ability(defender).on_contact_received(self, defender, attacker, move)
+                    # ゆうばくで瀕死になったら、複数回攻撃の残りは出さない
+                    if self.is_fainted(attacker):
+                        break
 
             result["damage"] = total_damage
             result["effectiveness"] = effectiveness
@@ -1319,11 +1330,12 @@ class Battle:
     # こんらんだけはstatus_conditionとは別枠で管理し、他の状態異常と重複できる（既にこんらん中なら上書きしない）
     # conditionが"toxic"ならもうどくにする（status_conditionは"poison"で、toxic_counterを1にする）
     # sourceは状態異常にした相手。めんえき等の特性で防がれる判定（かたやぶり）と、シンクロの発動に使う
-    def try_apply_status(self, target, condition, chance, source=None):
+    # bypass_substituteがTrueなら、targetのみがわりに防がれない（せいでんき等、接触技を受けて発動する特性）
+    def try_apply_status(self, target, condition, chance, source=None, bypass_substitute=False):
         badly_poisoned = condition == "toxic"
         if badly_poisoned:
             condition = "poison"
-        if self.is_shielded_by_substitute(target, source):
+        if not bypass_substitute and self.is_shielded_by_substitute(target, source):
             return False
         if not self.can_receive_status(target, condition, source):
             return False
@@ -1376,6 +1388,9 @@ class Battle:
     # attacker自身がdamageのratio分だけHPを回復する（ギガドレインなど）
     # おおきなねっこを持っていれば回復量が1.3倍になる。吸った相手(target)がヘドロえきなら、回復する代わりに同じ量のダメージを受ける
     def apply_drain(self, attacker, damage, ratio, target=None):
+        # ゆうばく・みちづれで瀕死になっていれば回復しない
+        if self.is_fainted(attacker):
+            return
         heal_amount = int(damage * ratio)
         heal_amount = int(heal_amount * attacker.held_item.get_drain_multiplier())
         if target is not None and self.get_ability(target).damages_drainer:

@@ -6,6 +6,7 @@ from move.base_move import BaseMove
 class Pursuit(BaseMove):
     def __init__(self):
         super().__init__(id=156)
+        self.makes_contact = True
         self.effects = []
         self.hits_switching_target = True
 

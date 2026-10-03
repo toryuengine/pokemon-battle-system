@@ -5,4 +5,5 @@ from move.base_move import BaseMove
 class HammerArm(BaseMove):
     def __init__(self):
         super().__init__(id=66)
+        self.makes_contact = True
         self.effects = [('stat', 'self', 'spd', -1, 1.0)]

@@ -1,3 +1,5 @@
+import random
+
 from ability.base_ability import BaseAbility
 
 # 複数の特性で共通する効果の型。個々の特性はこれを継承して、対象のタイプ・天候・状態異常だけを指定する
@@ -20,6 +22,9 @@ WEATHER_HEAL_RATIO = 1 / 16
 
 # フィルター・ハードロック: 効果抜群の技のダメージが0.75倍
 SUPER_EFFECTIVE_REDUCTION = 0.75
+
+# ほうし・せいでんき・メロメロボディ・どくのトゲ・ほのおのからだ: 接触技を受けたときに発動する確率
+CONTACT_EFFECT_CHANCE = 0.3
 
 
 class PinchTypeBoostAbility(BaseAbility):
@@ -111,12 +116,17 @@ class SuperEffectiveReductionAbility(BaseAbility):
         return 1.0
 
 
+# 接触技を受けると、CONTACT_EFFECT_CHANCEの確率で相手をconditionsのどれか1つ（ランダム）の状態異常にする
+# 相手にみがわりがいても防げない。かたやぶりの相手にも発動する
+class ContactStatusAbility(BaseAbility):
+    conditions = ()
+
+    def on_contact_received(self, battle, pokemon, attacker, move):
+        if random.random() >= CONTACT_EFFECT_CHANCE:
+            return
+        battle.try_apply_status(attacker, random.choice(self.conditions), 1.0, source=pokemon, bypass_substitute=True)
+
+
 # 第4世代のシングルバトルでは対戦結果に影響しない特性（野生との遭遇・ダブルバトル専用の効果等）
 class NoBattleEffectAbility(BaseAbility):
-    pass
-
-
-# 対戦に影響する効果を持つが、前提となる仕組み（技の接触判定・性別・交代の強制・持ち物を奪う技等）が
-# まだ無いため未実装の特性。クラスとしては保持しておき、仕組みが揃ったら個別に実装する
-class UnimplementedAbility(BaseAbility):
     pass

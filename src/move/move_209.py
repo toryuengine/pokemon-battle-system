@@ -5,4 +5,5 @@ from move.base_move import BaseMove
 class PoisonFang(BaseMove):
     def __init__(self):
         super().__init__(id=209)
+        self.makes_contact = True
         self.effects = [('status', 'target', 'toxic', 0.3)]

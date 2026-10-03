@@ -7,5 +7,6 @@ FLY_ID = 141
 class SkyUppercut(BaseMove):
     def __init__(self):
         super().__init__(id=126)
+        self.makes_contact = True
         self.effects = []
         self.hits_during_charge_move_ids = (FLY_ID,)

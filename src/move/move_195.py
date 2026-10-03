@@ -6,6 +6,7 @@ from move.base_move import BaseMove
 class LastResort(BaseMove):
     def __init__(self):
         super().__init__(id=195)
+        self.makes_contact = True
         self.effects = []
 
     def try_execute(self, battle, attacker, defender) -> bool:

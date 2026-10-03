@@ -5,4 +5,5 @@ from move.base_move import BaseMove
 class KnockOff(BaseMove):
     def __init__(self):
         super().__init__(id=78)
+        self.makes_contact = True
         self.effects = [("knock_off",)]

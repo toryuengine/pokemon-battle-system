@@ -6,6 +6,7 @@ from move.base_move import CATEGORY_PHYSICAL, BaseMove
 class Counter(BaseMove):
     def __init__(self):
         super().__init__(id=69)
+        self.makes_contact = True
         self.effects = []
         self.priority = -5
         self.has_fixed_damage = True

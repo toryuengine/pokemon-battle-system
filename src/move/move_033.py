@@ -6,6 +6,7 @@ from move.base_move import BaseMove
 class FocusPunch(BaseMove):
     def __init__(self):
         super().__init__(id=33)
+        self.makes_contact = True
         self.effects = []
         self.priority = -3
         # 集中している間に攻撃を受けると失敗する技なので、ねごとでは呼び出せない
