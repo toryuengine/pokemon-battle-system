@@ -5,10 +5,6 @@ from battlelogic.stat_stage import stage_multiplier
 from battlelogic.type_chart import get_move_effectiveness, resolve_type_id
 from move.base_move import CATEGORY_PHYSICAL, CATEGORY_STATUS
 
-# jsonの実数値にレベルが織り込まれておらず、データ上レベルを特定できないため
-# 便宜上レベル100固定で計算する（両者同条件なので相対的なダメージ比較には影響しない）
-LEVEL = 100
-
 # 急所ランクごとの急所の発生率（第4世代仕様）。通常は1/16、急所に当たりやすい技(high_crit)や
 # ピントレンズ等の持ち物でランクが1つずつ上がる（4以上は1/2で頭打ち）
 CRIT_CHANCE_BY_STAGE = [1 / 16, 1 / 8, 1 / 4, 1 / 3, 1 / 2]
@@ -82,7 +78,7 @@ def calculate_confusion_damage(pokemon, stages=None) -> int:
     attack_stat = apply_stage_to_stat(pokemon.status.atk, stages.atk if stages else 0, False, is_attack_side=True)
     defense_stat = max(1, apply_stage_to_stat(pokemon.status.defense, stages.defense if stages else 0, False, is_attack_side=False))
 
-    base_damage = (2 * LEVEL / 5 + 2) * CONFUSION_SELF_HIT_POWER * attack_stat / defense_stat
+    base_damage = (2 * pokemon.level / 5 + 2) * CONFUSION_SELF_HIT_POWER * attack_stat / defense_stat
     base_damage = base_damage / 50 + 2
 
     random_factor = random.randint(85, 100) / 100
@@ -171,7 +167,7 @@ def calculate_damage(attacker, defender, move, weather=None, screen_active=False
 
     power = int(power * attacker_item.get_power_multiplier(attacker, move) * ability_power_multiplier)
 
-    base_damage = (2 * LEVEL / 5 + 2) * power * attack_stat / defense_stat / 50
+    base_damage = (2 * attacker.level / 5 + 2) * power * attack_stat / defense_stat / 50
     # やけど状態なら物理技のダメージが半分になる。第4世代の計算式では最後の+2より前に掛かる
     if (move.category == CATEGORY_PHYSICAL and attacker.current_status.status_condition == "burn"
             and not attacker_ability.ignores_burn_damage_drop):
