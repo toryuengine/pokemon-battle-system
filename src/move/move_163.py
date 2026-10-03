@@ -5,4 +5,5 @@ from move.base_move import BaseMove
 class Headbutt(BaseMove):
     def __init__(self):
         super().__init__(id=163)
+        self.makes_contact = True
         self.effects = [('flinch', 'target', 0.3)]

@@ -8,6 +8,7 @@ FACADE_BOOSTED_CONDITIONS = ("poison", "paralysis", "burn")
 class Facade(BaseMove):
     def __init__(self):
         super().__init__(id=106)
+        self.makes_contact = True
         self.effects = []
 
     def get_power(self, battle, attacker, defender) -> int:

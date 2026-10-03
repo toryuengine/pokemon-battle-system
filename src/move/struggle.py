@@ -22,3 +22,6 @@ class Struggle(BaseMove):
 
         # タイプを持たないため、タイプ相性による無効化を受けない（ゴーストにも当たる）
         self.is_typeless = True
+
+        # 接触技
+        self.makes_contact = True

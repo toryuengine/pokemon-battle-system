@@ -5,6 +5,7 @@ from move.base_move import BaseMove
 class DoubleHit(BaseMove):
     def __init__(self):
         super().__init__(id=194)
+        self.makes_contact = True
         self.effects = []
         self.min_hits = 2
         self.max_hits = 2

@@ -1,7 +1,9 @@
-from ability.shared import UnimplementedAbility
+from ability.shared import ContactStatusAbility
 
 
-# どくのトゲ: 接触技を受けると30%の確率で相手をどくにする（技の接触判定が未実装のため未実装）
-class PoisonPoint(UnimplementedAbility):
+# どくのトゲ: 接触技を受けると30%の確率で相手をどくにする
+class PoisonPoint(ContactStatusAbility):
+    conditions = ("poison",)
+
     def __init__(self):
         super().__init__(id=53)

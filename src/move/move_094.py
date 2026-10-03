@@ -5,4 +5,5 @@ from move.base_move import BaseMove
 class DrainPunch(BaseMove):
     def __init__(self):
         super().__init__(id=94)
+        self.makes_contact = True
         self.effects = [('drain', 0.5)]

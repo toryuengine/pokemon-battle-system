@@ -5,5 +5,6 @@ from move.base_move import BaseMove
 class HornDrill(BaseMove):
     def __init__(self):
         super().__init__(id=167)
+        self.makes_contact = True
         self.effects = []
         self.is_ohko = True

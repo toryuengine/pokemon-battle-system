@@ -5,5 +5,6 @@ from move.base_move import BaseMove
 class BulletPunch(BaseMove):
     def __init__(self):
         super().__init__(id=230)
+        self.makes_contact = True
         self.effects = []
         self.priority = 1

@@ -5,4 +5,5 @@ from move.base_move import BaseMove
 class BlazeKick(BaseMove):
     def __init__(self):
         super().__init__(id=62)
+        self.makes_contact = True
         self.effects = [('status', 'target', 'burn', 0.1)]

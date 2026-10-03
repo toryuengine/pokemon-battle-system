@@ -1,7 +1,9 @@
-from ability.shared import UnimplementedAbility
+from ability.shared import ContactStatusAbility
 
 
-# ほうし: 接触技を受けると30%の確率で相手をどく・まひ・ねむりにする（技の接触判定が未実装のため未実装）
-class EffectSpore(UnimplementedAbility):
+# ほうし: 接触技を受けると30%の確率で相手をどく・まひ・ねむりのどれか（1/3ずつ）にする
+class EffectSpore(ContactStatusAbility):
+    conditions = ("poison", "paralysis", "sleep")
+
     def __init__(self):
         super().__init__(id=18)

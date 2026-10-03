@@ -38,7 +38,7 @@ class BaseAbility:
     ignores_paralysis_speed_drop = False
     # どんかん: メロメロ状態にならない
     prevents_infatuation = False
-    # しめりけ: 場にいる間、だいばくはつが失敗する
+    # しめりけ: 場にいる間、だいばくはつが失敗し、ゆうばくが発動しない
     prevents_self_destruct = False
     # こんじょう: やけどによる物理技のダメージ半減を受けない
     ignores_burn_damage_drop = False
@@ -95,6 +95,11 @@ class BaseAbility:
 
     # 相手の技が急所に当たった時（瀕死になった場合は呼ばれない）
     def on_critical_hit_received(self, battle, pokemon):
+        pass
+
+    # 相手(attacker)の接触技で本体にダメージを受けた時（複数回攻撃なら1回ごと。みがわりが受けた攻撃では呼ばれない）
+    # 自分が瀕死になった場合も呼ばれる（せいでんき・ほのおのからだ・ゆうばく等）
+    def on_contact_received(self, battle, pokemon, attacker, move):
         pass
 
     # 状態異常（こんらん以外）になった時。sourceは状態異常にした相手（どくびし等で相手がいなければNone）

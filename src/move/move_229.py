@@ -5,5 +5,6 @@ from move.base_move import BaseMove
 class Guillotine(BaseMove):
     def __init__(self):
         super().__init__(id=229)
+        self.makes_contact = True
         self.effects = []
         self.is_ohko = True

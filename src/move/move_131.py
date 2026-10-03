@@ -6,6 +6,7 @@ from move.base_move import BaseMove
 class Revenge(BaseMove):
     def __init__(self):
         super().__init__(id=131)
+        self.makes_contact = True
         self.effects = []
         self.priority = -4
 
