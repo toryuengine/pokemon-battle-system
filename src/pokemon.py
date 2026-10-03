@@ -8,7 +8,12 @@ from item.base_item import NO_ITEM, BaseItem
 from item.itemfactory import create_item
 from move.base_move import BaseMove
 from move.movefactory import create_move
+from nature import calc_stats
 from readpokemondata import load_pokemon_data
+
+# レベル・個体値を指定しなかったときの値（既存のデータの実数値がLv.100・個体値0で計算されていたため、それに合わせる）
+DEFAULT_LEVEL = 100
+DEFAULT_IV = 0
 
 
 @dataclass
@@ -143,21 +148,33 @@ class CurrentStatus:
 
 
 class Pokemon:
-    def __init__(self, pokemon_id: int, indivisual_id: int):
+    # levelはレベル、ivは個体値（バトルフロンティアのポケモンは全能力が同じ個体値なので1つの整数で受け取る）
+    # rngは性別・特性を決める乱数。省略するとrandomモジュールを使う（シードを固定したい呼び出し側はrandom.Randomを渡す）
+    def __init__(self, pokemon_id: int, indivisual_id: int, level: int = DEFAULT_LEVEL, iv: int = DEFAULT_IV,
+                 rng: Optional[random.Random] = None):
         pokemon_data = load_pokemon_data()
+        rng = rng if rng is not None else random
 
         entry = pokemon_data[pokemon_id]
         set_data = entry["indivisual"][indivisual_id]
 
+        # データ上の位置（ファクトリーで「どのセットか」を識別するのに使う）
+        self.pokemon_id: int = pokemon_id
+        self.indivisual_id: int = indivisual_id
+        self.level: int = level
+        self.iv: int = iv
+        self.nature: str = set_data["nature"]
         self.name: str = entry["name"]
         self.type1: int = entry["type1"]
         self.type2: Optional[int] = entry["type2"]
         # 性別（"male"/"female"。Noneなら性別不明）。個体データに"gender"があればそれを使い、
         # 無ければ種族のfemale_rate（メスになる確率。nullなら性別不明の種族）からこの時点でランダムに決める
-        self.gender: Optional[str] = set_data["gender"] if "gender" in set_data else _roll_gender(entry.get("female_rate"))
+        self.gender: Optional[str] = set_data["gender"] if "gender" in set_data else _roll_gender(entry.get("female_rate"), rng)
         # 種族が持ちうる特性の中からこの個体の特性をランダムに1つ選び、特性クラスのインスタンスとして持つ
-        self.ability: BaseAbility = create_ability(random.choice(entry["ability"]))
-        self.status: PokemonStatus = _parse_status(set_data["status"])
+        self.ability: BaseAbility = create_ability(rng.choice(entry["ability"]))
+        # 実数値は種族値・努力値・性格・個体値・レベルから計算する（データ中の"status"はLv.100・個体値0の検算用）
+        self.status: PokemonStatus = _parse_status(
+            calc_stats(entry["base_stats"], set_data["ev"], iv=iv, level=level, nature=set_data["nature"]))
         self.current_status: CurrentStatus = CurrentStatus(current_hp=self.status.hp)
         # 持っている持ち物のインスタンス。きのみ等を使い切ると(消費すると)Noneになる
         self.item: Optional[BaseItem] = create_item(set_data["item"]) if set_data["item"] is not None else None
@@ -191,17 +208,18 @@ class Pokemon:
 
     def __repr__(self):
         return (
-            f"Pokemon(name={self.name!r}, type1={self.type1!r}, type2={self.type2!r}, gender={self.gender!r}, "
+            f"Pokemon(name={self.name!r}, level={self.level!r}, iv={self.iv!r}, nature={self.nature!r}, "
+            f"type1={self.type1!r}, type2={self.type2!r}, gender={self.gender!r}, "
             f"status={self.status!r}, item={self.item!r}, ability={self.ability!r}, "
             f"moves={self.moves!r})"
         )
 
 
 # 種族のメスになる確率から性別を決める。female_rateがNone（性別不明の種族）ならNoneを返す
-def _roll_gender(female_rate: Optional[float]) -> Optional[str]:
+def _roll_gender(female_rate: Optional[float], rng=random) -> Optional[str]:
     if female_rate is None:
         return None
-    return "female" if random.random() < female_rate else "male"
+    return "female" if rng.random() < female_rate else "male"
 
 
 def _parse_status(status_data) -> PokemonStatus:
