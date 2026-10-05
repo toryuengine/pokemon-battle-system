@@ -1,12 +1,8 @@
 from move.base_move import BaseMove
 
-FLY_ID = 141
 
-
-# スカイアッパー: そらをとぶで上空にいる相手にも当たる（じしん・なみのりと違い、威力は2倍にならない）
-class SkyUppercut(BaseMove):
+# りゅうのまい
+class DragonDance(BaseMove):
     def __init__(self):
         super().__init__(id=126)
-        self.makes_contact = True
-        self.effects = []
-        self.hits_during_charge_move_ids = (FLY_ID,)
+        self.effects = [('stat_multi', 'self', [('atk', 1), ('spd', 1)], 1.0)]

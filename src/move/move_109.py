@@ -1,14 +1,24 @@
 from move.base_move import BaseMove
 
 
-# しっぺがえし: 相手がこのターン既に行動していれば（自分が後から行動すれば）威力が2倍になる
-class Payback(BaseMove):
+# なげつける: 持っている持ち物を投げつける。威力は持ち物によって決まり、きのみ・しろいハーブは相手が使った扱い、
+# どくどくだまはもうどく、おうじゃのしるし・するどいキバはひるみの効果を相手に与える。持ち物が無ければ失敗する
+# 投げた持ち物は消費した扱いになる（リサイクルで取り戻せる）。ぶきようで持ち物の効果が無くなっていても失敗する
+class Fling(BaseMove):
     def __init__(self):
         super().__init__(id=109)
-        self.makes_contact = True
-        self.effects = []
+        self.effects = [("fling",)]
+        # 今回投げつけた持ち物（威力と追加効果の判定に使う）
+        self.flung_item = None
+
+    # 技を出した時点で持ち物を手放す（持ち物が無い・ぶきようなら失敗する）
+    def try_execute(self, battle, attacker, defender) -> bool:
+        self.flung_item = attacker.item
+        if self.flung_item is None or attacker.is_item_disabled:
+            self.flung_item = None
+            return False
+        battle.consume_item(attacker)
+        return True
 
     def get_power(self, battle, attacker, defender) -> int:
-        if defender.current_status.has_moved_this_turn:
-            return self.power * 2
-        return self.power
+        return self.flung_item.fling_power if self.flung_item is not None else self.power

@@ -1,11 +1,10 @@
 from move.base_move import BaseMove
 
 
-# そらをとぶ
-class Fly(BaseMove):
+# かげうち
+class ShadowSneak(BaseMove):
     def __init__(self):
         super().__init__(id=141)
         self.makes_contact = True
         self.effects = []
-        self.requires_charge_turn = True
-        self.charge_is_invulnerable = True
+        self.priority = 1

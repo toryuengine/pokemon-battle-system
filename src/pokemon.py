@@ -8,10 +8,10 @@ from item.base_item import NO_ITEM, BaseItem
 from item.itemfactory import create_item
 from move.base_move import BaseMove
 from move.movefactory import create_move
-from nature import calc_stats
+from nature import NATURE_NAMES, calc_stats
 from readpokemondata import load_pokemon_data
 
-# レベル・個体値を指定しなかったときの値（既存のデータの実数値がLv.100・個体値0で計算されていたため、それに合わせる）
+# レベル・個体値を指定しなかったときの値（以前のデータの実数値がLv.100・個体値0で計算されていたため、それに合わせている）
 DEFAULT_LEVEL = 100
 DEFAULT_IV = 0
 
@@ -82,7 +82,7 @@ class CurrentStatus:
     # たくわえるで実際に上がった防御・特防のランク（はきだす・のみこむで、この分だけ元に戻す）。交代すると0に戻る
     stockpile_defense_boost: int = 0
     stockpile_spdef_boost: int = 0
-    # しめつけ系の技（まきつく・すなじごく・うずしお）で締め付けられている残りターン数と、締め付けている相手。
+    # しめつけ系の技（まきつく・すなじごく・うずしお・マグマストーム）で締め付けられている残りターン数と、締め付けている相手。
     # 残りターンの間、毎ターン終了時に最大HPの1/16を失う。締め付けている相手が場を退くと解除される
     bound_turns_remaining: int = 0
     bound_by: Optional["Pokemon"] = None
@@ -163,7 +163,7 @@ class Pokemon:
         self.indivisual_id: int = indivisual_id
         self.level: int = level
         self.iv: int = iv
-        self.nature: str = set_data["nature"]
+        self.nature: str = NATURE_NAMES[set_data["nature"]]
         self.name: str = entry["name"]
         self.type1: int = entry["type1"]
         self.type2: Optional[int] = entry["type2"]
@@ -172,9 +172,9 @@ class Pokemon:
         self.gender: Optional[str] = set_data["gender"] if "gender" in set_data else _roll_gender(entry.get("female_rate"), rng)
         # 種族が持ちうる特性の中からこの個体の特性をランダムに1つ選び、特性クラスのインスタンスとして持つ
         self.ability: BaseAbility = create_ability(rng.choice(entry["ability"]))
-        # 実数値は種族値・努力値・性格・個体値・レベルから計算する（データ中の"status"はLv.100・個体値0の検算用）
+        # 実数値は種族値・努力値・性格・個体値・レベルから計算する
         self.status: PokemonStatus = _parse_status(
-            calc_stats(entry["base_stats"], set_data["ev"], iv=iv, level=level, nature=set_data["nature"]))
+            calc_stats(entry["base_stats"], set_data["ev"], iv=iv, level=level, nature=self.nature))
         self.current_status: CurrentStatus = CurrentStatus(current_hp=self.status.hp)
         # 持っている持ち物のインスタンス。きのみ等を使い切ると(消費すると)Noneになる
         self.item: Optional[BaseItem] = create_item(set_data["item"]) if set_data["item"] is not None else None

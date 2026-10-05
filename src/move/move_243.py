@@ -1,9 +1,13 @@
 from move.base_move import BaseMove
 
+WRING_OUT_MAX_POWER = 120
 
-# ついばむ: 相手がきのみを持っていれば、奪って食べてその効果を自分が得る
-class Peck(BaseMove):
+
+# しぼりとる: 相手の残りHPが多いほど威力が高くなる。威力 = 120 × 相手の残りHP ÷ 相手の最大HP + 1（第4世代仕様、1〜121）
+class WringOut(BaseMove):
     def __init__(self):
         super().__init__(id=243)
-        self.makes_contact = True
-        self.effects = [("eat_berry",)]
+        self.effects = []
+
+    def get_power(self, battle, attacker, defender) -> int:
+        return WRING_OUT_MAX_POWER * defender.current_status.current_hp // defender.status.hp + 1

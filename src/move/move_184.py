@@ -1,10 +1,9 @@
 from move.base_move import BaseMove
 
 
-# だましうち
-class SuckerPunch(BaseMove):
+# はかいこうせん
+class HyperBeam(BaseMove):
     def __init__(self):
         super().__init__(id=184)
-        self.makes_contact = True
         self.effects = []
-        self.priority = 1
+        self.requires_recharge = True

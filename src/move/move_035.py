@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# アクアリング
-class AquaRing(BaseMove):
+# インファイト
+class CloseCombat(BaseMove):
     def __init__(self):
         super().__init__(id=35)
-        self.effects = [("aqua_ring",)]
+        self.makes_contact = True
+        self.effects = [('stat_multi', 'self', [('defense', -1), ('spdef', -1)], 1.0)]

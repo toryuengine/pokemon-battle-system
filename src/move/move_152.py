@@ -1,9 +1,8 @@
 from move.base_move import BaseMove
 
 
-# エアカッター
-class AirCutter(BaseMove):
+# じゅうでん
+class Charge(BaseMove):
     def __init__(self):
         super().__init__(id=152)
-        self.effects = []
-        self.high_crit = True
+        self.effects = [('charge',)]

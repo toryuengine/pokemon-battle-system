@@ -1,9 +1,8 @@
 from move.base_move import BaseMove
 
 
-# どくづき
-class PoisonJab(BaseMove):
+# つるぎのまい
+class SwordsDance(BaseMove):
     def __init__(self):
         super().__init__(id=95)
-        self.makes_contact = True
-        self.effects = [('status', 'target', 'poison', 0.3)]
+        self.effects = [('stat', 'self', 'atk', 2, 1.0)]

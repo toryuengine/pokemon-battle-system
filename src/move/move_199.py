@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# でんげきは
-class ZapCannon(BaseMove):
+# くろいまなざし: 相手を逃げられなくする。まもる・みきりを無視する
+class MeanLook(BaseMove):
     def __init__(self):
         super().__init__(id=199)
-        self.effects = [('status', 'target', 'paralysis', 1.0)]
+        self.effects = [("mean_look",)]
+        self.bypasses_protect = True

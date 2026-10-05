@@ -1,10 +1,8 @@
 from move.base_move import BaseMove
 
 
-# しんそく
-class ExtremeSpeed(BaseMove):
+# つきのひかり
+class Moonlight(BaseMove):
     def __init__(self):
         super().__init__(id=265)
-        self.makes_contact = True
-        self.effects = []
-        self.priority = 2
+        self.effects = [('heal', 0.5)]

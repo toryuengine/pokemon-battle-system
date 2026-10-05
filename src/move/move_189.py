@@ -1,9 +1,8 @@
 from move.base_move import BaseMove
 
 
-# こおりのつぶて
-class IceShard(BaseMove):
+# オーバーヒート
+class Overheat(BaseMove):
     def __init__(self):
         super().__init__(id=189)
-        self.makes_contact = True
-        self.effects = []
+        self.effects = [('stat', 'self', 'spatk', -2, 1.0)]

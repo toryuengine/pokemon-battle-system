@@ -1,9 +1,8 @@
 from move.base_move import BaseMove
 
 
-# たたきつける
-class Slam(BaseMove):
+# バリアー
+class Barrier(BaseMove):
     def __init__(self):
         super().__init__(id=159)
-        self.makes_contact = True
-        self.effects = []
+        self.effects = [('stat', 'self', 'defense', 2, 1.0)]

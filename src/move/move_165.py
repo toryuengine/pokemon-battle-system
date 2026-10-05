@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# かなしばり: 相手が直前に使った技を、4〜7ターンの間使えなくする
-class Disable(BaseMove):
+# こうそくいどう
+class Agility(BaseMove):
     def __init__(self):
         super().__init__(id=165)
-        self.effects = [("disable",)]
+        self.effects = [('stat', 'self', 'spd', 2, 1.0)]

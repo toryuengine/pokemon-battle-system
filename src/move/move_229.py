@@ -1,10 +1,8 @@
 from move.base_move import BaseMove
 
 
-# ハサミギロチン
-class Guillotine(BaseMove):
+# わるだくみ
+class NastyPlot(BaseMove):
     def __init__(self):
         super().__init__(id=229)
-        self.makes_contact = True
-        self.effects = []
-        self.is_ohko = True
+        self.effects = [('stat', 'self', 'spatk', 2, 1.0)]

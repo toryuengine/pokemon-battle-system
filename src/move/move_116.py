@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# まねっこ
-class Mimic(BaseMove):
+# おんねん: 次に自分が行動するまでに相手の攻撃で瀕死になると、その技のPPを0にする
+class Grudge(BaseMove):
     def __init__(self):
         super().__init__(id=116)
-        self.effects = [("mimic",)]
+        self.effects = [("grudge",)]

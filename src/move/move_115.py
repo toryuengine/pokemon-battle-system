@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# エナジーボール
-class EnergyBall(BaseMove):
+# でんげきは
+class ZapCannon(BaseMove):
     def __init__(self):
         super().__init__(id=115)
-        self.effects = [('stat', 'target', 'spdef', -1, 0.1)]
+        self.effects = [('status', 'target', 'paralysis', 1.0)]

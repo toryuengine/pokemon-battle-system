@@ -1,9 +1,9 @@
 from move.base_move import BaseMove
 
 
-# メタルクロー
-class MetalClaw(BaseMove):
+# エアカッター
+class AirCutter(BaseMove):
     def __init__(self):
         super().__init__(id=76)
-        self.makes_contact = True
-        self.effects = [('stat', 'self', 'atk', 1, 0.1)]
+        self.effects = []
+        self.high_crit = True

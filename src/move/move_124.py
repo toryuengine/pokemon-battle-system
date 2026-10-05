@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# かみなり
-class Thunder(BaseMove):
+# ミルクのみ
+class MilkDrink(BaseMove):
     def __init__(self):
         super().__init__(id=124)
-        self.effects = [('status', 'target', 'paralysis', 0.3)]
+        self.effects = [('heal', 0.5)]

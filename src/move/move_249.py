@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# こうそくいどう
-class Agility(BaseMove):
+# やつあたり
+class Frustration(BaseMove):
     def __init__(self):
         super().__init__(id=249)
-        self.effects = [('stat', 'self', 'spd', 2, 1.0)]
+        self.makes_contact = True
+        self.effects = []

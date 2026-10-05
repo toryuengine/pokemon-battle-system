@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# ねをはる
-class Ingrain(BaseMove):
+# エアスラッシュ
+class AirSlash(BaseMove):
     def __init__(self):
         super().__init__(id=5)
-        self.effects = [("ingrain",)]
+        self.effects = [('flinch', 'target', 0.3)]

@@ -1,8 +1,10 @@
 from move.base_move import BaseMove
 
 
-# いえき
-class GastroAcid(BaseMove):
+# クロスポイズン
+class CrossPoison(BaseMove):
     def __init__(self):
         super().__init__(id=177)
-        self.effects = [('suppress_ability',)]
+        self.makes_contact = True
+        self.effects = [('status', 'target', 'poison', 0.1)]
+        self.high_crit = True

@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# てんしのキッス
-class SweetKiss(BaseMove):
+# トライアタック
+class TriAttack(BaseMove):
     def __init__(self):
         super().__init__(id=160)
-        self.effects = [('status', 'target', 'confusion', 1.0)]
+        self.effects = [('status_random', 'target', ['burn', 'freeze', 'paralysis'], 0.2)]

@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# リフレクター
-class Reflect(BaseMove):
+# すなあらし
+class Sandstorm(BaseMove):
     def __init__(self):
         super().__init__(id=45)
-        self.effects = [("set_screen", "reflect")]
+        self.effects = [("set_weather", "sandstorm")]
