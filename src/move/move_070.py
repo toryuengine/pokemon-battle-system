@@ -1,8 +1,17 @@
 from move.base_move import BaseMove
 
+FACADE_BOOSTED_CONDITIONS = ("poison", "paralysis", "burn")
 
-# くさむすび
-class GrassKnot(BaseMove):
+
+# からげんき: 自分がどく・まひ・やけどのとき威力が2倍になる
+# (第4世代仕様で、やけどによる物理技のダメージ半減は受けるので、やけどのときは実質等倍になる)
+class Facade(BaseMove):
     def __init__(self):
         super().__init__(id=70)
+        self.makes_contact = True
         self.effects = []
+
+    def get_power(self, battle, attacker, defender) -> int:
+        if attacker.current_status.status_condition in FACADE_BOOSTED_CONDITIONS:
+            return self.power * 2
+        return self.power

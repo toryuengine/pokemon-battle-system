@@ -1,9 +1,10 @@
 from move.base_move import BaseMove
 
 
-# かみくだく
-class Crunch(BaseMove):
+# リーフブレード
+class LeafBlade(BaseMove):
     def __init__(self):
         super().__init__(id=23)
         self.makes_contact = True
-        self.effects = [('stat', 'target', 'defense', -1, 0.2)]
+        self.effects = []
+        self.high_crit = True

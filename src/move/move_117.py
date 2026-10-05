@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# ものまね
-class Transform(BaseMove):
+# すてみタックル
+class TakeDown(BaseMove):
     def __init__(self):
         super().__init__(id=117)
-        self.effects = [("transform",)]
+        self.makes_contact = True
+        self.effects = [('recoil', 0.3333333333333333)]

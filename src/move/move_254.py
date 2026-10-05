@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# はどうだん
-class AuraSphere(BaseMove):
+# キノコのほうし
+class Spore(BaseMove):
     def __init__(self):
         super().__init__(id=254)
-        self.effects = []
+        self.effects = [('status', 'target', 'sleep', 1.0)]

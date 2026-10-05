@@ -1,9 +1,8 @@
 from move.base_move import BaseMove
 
 
-# でんじは: じめんタイプには効果が無い
-class ThunderWave(BaseMove):
+# あやしいひかり
+class ConfuseRay(BaseMove):
     def __init__(self):
         super().__init__(id=105)
-        self.checks_type_immunity = True
-        self.effects = [('status', 'target', 'paralysis', 1.0)]
+        self.effects = [('status', 'target', 'confusion', 1.0)]

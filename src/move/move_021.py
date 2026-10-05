@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# にほんばれ
-class SunnyDay(BaseMove):
+# こおりのキバ
+class IceFang(BaseMove):
     def __init__(self):
         super().__init__(id=21)
-        self.effects = [("set_weather", "sun")]
+        self.makes_contact = True
+        self.effects = [('status', 'target', 'freeze', 0.1), ('flinch', 'target', 0.1)]

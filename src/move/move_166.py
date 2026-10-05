@@ -1,9 +1,9 @@
 from move.base_move import BaseMove
 
 
-# ぜったいれいど
-class SheerCold(BaseMove):
+# ばかぢから
+class Superpower(BaseMove):
     def __init__(self):
         super().__init__(id=166)
-        self.effects = []
-        self.is_ohko = True
+        self.makes_contact = True
+        self.effects = [('stat_multi', 'self', [('atk', -1), ('defense', -1)], 1.0)]

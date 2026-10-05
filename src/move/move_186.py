@@ -1,8 +1,10 @@
 from move.base_move import BaseMove
 
 
-# じんつうりき
-class Extrasensory(BaseMove):
+# ゴッドバード
+class SkyAttack(BaseMove):
     def __init__(self):
         super().__init__(id=186)
-        self.effects = [('flinch', 'target', 0.1)]
+        self.effects = [('flinch', 'target', 0.3)]
+        self.high_crit = True
+        self.requires_charge_turn = True

@@ -1,8 +1,11 @@
 from move.base_move import BaseMove
 
 
-# とおぼえ
-class Howl(BaseMove):
+# あなをほる
+class Dig(BaseMove):
     def __init__(self):
         super().__init__(id=234)
-        self.effects = [('stat', 'self', 'atk', 1, 1.0)]
+        self.makes_contact = True
+        self.effects = []
+        self.requires_charge_turn = True
+        self.charge_is_invulnerable = True

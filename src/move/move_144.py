@@ -1,10 +1,8 @@
 from move.base_move import BaseMove
 
 
-# ふいうち
-class Feint(BaseMove):
+# うらみ: 相手が直前に使った技のPPを4減らす
+class Spite(BaseMove):
     def __init__(self):
         super().__init__(id=144)
-        self.makes_contact = True
-        self.effects = []
-        self.priority = 2
+        self.effects = [("spite",)]

@@ -1,9 +1,9 @@
 from move.base_move import BaseMove
 
 
-# ストーンエッジ
-class StoneEdge(BaseMove):
+# むしくい: 相手がきのみを持っていれば、奪って食べてその効果を自分が得る
+class BugBite(BaseMove):
     def __init__(self):
         super().__init__(id=63)
-        self.effects = []
-        self.high_crit = True
+        self.makes_contact = True
+        self.effects = [("eat_berry",)]

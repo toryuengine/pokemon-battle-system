@@ -1,9 +1,9 @@
 from move.base_move import BaseMove
 
 
-# まもる
-class Protect(BaseMove):
+# ドリルくちばし
+class DrillPeck(BaseMove):
     def __init__(self):
         super().__init__(id=65)
-        self.effects = [("protect",)]
-        self.priority = 3
+        self.makes_contact = True
+        self.effects = []

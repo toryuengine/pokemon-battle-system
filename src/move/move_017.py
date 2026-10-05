@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# こわいかお
-class ScaryFace(BaseMove):
+# かみなりパンチ
+class ThunderPunch(BaseMove):
     def __init__(self):
         super().__init__(id=17)
-        self.effects = [('stat', 'target', 'spd', -2, 1.0)]
+        self.makes_contact = True
+        self.effects = [('status', 'target', 'paralysis', 0.1)]

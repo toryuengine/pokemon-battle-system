@@ -1,9 +1,8 @@
 from move.base_move import BaseMove
 
 
-# おどろかす
-class Astonish(BaseMove):
+# じこさいせい
+class Recover(BaseMove):
     def __init__(self):
         super().__init__(id=84)
-        self.makes_contact = True
-        self.effects = [('flinch', 'target', 0.3)]
+        self.effects = [('heal', 0.5)]

@@ -1,11 +1,8 @@
 from move.base_move import BaseMove
 
 
-# にどげり
-class DoubleKick(BaseMove):
+# だくりゅう
+class MuddyWater(BaseMove):
     def __init__(self):
         super().__init__(id=210)
-        self.makes_contact = True
-        self.effects = []
-        self.min_hits = 2
-        self.max_hits = 2
+        self.effects = [("stat", "target", "accuracy", -1, 0.3)]
