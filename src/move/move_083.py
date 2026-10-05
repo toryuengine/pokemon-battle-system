@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# ラスターカノン
-class FlashCannon(BaseMove):
+# はねやすめ
+class Roost(BaseMove):
     def __init__(self):
         super().__init__(id=83)
-        self.effects = [('stat', 'target', 'spdef', -1, 0.1)]
+        self.effects = [('heal', 0.5)]

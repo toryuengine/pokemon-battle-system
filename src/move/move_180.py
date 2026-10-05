@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# たくわえる
-class Stockpile(BaseMove):
+# きあいだま
+class FocusBlast(BaseMove):
     def __init__(self):
         super().__init__(id=180)
-        self.effects = [('stockpile',)]
+        self.effects = [('stat', 'target', 'spdef', -1, 0.1)]

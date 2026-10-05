@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# あくのはどう
-class DarkPulse(BaseMove):
+# アンコール: 相手が直前に使った技を、4〜8ターンの間出し続けさせる
+class Encore(BaseMove):
     def __init__(self):
         super().__init__(id=174)
-        self.effects = [('flinch', 'target', 0.2)]
+        self.effects = [("encore",)]

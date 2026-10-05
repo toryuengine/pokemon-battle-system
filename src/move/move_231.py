@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# うずしお: 当たると相手を2〜5ターン締め付け、毎ターン最大HPの1/16を削る
-class Whirlpool(BaseMove):
+# ついばむ: 相手がきのみを持っていれば、奪って食べてその効果を自分が得る
+class Peck(BaseMove):
     def __init__(self):
         super().__init__(id=231)
-        self.effects = [("bind",)]
+        self.makes_contact = True
+        self.effects = [("eat_berry",)]

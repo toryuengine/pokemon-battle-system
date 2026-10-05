@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# りゅうせいぐん
-class DracoMeteor(BaseMove):
+# かなしばり: 相手が直前に使った技を、4〜7ターンの間使えなくする
+class Disable(BaseMove):
     def __init__(self):
         super().__init__(id=207)
-        self.effects = [('stat', 'self', 'spatk', -2, 1.0)]
+        self.effects = [("disable",)]

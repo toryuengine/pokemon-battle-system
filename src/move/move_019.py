@@ -1,9 +1,10 @@
 from move.base_move import BaseMove
 
 
-# ソーラービーム
-class SolarBeam(BaseMove):
+# でんこうせっか
+class QuickAttack(BaseMove):
     def __init__(self):
         super().__init__(id=19)
+        self.makes_contact = True
         self.effects = []
-        self.requires_charge_turn = True
+        self.priority = 1

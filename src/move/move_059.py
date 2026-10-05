@@ -1,9 +1,8 @@
 from move.base_move import BaseMove
 
 
-# シザークロス
-class XScissor(BaseMove):
+# アクアリング
+class AquaRing(BaseMove):
     def __init__(self):
         super().__init__(id=59)
-        self.makes_contact = True
-        self.effects = []
+        self.effects = [("aqua_ring",)]

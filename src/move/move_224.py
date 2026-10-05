@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# ちいさくなる（第4世代仕様のため回避率+1。第6世代以降は+2）
-class Minimize(BaseMove):
+# トリック: 自分と相手の持ち物を入れ替える
+class Trick(BaseMove):
     def __init__(self):
         super().__init__(id=224)
-        self.effects = [("stat", "self", "evasion", 1, 1.0)]
+        self.effects = [("trick",)]

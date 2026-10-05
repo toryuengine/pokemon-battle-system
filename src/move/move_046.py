@@ -1,9 +1,9 @@
 from move.base_move import BaseMove
 
 
-# ほのおのパンチ
-class FirePunch(BaseMove):
+# しねんのずつき
+class ZenHeadbutt(BaseMove):
     def __init__(self):
         super().__init__(id=46)
         self.makes_contact = True
-        self.effects = [('status', 'target', 'burn', 0.1)]
+        self.effects = [('flinch', 'target', 0.3)]

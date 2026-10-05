@@ -1,8 +1,10 @@
 from move.base_move import BaseMove
 
 
-# だいもんじ
-class FireBlast(BaseMove):
+# つのドリル
+class HornDrill(BaseMove):
     def __init__(self):
         super().__init__(id=222)
-        self.effects = [('status', 'target', 'burn', 0.1)]
+        self.makes_contact = True
+        self.effects = []
+        self.is_ohko = True

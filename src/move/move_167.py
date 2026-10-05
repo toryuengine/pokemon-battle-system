@@ -1,10 +1,8 @@
 from move.base_move import BaseMove
 
 
-# つのドリル
-class HornDrill(BaseMove):
+# リフレクター
+class Reflect(BaseMove):
     def __init__(self):
         super().__init__(id=167)
-        self.makes_contact = True
-        self.effects = []
-        self.is_ohko = True
+        self.effects = [("set_screen", "reflect")]

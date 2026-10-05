@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# ふぶき
-class Blizzard(BaseMove):
+# かみなりのキバ
+class ThunderFang(BaseMove):
     def __init__(self):
         super().__init__(id=82)
-        self.effects = [('status', 'target', 'freeze', 0.1)]
+        self.makes_contact = True
+        self.effects = [('status', 'target', 'paralysis', 0.1), ('flinch', 'target', 0.1)]

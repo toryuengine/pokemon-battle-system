@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# やつあたり
-class Frustration(BaseMove):
+# つつく
+class Peck2(BaseMove):
     def __init__(self):
         super().__init__(id=175)
         self.makes_contact = True

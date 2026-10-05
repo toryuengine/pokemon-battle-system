@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# エアスラッシュ
-class AirSlash(BaseMove):
+# にほんばれ
+class SunnyDay(BaseMove):
     def __init__(self):
         super().__init__(id=15)
-        self.effects = [('flinch', 'target', 0.3)]
+        self.effects = [("set_weather", "sun")]

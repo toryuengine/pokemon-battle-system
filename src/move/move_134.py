@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# まきびし
-class Spikes(BaseMove):
+# あまごい
+class RainDance(BaseMove):
     def __init__(self):
         super().__init__(id=134)
-        self.effects = [("set_hazard", "spikes")]
+        self.effects = [("set_weather", "rain")]

@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# あられ
-class Hail(BaseMove):
+# どくどく: 相手をもうどく状態にする
+class Toxic(BaseMove):
     def __init__(self):
         super().__init__(id=190)
-        self.effects = [("set_weather", "hail")]
+        self.effects = [('status', 'target', 'toxic', 1.0)]

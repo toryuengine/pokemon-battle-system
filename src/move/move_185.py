@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# ハイパーボイス
-class HyperVoice(BaseMove):
+# うたう
+class Sing(BaseMove):
     def __init__(self):
         super().__init__(id=185)
-        self.effects = []
+        self.effects = [('status', 'target', 'sleep', 1.0)]

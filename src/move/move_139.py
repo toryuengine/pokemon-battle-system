@@ -1,9 +1,9 @@
 from move.base_move import BaseMove
 
 
-# はがねのつばさ
-class SteelWing(BaseMove):
+# しんくうは
+class VacuumWave(BaseMove):
     def __init__(self):
         super().__init__(id=139)
-        self.makes_contact = True
-        self.effects = [('stat', 'self', 'defense', 1, 0.1)]
+        self.effects = []
+        self.priority = 1

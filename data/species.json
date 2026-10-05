@@ -1,0 +1,1952 @@
+{
+  "0": {
+    "dex_no": 3,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 80,
+      "atk": 82,
+      "def": 83,
+      "spatk": 100,
+      "spdef": 100,
+      "spd": 80
+    },
+    "legendary": false
+  },
+  "1": {
+    "dex_no": 6,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 78,
+      "atk": 84,
+      "def": 78,
+      "spatk": 109,
+      "spdef": 85,
+      "spd": 100
+    },
+    "legendary": false
+  },
+  "2": {
+    "dex_no": 9,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 79,
+      "atk": 83,
+      "def": 100,
+      "spatk": 85,
+      "spdef": 105,
+      "spd": 78
+    },
+    "legendary": false
+  },
+  "3": {
+    "dex_no": 154,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 80,
+      "atk": 82,
+      "def": 100,
+      "spatk": 83,
+      "spdef": 100,
+      "spd": 80
+    },
+    "legendary": false
+  },
+  "4": {
+    "dex_no": 157,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 78,
+      "atk": 84,
+      "def": 78,
+      "spatk": 109,
+      "spdef": 85,
+      "spd": 100
+    },
+    "legendary": false
+  },
+  "5": {
+    "dex_no": 160,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 85,
+      "atk": 105,
+      "def": 100,
+      "spatk": 79,
+      "spdef": 83,
+      "spd": 78
+    },
+    "legendary": false
+  },
+  "6": {
+    "dex_no": 254,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 70,
+      "atk": 85,
+      "def": 65,
+      "spatk": 105,
+      "spdef": 85,
+      "spd": 120
+    },
+    "legendary": false
+  },
+  "7": {
+    "dex_no": 257,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 80,
+      "atk": 120,
+      "def": 70,
+      "spatk": 110,
+      "spdef": 70,
+      "spd": 80
+    },
+    "legendary": false
+  },
+  "8": {
+    "dex_no": 260,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 100,
+      "atk": 110,
+      "def": 90,
+      "spatk": 85,
+      "spdef": 90,
+      "spd": 60
+    },
+    "legendary": false
+  },
+  "9": {
+    "dex_no": 389,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 95,
+      "atk": 109,
+      "def": 105,
+      "spatk": 75,
+      "spdef": 85,
+      "spd": 56
+    },
+    "legendary": false
+  },
+  "10": {
+    "dex_no": 392,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 76,
+      "atk": 104,
+      "def": 71,
+      "spatk": 104,
+      "spdef": 71,
+      "spd": 108
+    },
+    "legendary": false
+  },
+  "11": {
+    "dex_no": 395,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 84,
+      "atk": 86,
+      "def": 88,
+      "spatk": 111,
+      "spdef": 101,
+      "spd": 60
+    },
+    "legendary": false
+  },
+  "12": {
+    "dex_no": 51,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 35,
+      "atk": 80,
+      "def": 50,
+      "spatk": 50,
+      "spdef": 70,
+      "spd": 120
+    },
+    "legendary": false
+  },
+  "13": {
+    "dex_no": 105,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 60,
+      "atk": 80,
+      "def": 110,
+      "spatk": 50,
+      "spdef": 80,
+      "spd": 45
+    },
+    "legendary": false
+  },
+  "14": {
+    "dex_no": 308,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 60,
+      "atk": 60,
+      "def": 75,
+      "spatk": 60,
+      "spdef": 75,
+      "spd": 80
+    },
+    "legendary": false
+  },
+  "15": {
+    "dex_no": 195,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 95,
+      "atk": 85,
+      "def": 85,
+      "spatk": 65,
+      "spdef": 65,
+      "spd": 35
+    },
+    "legendary": false
+  },
+  "16": {
+    "dex_no": 210,
+    "female_rate": 0.75,
+    "base_stats": {
+      "hp": 90,
+      "atk": 120,
+      "def": 75,
+      "spatk": 60,
+      "spdef": 60,
+      "spd": 45
+    },
+    "legendary": false
+  },
+  "17": {
+    "dex_no": 124,
+    "female_rate": 1.0,
+    "base_stats": {
+      "hp": 65,
+      "atk": 50,
+      "def": 35,
+      "spatk": 115,
+      "spdef": 95,
+      "spd": 95
+    },
+    "legendary": false
+  },
+  "18": {
+    "dex_no": 122,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 40,
+      "atk": 45,
+      "def": 65,
+      "spatk": 100,
+      "spdef": 120,
+      "spd": 90
+    },
+    "legendary": false
+  },
+  "19": {
+    "dex_no": 171,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 125,
+      "atk": 58,
+      "def": 58,
+      "spatk": 76,
+      "spdef": 76,
+      "spd": 67
+    },
+    "legendary": false
+  },
+  "20": {
+    "dex_no": 286,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 60,
+      "atk": 130,
+      "def": 80,
+      "spatk": 60,
+      "spdef": 60,
+      "spd": 70
+    },
+    "legendary": false
+  },
+  "21": {
+    "dex_no": 205,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 75,
+      "atk": 90,
+      "def": 140,
+      "spatk": 60,
+      "spdef": 60,
+      "spd": 40
+    },
+    "legendary": false
+  },
+  "22": {
+    "dex_no": 227,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 65,
+      "atk": 80,
+      "def": 140,
+      "spatk": 40,
+      "spdef": 70,
+      "spd": 70
+    },
+    "legendary": false
+  },
+  "23": {
+    "dex_no": 359,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 65,
+      "atk": 130,
+      "def": 60,
+      "spatk": 75,
+      "spdef": 60,
+      "spd": 75
+    },
+    "legendary": false
+  },
+  "24": {
+    "dex_no": 340,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 110,
+      "atk": 78,
+      "def": 73,
+      "spatk": 76,
+      "spdef": 71,
+      "spd": 60
+    },
+    "legendary": false
+  },
+  "25": {
+    "dex_no": 297,
+    "female_rate": 0.25,
+    "base_stats": {
+      "hp": 144,
+      "atk": 120,
+      "def": 60,
+      "spatk": 40,
+      "spdef": 60,
+      "spd": 50
+    },
+    "legendary": false
+  },
+  "26": {
+    "dex_no": 416,
+    "female_rate": 1.0,
+    "base_stats": {
+      "hp": 70,
+      "atk": 80,
+      "def": 102,
+      "spatk": 80,
+      "spdef": 102,
+      "spd": 40
+    },
+    "legendary": false
+  },
+  "27": {
+    "dex_no": 26,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 60,
+      "atk": 90,
+      "def": 55,
+      "spatk": 90,
+      "spdef": 80,
+      "spd": 100
+    },
+    "legendary": false
+  },
+  "28": {
+    "dex_no": 87,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 90,
+      "atk": 70,
+      "def": 80,
+      "spatk": 70,
+      "spdef": 95,
+      "spd": 70
+    },
+    "legendary": false
+  },
+  "29": {
+    "dex_no": 310,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 70,
+      "atk": 75,
+      "def": 60,
+      "spatk": 105,
+      "spdef": 60,
+      "spd": 105
+    },
+    "legendary": false
+  },
+  "30": {
+    "dex_no": 398,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 85,
+      "atk": 120,
+      "def": 70,
+      "spatk": 50,
+      "spdef": 50,
+      "spd": 100
+    },
+    "legendary": false
+  },
+  "31": {
+    "dex_no": 423,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 111,
+      "atk": 83,
+      "def": 68,
+      "spatk": 92,
+      "spdef": 82,
+      "spd": 39
+    },
+    "legendary": false
+  },
+  "32": {
+    "dex_no": 435,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 103,
+      "atk": 93,
+      "def": 67,
+      "spatk": 71,
+      "spdef": 61,
+      "spd": 84
+    },
+    "legendary": false
+  },
+  "33": {
+    "dex_no": 45,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 75,
+      "atk": 80,
+      "def": 85,
+      "spatk": 100,
+      "spdef": 90,
+      "spd": 50
+    },
+    "legendary": false
+  },
+  "34": {
+    "dex_no": 71,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 80,
+      "atk": 105,
+      "def": 65,
+      "spatk": 100,
+      "spdef": 60,
+      "spd": 70
+    },
+    "legendary": false
+  },
+  "35": {
+    "dex_no": 101,
+    "female_rate": null,
+    "base_stats": {
+      "hp": 60,
+      "atk": 50,
+      "def": 70,
+      "spatk": 80,
+      "spdef": 80,
+      "spd": 140
+    },
+    "legendary": false
+  },
+  "36": {
+    "dex_no": 272,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 80,
+      "atk": 70,
+      "def": 70,
+      "spatk": 90,
+      "spdef": 100,
+      "spd": 70
+    },
+    "legendary": false
+  },
+  "37": {
+    "dex_no": 275,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 90,
+      "atk": 100,
+      "def": 60,
+      "spatk": 90,
+      "spdef": 60,
+      "spd": 80
+    },
+    "legendary": false
+  },
+  "38": {
+    "dex_no": 295,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 104,
+      "atk": 91,
+      "def": 63,
+      "spatk": 91,
+      "spdef": 63,
+      "spd": 68
+    },
+    "legendary": false
+  },
+  "39": {
+    "dex_no": 362,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 80,
+      "atk": 80,
+      "def": 80,
+      "spatk": 80,
+      "spdef": 80,
+      "spd": 80
+    },
+    "legendary": false
+  },
+  "40": {
+    "dex_no": 428,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 65,
+      "atk": 76,
+      "def": 84,
+      "spatk": 54,
+      "spdef": 96,
+      "spd": 105
+    },
+    "legendary": false
+  },
+  "41": {
+    "dex_no": 478,
+    "female_rate": 1.0,
+    "base_stats": {
+      "hp": 70,
+      "atk": 80,
+      "def": 70,
+      "spatk": 80,
+      "spdef": 70,
+      "spd": 110
+    },
+    "legendary": false
+  },
+  "42": {
+    "dex_no": 424,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 75,
+      "atk": 100,
+      "def": 66,
+      "spatk": 60,
+      "spdef": 66,
+      "spd": 115
+    },
+    "legendary": false
+  },
+  "43": {
+    "dex_no": 97,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 85,
+      "atk": 73,
+      "def": 70,
+      "spatk": 73,
+      "spdef": 115,
+      "spd": 67
+    },
+    "legendary": false
+  },
+  "44": {
+    "dex_no": 76,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 80,
+      "atk": 110,
+      "def": 130,
+      "spatk": 55,
+      "spdef": 65,
+      "spd": 45
+    },
+    "legendary": false
+  },
+  "45": {
+    "dex_no": 112,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 105,
+      "atk": 130,
+      "def": 120,
+      "spatk": 45,
+      "spdef": 45,
+      "spd": 40
+    },
+    "legendary": false
+  },
+  "46": {
+    "dex_no": 80,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 95,
+      "atk": 75,
+      "def": 110,
+      "spatk": 100,
+      "spdef": 80,
+      "spd": 30
+    },
+    "legendary": false
+  },
+  "47": {
+    "dex_no": 110,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 65,
+      "atk": 90,
+      "def": 120,
+      "spatk": 85,
+      "spdef": 70,
+      "spd": 60
+    },
+    "legendary": false
+  },
+  "48": {
+    "dex_no": 115,
+    "female_rate": 1.0,
+    "base_stats": {
+      "hp": 105,
+      "atk": 95,
+      "def": 80,
+      "spatk": 40,
+      "spdef": 80,
+      "spd": 90
+    },
+    "legendary": false
+  },
+  "49": {
+    "dex_no": 128,
+    "female_rate": 0.0,
+    "base_stats": {
+      "hp": 75,
+      "atk": 100,
+      "def": 95,
+      "spatk": 40,
+      "spdef": 70,
+      "spd": 110
+    },
+    "legendary": false
+  },
+  "50": {
+    "dex_no": 65,
+    "female_rate": 0.25,
+    "base_stats": {
+      "hp": 55,
+      "atk": 50,
+      "def": 45,
+      "spatk": 135,
+      "spdef": 85,
+      "spd": 120
+    },
+    "legendary": false
+  },
+  "51": {
+    "dex_no": 199,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 95,
+      "atk": 75,
+      "def": 80,
+      "spatk": 100,
+      "spdef": 110,
+      "spd": 30
+    },
+    "legendary": false
+  },
+  "52": {
+    "dex_no": 241,
+    "female_rate": 1.0,
+    "base_stats": {
+      "hp": 95,
+      "atk": 80,
+      "def": 105,
+      "spatk": 40,
+      "spdef": 70,
+      "spd": 100
+    },
+    "legendary": false
+  },
+  "53": {
+    "dex_no": 334,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 75,
+      "atk": 70,
+      "def": 90,
+      "spatk": 70,
+      "spdef": 105,
+      "spd": 80
+    },
+    "legendary": false
+  },
+  "54": {
+    "dex_no": 454,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 83,
+      "atk": 106,
+      "def": 65,
+      "spatk": 86,
+      "spdef": 65,
+      "spd": 85
+    },
+    "legendary": false
+  },
+  "55": {
+    "dex_no": 460,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 90,
+      "atk": 92,
+      "def": 75,
+      "spatk": 92,
+      "spdef": 85,
+      "spd": 60
+    },
+    "legendary": false
+  },
+  "56": {
+    "dex_no": 31,
+    "female_rate": 1.0,
+    "base_stats": {
+      "hp": 90,
+      "atk": 82,
+      "def": 87,
+      "spatk": 75,
+      "spdef": 85,
+      "spd": 76
+    },
+    "legendary": false
+  },
+  "57": {
+    "dex_no": 34,
+    "female_rate": 0.0,
+    "base_stats": {
+      "hp": 81,
+      "atk": 92,
+      "def": 77,
+      "spatk": 85,
+      "spdef": 75,
+      "spd": 85
+    },
+    "legendary": false
+  },
+  "58": {
+    "dex_no": 346,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 86,
+      "atk": 81,
+      "def": 97,
+      "spatk": 81,
+      "spdef": 107,
+      "spd": 43
+    },
+    "legendary": false
+  },
+  "59": {
+    "dex_no": 348,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 75,
+      "atk": 125,
+      "def": 100,
+      "spatk": 70,
+      "spdef": 80,
+      "spd": 45
+    },
+    "legendary": false
+  },
+  "60": {
+    "dex_no": 411,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 60,
+      "atk": 52,
+      "def": 168,
+      "spatk": 47,
+      "spdef": 138,
+      "spd": 30
+    },
+    "legendary": false
+  },
+  "61": {
+    "dex_no": 419,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 85,
+      "atk": 105,
+      "def": 55,
+      "spatk": 85,
+      "spdef": 50,
+      "spd": 115
+    },
+    "legendary": false
+  },
+  "62": {
+    "dex_no": 429,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 60,
+      "atk": 60,
+      "def": 60,
+      "spatk": 105,
+      "spdef": 105,
+      "spd": 105
+    },
+    "legendary": false
+  },
+  "63": {
+    "dex_no": 426,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 150,
+      "atk": 80,
+      "def": 44,
+      "spatk": 90,
+      "spdef": 54,
+      "spd": 80
+    },
+    "legendary": false
+  },
+  "64": {
+    "dex_no": 55,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 80,
+      "atk": 82,
+      "def": 78,
+      "spatk": 95,
+      "spdef": 80,
+      "spd": 85
+    },
+    "legendary": false
+  },
+  "65": {
+    "dex_no": 62,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 90,
+      "atk": 85,
+      "def": 95,
+      "spatk": 70,
+      "spdef": 90,
+      "spd": 70
+    },
+    "legendary": false
+  },
+  "66": {
+    "dex_no": 78,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 65,
+      "atk": 100,
+      "def": 70,
+      "spatk": 80,
+      "spdef": 80,
+      "spd": 105
+    },
+    "legendary": false
+  },
+  "67": {
+    "dex_no": 89,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 105,
+      "atk": 105,
+      "def": 75,
+      "spatk": 65,
+      "spdef": 100,
+      "spd": 50
+    },
+    "legendary": false
+  },
+  "68": {
+    "dex_no": 94,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 60,
+      "atk": 65,
+      "def": 60,
+      "spatk": 130,
+      "spdef": 75,
+      "spd": 110
+    },
+    "legendary": false
+  },
+  "69": {
+    "dex_no": 181,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 90,
+      "atk": 75,
+      "def": 75,
+      "spatk": 115,
+      "spdef": 90,
+      "spd": 55
+    },
+    "legendary": false
+  },
+  "70": {
+    "dex_no": 186,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 90,
+      "atk": 75,
+      "def": 75,
+      "spatk": 90,
+      "spdef": 100,
+      "spd": 70
+    },
+    "legendary": false
+  },
+  "71": {
+    "dex_no": 127,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 65,
+      "atk": 125,
+      "def": 100,
+      "spatk": 55,
+      "spdef": 70,
+      "spd": 85
+    },
+    "legendary": false
+  },
+  "72": {
+    "dex_no": 212,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 70,
+      "atk": 130,
+      "def": 100,
+      "spatk": 55,
+      "spdef": 80,
+      "spd": 65
+    },
+    "legendary": false
+  },
+  "73": {
+    "dex_no": 214,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 80,
+      "atk": 125,
+      "def": 75,
+      "spatk": 40,
+      "spdef": 95,
+      "spd": 85
+    },
+    "legendary": false
+  },
+  "74": {
+    "dex_no": 217,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 90,
+      "atk": 130,
+      "def": 75,
+      "spatk": 75,
+      "spdef": 75,
+      "spd": 55
+    },
+    "legendary": false
+  },
+  "75": {
+    "dex_no": 229,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 75,
+      "atk": 90,
+      "def": 50,
+      "spatk": 110,
+      "spdef": 80,
+      "spd": 95
+    },
+    "legendary": false
+  },
+  "76": {
+    "dex_no": 232,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 90,
+      "atk": 120,
+      "def": 120,
+      "spatk": 60,
+      "spdef": 60,
+      "spd": 50
+    },
+    "legendary": false
+  },
+  "77": {
+    "dex_no": 321,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 170,
+      "atk": 90,
+      "def": 45,
+      "spatk": 90,
+      "spdef": 45,
+      "spd": 60
+    },
+    "legendary": false
+  },
+  "78": {
+    "dex_no": 344,
+    "female_rate": null,
+    "base_stats": {
+      "hp": 60,
+      "atk": 70,
+      "def": 105,
+      "spatk": 70,
+      "spdef": 120,
+      "spd": 75
+    },
+    "legendary": false
+  },
+  "79": {
+    "dex_no": 409,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 97,
+      "atk": 165,
+      "def": 60,
+      "spatk": 65,
+      "spdef": 50,
+      "spd": 58
+    },
+    "legendary": false
+  },
+  "80": {
+    "dex_no": 437,
+    "female_rate": null,
+    "base_stats": {
+      "hp": 67,
+      "atk": 89,
+      "def": 116,
+      "spatk": 79,
+      "spdef": 116,
+      "spd": 33
+    },
+    "legendary": false
+  },
+  "81": {
+    "dex_no": 452,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 70,
+      "atk": 90,
+      "def": 110,
+      "spatk": 60,
+      "spdef": 75,
+      "spd": 95
+    },
+    "legendary": false
+  },
+  "82": {
+    "dex_no": 405,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 80,
+      "atk": 120,
+      "def": 79,
+      "spatk": 95,
+      "spdef": 79,
+      "spd": 70
+    },
+    "legendary": false
+  },
+  "83": {
+    "dex_no": 38,
+    "female_rate": 0.75,
+    "base_stats": {
+      "hp": 73,
+      "atk": 76,
+      "def": 75,
+      "spatk": 81,
+      "spdef": 100,
+      "spd": 100
+    },
+    "legendary": false
+  },
+  "84": {
+    "dex_no": 68,
+    "female_rate": 0.25,
+    "base_stats": {
+      "hp": 90,
+      "atk": 130,
+      "def": 80,
+      "spatk": 65,
+      "spdef": 85,
+      "spd": 55
+    },
+    "legendary": false
+  },
+  "85": {
+    "dex_no": 213,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 20,
+      "atk": 10,
+      "def": 230,
+      "spatk": 10,
+      "spdef": 230,
+      "spd": 5
+    },
+    "legendary": false
+  },
+  "86": {
+    "dex_no": 407,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 60,
+      "atk": 70,
+      "def": 55,
+      "spatk": 125,
+      "spdef": 105,
+      "spd": 90
+    },
+    "legendary": false
+  },
+  "87": {
+    "dex_no": 430,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 100,
+      "atk": 125,
+      "def": 52,
+      "spatk": 105,
+      "spdef": 52,
+      "spd": 71
+    },
+    "legendary": false
+  },
+  "88": {
+    "dex_no": 208,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 75,
+      "atk": 85,
+      "def": 200,
+      "spatk": 55,
+      "spdef": 65,
+      "spd": 30
+    },
+    "legendary": false
+  },
+  "89": {
+    "dex_no": 461,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 70,
+      "atk": 120,
+      "def": 65,
+      "spatk": 45,
+      "spdef": 85,
+      "spd": 125
+    },
+    "legendary": false
+  },
+  "90": {
+    "dex_no": 472,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 75,
+      "atk": 95,
+      "def": 125,
+      "spatk": 45,
+      "spdef": 75,
+      "spd": 95
+    },
+    "legendary": false
+  },
+  "91": {
+    "dex_no": 73,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 80,
+      "atk": 70,
+      "def": 65,
+      "spatk": 80,
+      "spdef": 120,
+      "spd": 100
+    },
+    "legendary": false
+  },
+  "92": {
+    "dex_no": 142,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 80,
+      "atk": 105,
+      "def": 65,
+      "spatk": 60,
+      "spdef": 75,
+      "spd": 130
+    },
+    "legendary": false
+  },
+  "93": {
+    "dex_no": 233,
+    "female_rate": null,
+    "base_stats": {
+      "hp": 85,
+      "atk": 80,
+      "def": 90,
+      "spatk": 105,
+      "spdef": 95,
+      "spd": 60
+    },
+    "legendary": false
+  },
+  "94": {
+    "dex_no": 463,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 110,
+      "atk": 85,
+      "def": 95,
+      "spatk": 80,
+      "spdef": 95,
+      "spd": 50
+    },
+    "legendary": false
+  },
+  "95": {
+    "dex_no": 469,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 86,
+      "atk": 76,
+      "def": 86,
+      "spatk": 116,
+      "spdef": 56,
+      "spd": 95
+    },
+    "legendary": false
+  },
+  "96": {
+    "dex_no": 282,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 68,
+      "atk": 65,
+      "def": 65,
+      "spatk": 125,
+      "spdef": 115,
+      "spd": 80
+    },
+    "legendary": false
+  },
+  "97": {
+    "dex_no": 475,
+    "female_rate": 0.0,
+    "base_stats": {
+      "hp": 68,
+      "atk": 125,
+      "def": 65,
+      "spatk": 65,
+      "spdef": 115,
+      "spd": 80
+    },
+    "legendary": false
+  },
+  "98": {
+    "dex_no": 103,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 95,
+      "atk": 95,
+      "def": 85,
+      "spatk": 125,
+      "spdef": 65,
+      "spd": 55
+    },
+    "legendary": false
+  },
+  "99": {
+    "dex_no": 121,
+    "female_rate": null,
+    "base_stats": {
+      "hp": 60,
+      "atk": 75,
+      "def": 85,
+      "spatk": 100,
+      "spdef": 85,
+      "spd": 115
+    },
+    "legendary": false
+  },
+  "100": {
+    "dex_no": 330,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 80,
+      "atk": 100,
+      "def": 80,
+      "spatk": 80,
+      "spdef": 80,
+      "spd": 100
+    },
+    "legendary": false
+  },
+  "101": {
+    "dex_no": 134,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 130,
+      "atk": 65,
+      "def": 60,
+      "spatk": 110,
+      "spdef": 95,
+      "spd": 65
+    },
+    "legendary": false
+  },
+  "102": {
+    "dex_no": 135,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 65,
+      "atk": 65,
+      "def": 60,
+      "spatk": 110,
+      "spdef": 95,
+      "spd": 130
+    },
+    "legendary": false
+  },
+  "103": {
+    "dex_no": 136,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 65,
+      "atk": 130,
+      "def": 60,
+      "spatk": 95,
+      "spdef": 110,
+      "spd": 65
+    },
+    "legendary": false
+  },
+  "104": {
+    "dex_no": 196,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 65,
+      "atk": 65,
+      "def": 60,
+      "spatk": 130,
+      "spdef": 95,
+      "spd": 110
+    },
+    "legendary": false
+  },
+  "105": {
+    "dex_no": 197,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 95,
+      "atk": 65,
+      "def": 110,
+      "spatk": 60,
+      "spdef": 130,
+      "spd": 65
+    },
+    "legendary": false
+  },
+  "106": {
+    "dex_no": 470,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 65,
+      "atk": 110,
+      "def": 130,
+      "spatk": 60,
+      "spdef": 65,
+      "spd": 95
+    },
+    "legendary": false
+  },
+  "107": {
+    "dex_no": 471,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 65,
+      "atk": 60,
+      "def": 110,
+      "spatk": 130,
+      "spdef": 95,
+      "spd": 65
+    },
+    "legendary": false
+  },
+  "108": {
+    "dex_no": 448,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 70,
+      "atk": 110,
+      "def": 70,
+      "spatk": 115,
+      "spdef": 70,
+      "spd": 90
+    },
+    "legendary": false
+  },
+  "109": {
+    "dex_no": 450,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 108,
+      "atk": 112,
+      "def": 118,
+      "spatk": 68,
+      "spdef": 72,
+      "spd": 47
+    },
+    "legendary": false
+  },
+  "110": {
+    "dex_no": 476,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 60,
+      "atk": 55,
+      "def": 145,
+      "spatk": 75,
+      "spdef": 150,
+      "spd": 40
+    },
+    "legendary": false
+  },
+  "111": {
+    "dex_no": 477,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 45,
+      "atk": 100,
+      "def": 135,
+      "spatk": 65,
+      "spdef": 135,
+      "spd": 45
+    },
+    "legendary": false
+  },
+  "112": {
+    "dex_no": 306,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 70,
+      "atk": 110,
+      "def": 180,
+      "spatk": 60,
+      "spdef": 60,
+      "spd": 50
+    },
+    "legendary": false
+  },
+  "113": {
+    "dex_no": 365,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 110,
+      "atk": 80,
+      "def": 90,
+      "spatk": 95,
+      "spdef": 90,
+      "spd": 65
+    },
+    "legendary": false
+  },
+  "114": {
+    "dex_no": 473,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 110,
+      "atk": 130,
+      "def": 80,
+      "spatk": 70,
+      "spdef": 60,
+      "spd": 80
+    },
+    "legendary": false
+  },
+  "115": {
+    "dex_no": 131,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 130,
+      "atk": 85,
+      "def": 80,
+      "spatk": 85,
+      "spdef": 95,
+      "spd": 60
+    },
+    "legendary": false
+  },
+  "116": {
+    "dex_no": 169,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 85,
+      "atk": 90,
+      "def": 80,
+      "spatk": 70,
+      "spdef": 80,
+      "spd": 130
+    },
+    "legendary": false
+  },
+  "117": {
+    "dex_no": 462,
+    "female_rate": null,
+    "base_stats": {
+      "hp": 70,
+      "atk": 70,
+      "def": 115,
+      "spatk": 130,
+      "spdef": 90,
+      "spd": 60
+    },
+    "legendary": false
+  },
+  "118": {
+    "dex_no": 464,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 115,
+      "atk": 140,
+      "def": 130,
+      "spatk": 55,
+      "spdef": 55,
+      "spd": 40
+    },
+    "legendary": false
+  },
+  "119": {
+    "dex_no": 465,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 100,
+      "atk": 100,
+      "def": 125,
+      "spatk": 110,
+      "spdef": 50,
+      "spd": 50
+    },
+    "legendary": false
+  },
+  "120": {
+    "dex_no": 474,
+    "female_rate": null,
+    "base_stats": {
+      "hp": 85,
+      "atk": 80,
+      "def": 70,
+      "spatk": 135,
+      "spdef": 75,
+      "spd": 90
+    },
+    "legendary": false
+  },
+  "121": {
+    "dex_no": 130,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 95,
+      "atk": 125,
+      "def": 79,
+      "spatk": 60,
+      "spdef": 100,
+      "spd": 81
+    },
+    "legendary": false
+  },
+  "122": {
+    "dex_no": 143,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 160,
+      "atk": 110,
+      "def": 65,
+      "spatk": 65,
+      "spdef": 110,
+      "spd": 30
+    },
+    "legendary": false
+  },
+  "123": {
+    "dex_no": 230,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 75,
+      "atk": 95,
+      "def": 95,
+      "spatk": 95,
+      "spdef": 95,
+      "spd": 85
+    },
+    "legendary": false
+  },
+  "124": {
+    "dex_no": 242,
+    "female_rate": 1.0,
+    "base_stats": {
+      "hp": 255,
+      "atk": 10,
+      "def": 10,
+      "spatk": 75,
+      "spdef": 135,
+      "spd": 55
+    },
+    "legendary": false
+  },
+  "125": {
+    "dex_no": 350,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 95,
+      "atk": 60,
+      "def": 79,
+      "spatk": 100,
+      "spdef": 125,
+      "spd": 81
+    },
+    "legendary": false
+  },
+  "126": {
+    "dex_no": 466,
+    "female_rate": 0.25,
+    "base_stats": {
+      "hp": 75,
+      "atk": 123,
+      "def": 67,
+      "spatk": 95,
+      "spdef": 85,
+      "spd": 95
+    },
+    "legendary": false
+  },
+  "127": {
+    "dex_no": 467,
+    "female_rate": 0.25,
+    "base_stats": {
+      "hp": 75,
+      "atk": 95,
+      "def": 67,
+      "spatk": 125,
+      "spdef": 95,
+      "spd": 83
+    },
+    "legendary": false
+  },
+  "128": {
+    "dex_no": 468,
+    "female_rate": 0.125,
+    "base_stats": {
+      "hp": 85,
+      "atk": 50,
+      "def": 95,
+      "spatk": 120,
+      "spdef": 115,
+      "spd": 80
+    },
+    "legendary": false
+  },
+  "129": {
+    "dex_no": 59,
+    "female_rate": 0.25,
+    "base_stats": {
+      "hp": 90,
+      "atk": 110,
+      "def": 80,
+      "spatk": 100,
+      "spdef": 80,
+      "spd": 95
+    },
+    "legendary": false
+  },
+  "130": {
+    "dex_no": 149,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 91,
+      "atk": 134,
+      "def": 95,
+      "spatk": 100,
+      "spdef": 100,
+      "spd": 80
+    },
+    "legendary": false
+  },
+  "131": {
+    "dex_no": 248,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 100,
+      "atk": 134,
+      "def": 110,
+      "spatk": 95,
+      "spdef": 100,
+      "spd": 61
+    },
+    "legendary": false
+  },
+  "132": {
+    "dex_no": 373,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 95,
+      "atk": 135,
+      "def": 80,
+      "spatk": 110,
+      "spdef": 80,
+      "spd": 100
+    },
+    "legendary": false
+  },
+  "133": {
+    "dex_no": 376,
+    "female_rate": null,
+    "base_stats": {
+      "hp": 80,
+      "atk": 135,
+      "def": 130,
+      "spatk": 95,
+      "spdef": 90,
+      "spd": 70
+    },
+    "legendary": false
+  },
+  "134": {
+    "dex_no": 445,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 108,
+      "atk": 130,
+      "def": 95,
+      "spatk": 80,
+      "spdef": 85,
+      "spd": 102
+    },
+    "legendary": false
+  },
+  "135": {
+    "dex_no": 289,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 150,
+      "atk": 160,
+      "def": 100,
+      "spatk": 95,
+      "spdef": 65,
+      "spd": 100
+    },
+    "legendary": false
+  },
+  "136": {
+    "dex_no": 144,
+    "female_rate": null,
+    "base_stats": {
+      "hp": 90,
+      "atk": 85,
+      "def": 100,
+      "spatk": 95,
+      "spdef": 125,
+      "spd": 85
+    },
+    "legendary": true
+  },
+  "137": {
+    "dex_no": 145,
+    "female_rate": null,
+    "base_stats": {
+      "hp": 90,
+      "atk": 90,
+      "def": 85,
+      "spatk": 125,
+      "spdef": 90,
+      "spd": 100
+    },
+    "legendary": true
+  },
+  "138": {
+    "dex_no": 146,
+    "female_rate": null,
+    "base_stats": {
+      "hp": 90,
+      "atk": 100,
+      "def": 90,
+      "spatk": 125,
+      "spdef": 85,
+      "spd": 90
+    },
+    "legendary": true
+  },
+  "139": {
+    "dex_no": 243,
+    "female_rate": null,
+    "base_stats": {
+      "hp": 90,
+      "atk": 85,
+      "def": 75,
+      "spatk": 115,
+      "spdef": 100,
+      "spd": 115
+    },
+    "legendary": true
+  },
+  "140": {
+    "dex_no": 244,
+    "female_rate": null,
+    "base_stats": {
+      "hp": 115,
+      "atk": 115,
+      "def": 85,
+      "spatk": 90,
+      "spdef": 75,
+      "spd": 100
+    },
+    "legendary": true
+  },
+  "141": {
+    "dex_no": 245,
+    "female_rate": null,
+    "base_stats": {
+      "hp": 100,
+      "atk": 75,
+      "def": 115,
+      "spatk": 90,
+      "spdef": 115,
+      "spd": 85
+    },
+    "legendary": true
+  },
+  "142": {
+    "dex_no": 377,
+    "female_rate": null,
+    "base_stats": {
+      "hp": 80,
+      "atk": 100,
+      "def": 200,
+      "spatk": 50,
+      "spdef": 100,
+      "spd": 50
+    },
+    "legendary": true
+  },
+  "143": {
+    "dex_no": 378,
+    "female_rate": null,
+    "base_stats": {
+      "hp": 80,
+      "atk": 50,
+      "def": 100,
+      "spatk": 100,
+      "spdef": 200,
+      "spd": 50
+    },
+    "legendary": true
+  },
+  "144": {
+    "dex_no": 379,
+    "female_rate": null,
+    "base_stats": {
+      "hp": 80,
+      "atk": 75,
+      "def": 150,
+      "spatk": 75,
+      "spdef": 150,
+      "spd": 50
+    },
+    "legendary": true
+  },
+  "145": {
+    "dex_no": 380,
+    "female_rate": 1.0,
+    "base_stats": {
+      "hp": 80,
+      "atk": 80,
+      "def": 90,
+      "spatk": 110,
+      "spdef": 130,
+      "spd": 110
+    },
+    "legendary": true
+  },
+  "146": {
+    "dex_no": 381,
+    "female_rate": 0.0,
+    "base_stats": {
+      "hp": 80,
+      "atk": 90,
+      "def": 80,
+      "spatk": 130,
+      "spdef": 110,
+      "spd": 110
+    },
+    "legendary": true
+  },
+  "147": {
+    "dex_no": 485,
+    "female_rate": 0.5,
+    "base_stats": {
+      "hp": 91,
+      "atk": 90,
+      "def": 106,
+      "spatk": 130,
+      "spdef": 106,
+      "spd": 77
+    },
+    "legendary": true
+  },
+  "148": {
+    "dex_no": 488,
+    "female_rate": 1.0,
+    "base_stats": {
+      "hp": 120,
+      "atk": 70,
+      "def": 120,
+      "spatk": 75,
+      "spdef": 130,
+      "spd": 85
+    },
+    "legendary": true
+  },
+  "149": {
+    "dex_no": 486,
+    "female_rate": null,
+    "base_stats": {
+      "hp": 110,
+      "atk": 160,
+      "def": 110,
+      "spatk": 80,
+      "spdef": 110,
+      "spd": 100
+    },
+    "legendary": true
+  }
+}

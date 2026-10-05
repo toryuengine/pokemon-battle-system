@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# うたう
-class Sing(BaseMove):
+# かいふくしれい
+class HealOrder(BaseMove):
     def __init__(self):
         super().__init__(id=204)
-        self.effects = [('status', 'target', 'sleep', 1.0)]
+        self.effects = [('heal', 0.5)]

@@ -32,6 +32,10 @@ NATURES = {
     "きまぐれ": (None, None),
 }
 
+# 性格ID → 性格名。データ（pokemon_<周>.jsonの"nature"）は性格を本編の性格ID（がんばりや=0〜きまぐれ=24）で持っていて、
+# NATURESはその順に並べてある
+NATURE_NAMES = list(NATURES)
+
 
 # 上昇・下降する能力の組から性格名を引く（無補正ならNoneを返す。無補正の5種は実数値から区別できないため）
 def find_nature(up, down):

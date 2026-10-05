@@ -1,9 +1,8 @@
 from move.base_move import BaseMove
 
 
-# すてみタックル
-class TakeDown(BaseMove):
+# バトンタッチ: 能力ランク等を引き継いで、手持ちの次の1体に交代する
+class BatonPass(BaseMove):
     def __init__(self):
         super().__init__(id=138)
-        self.makes_contact = True
-        self.effects = [('recoil', 0.3333333333333333)]
+        self.effects = [("baton_pass",)]

@@ -1,9 +1,9 @@
 from move.base_move import BaseMove
 
 
-# アイアンヘッド
-class IronHead(BaseMove):
+# はっぱカッター
+class RazorLeaf(BaseMove):
     def __init__(self):
         super().__init__(id=93)
-        self.makes_contact = True
-        self.effects = [('flinch', 'target', 0.3)]
+        self.effects = []
+        self.high_crit = True

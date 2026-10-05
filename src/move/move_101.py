@@ -1,9 +1,8 @@
 from move.base_move import BaseMove
 
 
-# サイコカッター
-class PsychoCut(BaseMove):
+# いちゃもん: 相手が同じ技を2回続けて出せなくする
+class Torment(BaseMove):
     def __init__(self):
         super().__init__(id=101)
-        self.effects = []
-        self.high_crit = True
+        self.effects = [("torment",)]

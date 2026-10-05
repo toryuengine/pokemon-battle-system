@@ -1,9 +1,8 @@
 from move.base_move import BaseMove
 
 
-# つばめがえし
-class AerialAce(BaseMove):
+# れいとうビーム
+class IceBeam(BaseMove):
     def __init__(self):
         super().__init__(id=52)
-        self.makes_contact = True
-        self.effects = []
+        self.effects = [('status', 'target', 'freeze', 0.1)]

@@ -1,8 +1,10 @@
 from move.base_move import BaseMove
 
 
-# うそなき
-class FakeTears(BaseMove):
+# トリックルーム
+class TrickRoom(BaseMove):
     def __init__(self):
         super().__init__(id=111)
-        self.effects = [('stat', 'target', 'spdef', -2, 1.0)]
+        self.effects = [("trick_room",)]
+        # 後攻技（優先度-7）
+        self.priority = -7

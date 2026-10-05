@@ -1,9 +1,9 @@
 from move.base_move import BaseMove
 
 
-# ハイドロカノン
-class HydroCannon(BaseMove):
+# かわらわり
+class BrickBreak(BaseMove):
     def __init__(self):
         super().__init__(id=39)
+        self.makes_contact = True
         self.effects = []
-        self.requires_recharge = True
