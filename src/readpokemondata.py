@@ -11,6 +11,7 @@ _type_data = None
 _type_chart_data = None
 _ability_data = None
 _item_data = None
+_base_stats_data = None
 
 
 def _load_json(path):
@@ -30,7 +31,7 @@ def load_round_pokemon_data(round_index: int):
 
 # 全種族・全セットをまとめたデータ（Pokemon(pokemon_id, indivisual_id)はこのリストの位置で指定する）
 # 周ごとのファイルにはセットしか入っていないので、種族名(pokemon_name.json)と種族ごとの情報(species.json:
-# 種族値・図鑑番号・メスになる確率・伝説か)を合わせ、全周のセットを重複なく並べ直す。
+# 図鑑番号・メスになる確率・伝説か)、種族値(base_stats.json。図鑑番号で引く)を合わせ、全周のセットを重複なく並べ直す。
 # セットの並びは「初めて出てくる周の順」（1周目のセットが0番目、2周目で増えたセットが1番目…）
 def load_pokemon_data():
     global _pokemon_data
@@ -56,6 +57,7 @@ def _build_pokemon_data():
     global _round_pools
     names = _load_json(DATA_DIR / "pokemon_name.json")
     species = _load_json(DATA_DIR / "species.json")
+    base_stats = load_base_stats_data()
 
     entries = [None] * len(names)
     set_index = [dict() for _ in names]
@@ -74,6 +76,11 @@ def _build_pokemon_data():
                     **species[str(pokemon_id)],
                     "indivisual": [],
                 }
+                dex_entry = base_stats[str(entry["dex_no"])]
+                # 種族値表(CSV由来)と周ごとのファイルで、種族名・タイプが食い違っていないか
+                assert (dex_entry["name"], dex_entry["type1"], dex_entry["type2"]) == \
+                    (entry["name"], entry["type1"], entry["type2"]), entry["name"]
+                entry["base_stats"] = dex_entry["base_stats"]
                 entries[pokemon_id] = entry
             # 種族の情報はどの周のファイルでも同じはず
             assert (raw["type1"], raw["type2"], raw["ability"]) == (entry["type1"], entry["type2"], entry["ability"]), entry["name"]
@@ -89,6 +96,15 @@ def _build_pokemon_data():
     assert not missing, f"どの周にも出てこない種族があります: {missing}"
     _round_pools = rounds
     return entries
+
+
+# 図鑑番号（文字列）→ 種族名・タイプ・種族値（第4世代の全493種。data/base_stats.csvから tools/build_base_stats.py で作る）
+# ファクトリーに出てこない種族も入っている（グループ1のデータを足すときなどに使う）
+def load_base_stats_data(path=DATA_DIR / "base_stats.json"):
+    global _base_stats_data
+    if _base_stats_data is None:
+        _base_stats_data = _load_json(path)
+    return _base_stats_data
 
 
 def load_move_data(path=DATA_DIR / "move.json"):

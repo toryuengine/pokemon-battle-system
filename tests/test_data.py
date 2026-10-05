@@ -12,8 +12,8 @@ from item.itemfactory import create_item
 from move.base_move import BaseMove
 from move.movefactory import create_move
 from pokemon import Pokemon
-from readpokemondata import (load_ability_data, load_item_data, load_move_data, load_pokemon_data, load_round_data,
-                             load_round_pool)
+from readpokemondata import (load_ability_data, load_base_stats_data, load_item_data, load_move_data, load_pokemon_data,
+                             load_round_data, load_round_pool)
 
 
 def pokemon_id_of(name):
@@ -57,6 +57,33 @@ def test_legendary_base_stats():
     assert cresselia["base_stats"] == {"hp": 120, "atk": 70, "def": 120, "spatk": 75, "spdef": 130, "spd": 85}
     assert cresselia["female_rate"] == 1.0
     assert load_pokemon_data()[pokemon_id_of("レジギガス")]["female_rate"] is None
+
+
+# 種族値表（data/base_stats.csv → data/base_stats.json）は図鑑番号1〜493の全種族を持つ
+def test_base_stats_covers_all_gen4_species():
+    data = load_base_stats_data()
+    assert sorted(map(int, data)) == list(range(1, 494))
+    assert data["1"]["name"] == "フシギダネ" and data["493"]["name"] == "アルセウス"
+    # 単タイプはtype2がnull
+    assert data["26"]["type2"] is None
+
+
+# 第6世代以降に種族値が変わった種族は、第4世代の値になっていること
+@pytest.mark.parametrize("dex_no, key, expected", [
+    ("26", "spd", 100),     # ライチュウ（第6世代で素早さ110）
+    ("65", "spdef", 85),    # フーディン（第6世代で特防95）
+    ("18", "spd", 91),      # ピジョット（第6世代で素早さ101）
+    ("12", "spatk", 80),    # バタフリー（第6世代で特攻90）
+])
+def test_base_stats_are_gen4_values(dex_no, key, expected):
+    assert load_base_stats_data()[dex_no]["base_stats"][key] == expected
+
+
+# 種族値表に、出てこない種族（ファクトリーのデータに無い進化前など）も入っていること
+def test_base_stats_has_species_outside_factory_data():
+    factory_dex_numbers = {entry["dex_no"] for entry in load_pokemon_data()}
+    assert len(factory_dex_numbers) == 150
+    assert len(set(map(int, load_base_stats_data())) - factory_dex_numbers) == 343
 
 
 # データに出てくる技・特性・持ち物は全て、効果を実装したクラスがある（汎用の基底クラスのままのものが無い）

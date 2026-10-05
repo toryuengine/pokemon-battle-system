@@ -86,7 +86,7 @@ AIの評価・学習では大量の対戦を回すので、最初から次を守
 ### 3.5 データ
 
 - `data/pokemon_<周>.json`（0〜8、周の名前は `data/round.json`）：周ごとに出てくるセット（持ち物・技・性格ID・努力値）。150種（伝説14種を含む）・600セット。
-- 種族ごとの情報（種族値・図鑑番号・メスになる確率・伝説か）は `data/species.json`、種族名は `data/pokemon_name.json`。実数値はこれらと個体値・レベルから計算する。
+- 種族ごとの情報（図鑑番号・メスになる確率・伝説か）は `data/species.json`、種族名は `data/pokemon_name.json`。種族値・タイプは全493種分を `data/base_stats.json`（`data/base_stats.csv` から `tools/build_base_stats.py` で生成）に持ち、図鑑番号で引く。実数値はこれらと個体値・レベルから計算する。
 - 技・特性・持ち物のIDは `data/*.json` のキーで、`src/move/move_XXX.py` 等の番号と一致させる。データを作り直してIDが変わったら、コード側（ファイル番号・ID定数・ID→値の表）も振り直す（`tests/test_data.py` で名前との対応を確かめている）。
 - データの出典は Bulbapedia「List of Battle Frontier Pokémon in Generation IV」。手で推測した値を混ぜる場合はそう明記する。
 
