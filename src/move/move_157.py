@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# どろかけ
-class MudSlap(BaseMove):
+# こうげきしれい
+class AttackOrder(BaseMove):
     def __init__(self):
         super().__init__(id=157)
-        self.effects = [("stat", "target", "accuracy", -1, 1.0)]
+        self.effects = []
+        self.high_crit = True

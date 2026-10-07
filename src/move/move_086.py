@@ -1,10 +1,8 @@
 from move.base_move import BaseMove
 
 
-# きりさく
-class Slash(BaseMove):
+# トライアタック
+class TriAttack(BaseMove):
     def __init__(self):
         super().__init__(id=86)
-        self.makes_contact = True
-        self.effects = []
-        self.high_crit = True
+        self.effects = [('status_random', 'target', ['burn', 'freeze', 'paralysis'], 0.2)]

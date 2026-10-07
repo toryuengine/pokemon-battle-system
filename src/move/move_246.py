@@ -1,10 +1,9 @@
 from move.base_move import BaseMove
 
 
-# ギガインパクト
-class GigaImpact(BaseMove):
+# のしかかり
+class BodySlam(BaseMove):
     def __init__(self):
         super().__init__(id=246)
         self.makes_contact = True
-        self.effects = []
-        self.requires_recharge = True
+        self.effects = [('status', 'target', 'paralysis', 0.3)]

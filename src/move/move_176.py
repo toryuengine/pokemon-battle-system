@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# あられ
-class Hail(BaseMove):
+# つるぎのまい
+class SwordsDance(BaseMove):
     def __init__(self):
         super().__init__(id=176)
-        self.effects = [("set_weather", "hail")]
+        self.effects = [('stat', 'self', 'atk', 2, 1.0)]

@@ -1,9 +1,8 @@
 from move.base_move import BaseMove
 
 
-# ウッドハンマー
-class WoodHammer(BaseMove):
+# つきのひかり
+class Moonlight(BaseMove):
     def __init__(self):
         super().__init__(id=253)
-        self.makes_contact = True
-        self.effects = [('recoil', 0.3333333333333333)]
+        self.effects = [('heal', 0.5)]

@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# とける
-class AcidArmor(BaseMove):
+# ブレイブバード
+class BraveBird(BaseMove):
     def __init__(self):
         super().__init__(id=143)
-        self.effects = [('stat', 'self', 'defense', 2, 1.0)]
+        self.makes_contact = True
+        self.effects = [('recoil', 0.3333333333333333)]

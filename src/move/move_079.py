@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# たたきつける
-class Slam(BaseMove):
+# ドリルくちばし
+class DrillPeck(BaseMove):
     def __init__(self):
         super().__init__(id=79)
         self.makes_contact = True

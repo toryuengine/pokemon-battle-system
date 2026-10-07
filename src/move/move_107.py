@@ -1,11 +1,9 @@
 from move.base_move import BaseMove
 
 
-# ダブルアタック
-class DoubleHit(BaseMove):
+# ほのおのキバ
+class FireFang(BaseMove):
     def __init__(self):
         super().__init__(id=107)
         self.makes_contact = True
-        self.effects = []
-        self.min_hits = 2
-        self.max_hits = 2
+        self.effects = [('status', 'target', 'burn', 0.1), ('flinch', 'target', 0.1)]

@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# ひかりのかべ
-class LightScreen(BaseMove):
+# アイアンテール
+class IronTail(BaseMove):
     def __init__(self):
         super().__init__(id=92)
-        self.effects = [("set_screen", "light_screen")]
+        self.makes_contact = True
+        self.effects = [('stat', 'target', 'defense', -1, 0.3)]

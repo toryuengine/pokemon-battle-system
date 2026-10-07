@@ -1,11 +1,10 @@
 from move.base_move import BaseMove
 
 
-# ダイビング
-class Dive(BaseMove):
+# トリックルーム
+class TrickRoom(BaseMove):
     def __init__(self):
         super().__init__(id=196)
-        self.makes_contact = True
-        self.effects = []
-        self.requires_charge_turn = True
-        self.charge_is_invulnerable = True
+        self.effects = [("trick_room",)]
+        # 後攻技（優先度-7）
+        self.priority = -7

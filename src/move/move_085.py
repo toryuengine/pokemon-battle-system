@@ -1,9 +1,8 @@
 from move.base_move import BaseMove
 
 
-# どくづき
-class PoisonJab(BaseMove):
+# すなじごく: 当たると相手を2〜5ターン締め付け、毎ターン最大HPの1/16を削る
+class SandTomb(BaseMove):
     def __init__(self):
         super().__init__(id=85)
-        self.makes_contact = True
-        self.effects = [('status', 'target', 'poison', 0.3)]
+        self.effects = [("bind",)]

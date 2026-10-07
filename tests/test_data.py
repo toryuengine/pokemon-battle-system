@@ -9,6 +9,11 @@ from battlelogic import damage as damage_module
 from battlelogic.battle import Battle
 from item.base_item import FLING_POWERS, BaseItem
 from item.itemfactory import create_item
+from ability import ability_014 as soundproof_module
+from move import base_move as base_move_module
+from move import move_008 as dig_module  # じしん（あなをほる中の相手に当たる）
+from move import move_081 as dive_module  # なみのり（ダイビング中の相手に当たる）
+from move import move_126 as fly_module  # スカイアッパー（そらをとぶ中の相手に当たる）
 from move.base_move import BaseMove
 from move.movefactory import create_move
 from pokemon import Pokemon
@@ -20,9 +25,18 @@ def pokemon_id_of(name):
     return next(i for i, entry in enumerate(load_pokemon_data()) if entry["name"] == name)
 
 
+# 技・持ち物は名前からIDを引く（データを作り直してIDが振り直されても、テストを書き換えずに済むように）
+def move_id_of(name):
+    return next(int(i) for i, data in load_move_data().items() if data["name"] == name)
+
+
+def item_id_of(name):
+    return next(int(i) for i, item_name in load_item_data().items() if item_name == name)
+
+
 # ---- 周ごとのデータ ----
 
-# 周ごとのセット数（pokemon_<周>.jsonに入っているセットの数）
+# 周ごとのセット数（round.jsonの"groups"に入っているグループのセットの数）
 def test_round_pool_sizes():
     assert len(load_round_data()) == 9
     assert [len(load_round_pool(r)) for r in range(9)] == [136, 272, 408, 600, 544, 600, 600, 600, 600]
@@ -43,7 +57,12 @@ def test_legendary_rounds():
     assert rounds_with_legendary == [3, 5, 6, 7, 8]
 
 
-# 全セットを重複なくまとめたデータ：150種・各4セット
+# セットはバリエーション番号の順に並ぶ（indivisual_id = バリエーション - 1）
+def test_sets_are_ordered_by_variation():
+    assert all([s["variation"] for s in entry["indivisual"]] == [1, 2, 3, 4] for entry in load_pokemon_data())
+
+
+# 全セットのデータ：150種・各4セット
 def test_pokemon_data_contains_every_set_once():
     data = load_pokemon_data()
     assert len(data) == 150
@@ -119,6 +138,12 @@ def test_move_id_constants():
     assert names[str(battle_module.BRICK_BREAK_ID)] == "かわらわり"
     assert names[str(battle_module.ENCORE_ID)] == "アンコール"
     assert {names[str(i)] for i in battle_module.PROTECT_FAMILY_MOVE_IDS} == {"こらえる", "まもる", "みきり"}
+    assert names[str(dig_module.DIG_ID)] == "あなをほる"
+    assert names[str(dive_module.DIVE_ID)] == "ダイビング"
+    assert names[str(fly_module.FLY_ID)] == "そらをとぶ"
+    assert {names[str(i)] for i in soundproof_module.SOUND_MOVE_IDS} == {
+        "いやなおと", "うたう", "ほえる", "ハイパーボイス", "ほろびのうた", "くさぶえ", "むしのさざめき"}
+    assert {names[str(i)] for i in base_move_module.WEATHER_HEAL_MOVE_IDS} == {"こうごうせい", "あさのひざし", "つきのひかり"}
 
 
 def test_fling_powers():
@@ -135,7 +160,7 @@ def test_fling_powers():
 
 # にぎりつぶす: 威力 = 120 × 相手の残りHP ÷ 相手の最大HP + 1
 def test_crush_grip_power():
-    move = create_move(270)
+    move = create_move(move_id_of("にぎりつぶす"))
     assert move.name == "にぎりつぶす"
     defender = Pokemon(0, 0, rng=random.Random(0))
     assert move.get_power(None, None, defender) == 121
@@ -166,20 +191,20 @@ def test_slow_start():
     assert battle.get_effective_speed(regigigas) == slowed_speed
 
 
-@pytest.mark.parametrize("move_id, name, stat_name", [(267, "ミストボール", "spatk"), (268, "ラスターパージ", "spdef")])
-def test_lati_moves_lower_stat(move_id, name, stat_name):
-    move = create_move(move_id)
+@pytest.mark.parametrize("name, stat_name", [("ミストボール", "spatk"), ("ラスターパージ", "spdef")])
+def test_lati_moves_lower_stat(name, stat_name):
+    move = create_move(move_id_of(name))
     assert move.name == name
     assert move.effects == [("stat", "target", stat_name, -1, 0.5)]
 
 
 def test_magma_storm_binds():
-    move = create_move(269)
+    move = create_move(move_id_of("マグマストーム"))
     assert move.name == "マグマストーム"
     assert move.effects == [("bind",)]
 
 
 def test_charti_berry():
-    item = create_item(54)
+    item = create_item(item_id_of("ヨロギのみ"))
     assert item.name == "ヨロギのみ"
     assert item.resist_type == "いわ"

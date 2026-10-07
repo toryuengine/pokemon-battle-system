@@ -1,9 +1,8 @@
 from move.base_move import BaseMove
 
 
-# おどろかす
-class Astonish(BaseMove):
+# どくどく: 相手をもうどく状態にする
+class Toxic(BaseMove):
     def __init__(self):
         super().__init__(id=41)
-        self.makes_contact = True
-        self.effects = [('flinch', 'target', 0.3)]
+        self.effects = [('status', 'target', 'toxic', 1.0)]

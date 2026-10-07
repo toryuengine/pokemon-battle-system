@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# ほろびのうた
-class PerishSong(BaseMove):
+# メガホーン
+class Megahorn(BaseMove):
     def __init__(self):
         super().__init__(id=198)
-        self.effects = [("perish_song",)]
+        self.makes_contact = True
+        self.effects = []

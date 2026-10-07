@@ -1,8 +1,11 @@
 from move.base_move import BaseMove
 
 
-# ダストシュート
-class GunkShot(BaseMove):
+# ダブルアタック
+class DoubleHit(BaseMove):
     def __init__(self):
         super().__init__(id=194)
-        self.effects = [('status', 'target', 'poison', 0.3)]
+        self.makes_contact = True
+        self.effects = []
+        self.min_hits = 2
+        self.max_hits = 2

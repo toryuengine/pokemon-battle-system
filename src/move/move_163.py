@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# はらだいこ
-class BellyDrum(BaseMove):
+# ずつき
+class Headbutt(BaseMove):
     def __init__(self):
         super().__init__(id=163)
-        self.effects = [('belly_drum',)]
+        self.makes_contact = True
+        self.effects = [('flinch', 'target', 0.3)]

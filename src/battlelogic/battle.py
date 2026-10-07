@@ -54,9 +54,9 @@ STATUS_IMMUNE_TYPE_IDS = {
 }
 
 # 天候によって必ず命中する技・命中率が変わる技（idで個別に判定する）
-THUNDER_ID = 208  # かみなり
-BLIZZARD_ID = 232  # ふぶき
-SOLAR_BEAM_ID = 12  # ソーラービーム
+THUNDER_ID = 124  # かみなり
+BLIZZARD_ID = 82  # ふぶき
+SOLAR_BEAM_ID = 19  # ソーラービーム
 
 # 設置技の効果値。まきびしは層数(1〜3)に応じてダメージ割合が変わる
 STEALTH_ROCK_DAMAGE_RATIO = 1 / 8
@@ -67,10 +67,10 @@ TYPE_ID_POISON = 7
 # 壁（リフレクター・ひかりのかべ）の持続ターン数
 SCREEN_DURATION = 5
 # かわらわりは攻撃前に相手の場の壁を破壊する
-BRICK_BREAK_ID = 39
+BRICK_BREAK_ID = 77
 
 # まもる・みきり・こらえる（本編仕様で連続成功の可否を共通の1つのカウンタで管理する）
-PROTECT_FAMILY_MOVE_IDS = {29, 32, 164}  # こらえる、まもる、みきり
+PROTECT_FAMILY_MOVE_IDS = {51, 65, 96}  # こらえる、まもる、みきり
 # 連続成功するたびに次回の成功率が1/3倍になっていく（3世代以降共通の仕様）
 PROTECT_STALL_SUCCESS_RATIO = 1 / 3
 
@@ -91,7 +91,7 @@ FUTURE_SIGHT_DELAY = 3
 # のみこむの回復量（たくわえた回数ごとの最大HPに対する割合）
 SWALLOW_HEAL_RATIOS = {1: 1 / 4, 2: 1 / 2, 3: 1.0}
 # アンコールで固定できない技（アンコール自身）。まねっこ・ものまね・わるあがきも固定できない
-ENCORE_ID = 174
+ENCORE_ID = 164
 # みがわりで払うHPの、最大HPに対する割合
 SUBSTITUTE_HP_RATIO = 1 / 4
 # 相手に向けた効果のうち、みがわりを無視して届くもの（第4世代仕様: ほえる・ちょうはつ・アンコール・かなしばり・

@@ -1,9 +1,8 @@
 from move.base_move import BaseMove
 
 
-# ドラゴンダイブ
-class DragonRush(BaseMove):
+# しびれごな
+class StunSpore(BaseMove):
     def __init__(self):
         super().__init__(id=240)
-        self.makes_contact = True
-        self.effects = [('flinch', 'target', 0.2)]
+        self.effects = [('status', 'target', 'paralysis', 1.0)]

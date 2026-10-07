@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# あくび
-class Yawn(BaseMove):
+# ほろびのうた
+class PerishSong(BaseMove):
     def __init__(self):
         super().__init__(id=113)
-        self.effects = [("yawn",)]
+        self.effects = [("perish_song",)]

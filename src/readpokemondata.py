@@ -19,20 +19,15 @@ def _load_json(path):
         return json.load(f)
 
 
-# 周の番号（data/pokemon_<番号>.jsonの番号）→ 周の名前（"1周目"・"銀ネジキ"等）
+# 周の番号 → 周の名前（"1周目"・"銀ネジキ"等）と、その周で使うセットのグループ（data/pokemon.jsonの"group"）
 def load_round_data(path=DATA_DIR / "round.json"):
     return _load_json(path)
 
 
-# 周ごとに出てくるポケモンの元データ（data/pokemon_<番号>.json）。種族ごとに、その周で使われるセットだけが入っている
-def load_round_pokemon_data(round_index: int):
-    return _load_json(DATA_DIR / f"pokemon_{round_index}.json")
-
-
-# 全種族・全セットをまとめたデータ（Pokemon(pokemon_id, indivisual_id)はこのリストの位置で指定する）
-# 周ごとのファイルにはセットしか入っていないので、種族名(pokemon_name.json)と種族ごとの情報(species.json:
-# 図鑑番号・メスになる確率・伝説か)、種族値(base_stats.json。図鑑番号で引く)を合わせ、全周のセットを重複なく並べ直す。
-# セットの並びは「初めて出てくる周の順」（1周目のセットが0番目、2周目で増えたセットが1番目…）
+# 全種族・全セットのデータ（Pokemon(pokemon_id, indivisual_id)はこのリストの位置で指定する）
+# data/pokemon.jsonはセットしか持たないので、種族名(pokemon_name.json)と種族ごとの情報(species.json:
+# 図鑑番号・メスになる確率・伝説か)、種族値(base_stats.json。図鑑番号で引く)を合わせる。
+# セットの並びはバリエーション番号の順（バリエーション1が0番目…）
 def load_pokemon_data():
     global _pokemon_data
     if _pokemon_data is None:
@@ -41,61 +36,56 @@ def load_pokemon_data():
 
 
 # 周ごとに出てくるセットの一覧。(pokemon_id, indivisual_id)のリストで返す
+# その周のグループ（round.jsonの"groups"）に入っているセットを集める
 def load_round_pool(round_index: int):
     global _round_pools
     if _round_pools is None:
-        load_pokemon_data()
+        _round_pools = _build_round_pools()
     return _round_pools[round_index]
 
 
-# セットを見分けるためのキー（同じ種族で、技・持ち物・性格・努力値が全て同じなら同じセット）
-def _set_key(set_data):
-    return (tuple(set_data["move"]), set_data["item"], set_data["nature"], tuple(sorted(set_data["ev"].items())))
-
-
 def _build_pokemon_data():
-    global _round_pools
     names = _load_json(DATA_DIR / "pokemon_name.json")
     species = _load_json(DATA_DIR / "species.json")
     base_stats = load_base_stats_data()
 
-    entries = [None] * len(names)
-    set_index = [dict() for _ in names]
-    rounds = []
-    for round_index in range(len(load_round_data())):
-        pool = []
-        for raw in load_round_pokemon_data(round_index):
-            pokemon_id = raw["name"]
-            entry = entries[pokemon_id]
-            if entry is None:
-                entry = {
-                    "name": names[str(pokemon_id)],
-                    "type1": raw["type1"],
-                    "type2": raw["type2"],
-                    "ability": raw["ability"],
-                    **species[str(pokemon_id)],
-                    "indivisual": [],
-                }
-                dex_entry = base_stats[str(entry["dex_no"])]
-                # 種族値表(CSV由来)と周ごとのファイルで、種族名・タイプが食い違っていないか
-                assert (dex_entry["name"], dex_entry["type1"], dex_entry["type2"]) == \
-                    (entry["name"], entry["type1"], entry["type2"]), entry["name"]
-                entry["base_stats"] = dex_entry["base_stats"]
-                entries[pokemon_id] = entry
-            # 種族の情報はどの周のファイルでも同じはず
-            assert (raw["type1"], raw["type2"], raw["ability"]) == (entry["type1"], entry["type2"], entry["ability"]), entry["name"]
-            for set_data in raw["indivisual"]:
-                key = _set_key(set_data)
-                if key not in set_index[pokemon_id]:
-                    set_index[pokemon_id][key] = len(entry["indivisual"])
-                    entry["indivisual"].append(set_data)
-                pool.append((pokemon_id, set_index[pokemon_id][key]))
-        rounds.append(pool)
-
-    missing = [names[str(i)] for i, entry in enumerate(entries) if entry is None]
-    assert not missing, f"どの周にも出てこない種族があります: {missing}"
-    _round_pools = rounds
+    raw_entries = _load_json(DATA_DIR / "pokemon.json")
+    # pokemon.jsonの"name"は種族ID。並びが種族IDの順になっていることを前提にリストの位置で引く
+    assert [raw["name"] for raw in raw_entries] == list(range(len(names)))
+    entries = []
+    for raw in raw_entries:
+        pokemon_id = raw["name"]
+        entry = {
+            "name": names[str(pokemon_id)],
+            "type1": raw["type1"],
+            "type2": raw["type2"],
+            "ability": raw["ability"],
+            **species[str(pokemon_id)],
+            "indivisual": sorted(raw["indivisual"], key=lambda set_data: set_data["variation"]),
+        }
+        dex_entry = base_stats[str(entry["dex_no"])]
+        # 種族値表(CSV由来)とpokemon.jsonで、種族名・タイプが食い違っていないか
+        assert (dex_entry["name"], dex_entry["type1"], dex_entry["type2"]) == \
+            (entry["name"], entry["type1"], entry["type2"]), entry["name"]
+        entry["base_stats"] = dex_entry["base_stats"]
+        entries.append(entry)
     return entries
+
+
+def _build_round_pools():
+    entries = load_pokemon_data()
+    rounds = load_round_data()
+    pools = []
+    for round_index in range(len(rounds)):
+        groups = set(rounds[str(round_index)]["groups"])
+        pools.append([(pokemon_id, indivisual_id)
+                      for pokemon_id, entry in enumerate(entries)
+                      for indivisual_id, set_data in enumerate(entry["indivisual"])
+                      if set_data["group"] in groups])
+    used = {pokemon_id for pool in pools for pokemon_id, _ in pool}
+    missing = [entry["name"] for pokemon_id, entry in enumerate(entries) if pokemon_id not in used]
+    assert not missing, f"どの周にも出てこない種族があります: {missing}"
+    return pools
 
 
 # 図鑑番号（文字列）→ 種族名・タイプ・種族値（第4世代の全493種。data/base_stats.csvから tools/build_base_stats.py で作る）

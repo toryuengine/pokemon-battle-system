@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# りゅうせいぐん
-class DracoMeteor(BaseMove):
+# どろかけ
+class MudSlap(BaseMove):
     def __init__(self):
         super().__init__(id=241)
-        self.effects = [('stat', 'self', 'spatk', -2, 1.0)]
+        self.effects = [("stat", "target", "accuracy", -1, 1.0)]

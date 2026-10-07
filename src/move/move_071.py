@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# かげぶんしん
-class DoubleTeam(BaseMove):
+# ウッドハンマー
+class WoodHammer(BaseMove):
     def __init__(self):
         super().__init__(id=71)
-        self.effects = [("stat", "self", "evasion", 1, 1.0)]
+        self.makes_contact = True
+        self.effects = [('recoil', 0.3333333333333333)]

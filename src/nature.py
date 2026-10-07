@@ -32,7 +32,7 @@ NATURES = {
     "きまぐれ": (None, None),
 }
 
-# 性格ID → 性格名。データ（pokemon_<周>.jsonの"nature"）は性格を本編の性格ID（がんばりや=0〜きまぐれ=24）で持っていて、
+# 性格ID → 性格名。データ（pokemon.jsonの"nature"）は性格を本編の性格ID（がんばりや=0〜きまぐれ=24）で持っていて、
 # NATURESはその順に並べてある
 NATURE_NAMES = list(NATURES)
 

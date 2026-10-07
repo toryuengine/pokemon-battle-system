@@ -17,59 +17,59 @@ from move.base_move import CATEGORY_PHYSICAL, CATEGORY_SPECIAL
 # 半減実のように効果が同じでパラメータだけ違う持ち物は、1つのクラスにpartialでパラメータを渡して使い回す
 _ITEM_CLASSES = {
     0: WhiteHerb,  # しろいハーブ
-    1: partial(PinchBerry, stat_name="spatk"),  # ヤタピのみ
-    2: partial(TypeBoostItem, move_type="みず", multiplier=1.2),  # しんぴのしずく
-    3: partial(WeatherRock, weather="sun"),  # あついいわ
-    4: CritBoostItem,  # ピントレンズ
-    5: FlinchItem,  # おうじゃのしるし
-    6: partial(PinchBerry, stat_name="atk"),  # チイラのみ
-    7: partial(PinchBerry, stat_name="spd"),  # カムラのみ
+    1: BigRoot,  # おおきなねっこ
+    2: BlackSludge,  # くろいヘドロ
+    3: partial(CategoryBoostItem, category=CATEGORY_SPECIAL, multiplier=1.1),  # ものしりメガネ
+    4: partial(PinchBerry, stat_name="spatk"),  # ヤタピのみ
+    5: CritBoostItem,  # ピントレンズ
+    6: EvasionItem,  # ひかりのこな
+    7: partial(TypeBoostItem, move_type="みず", multiplier=1.2),  # しんぴのしずく
     8: ShellBell,  # かいがらのすず
-    9: partial(ResistBerry, resist_type="こおり"),  # ヤチェのみ
-    10: partial(ResistBerry, resist_type="ひこう"),  # バコウのみ
-    11: CritBoostItem,  # するどいツメ
-    12: GripClaw,  # ねばりのかぎづめ
-    13: partial(ResistBerry, resist_type="くさ"),  # リンドのみ
-    14: partial(StatusCureBerry, cures_conditions=("sleep",)),  # カゴのみ
-    15: partial(StatusCureBerry, cures_conditions=("paralysis",)),  # クラボのみ
-    16: FocusSash,  # きあいのタスキ
-    17: partial(ResistBerry, resist_type="ほのお"),  # オッカのみ
-    18: partial(ResistBerry, resist_type="かくとう"),  # ヨプのみ
-    19: partial(StatusCureBerry, cures_confusion=True),  # キーのみ
-    20: WideLens,  # こうかくレンズ
-    21: FlinchItem,  # するどいキバ
-    22: partial(ResistBerry, resist_type="じめん"),  # シュカのみ
-    23: BigRoot,  # おおきなねっこ
-    24: partial(ResistBerry, resist_type="エスパー"),  # ウタンのみ
-    25: partial(CategoryBoostItem, category=CATEGORY_PHYSICAL, multiplier=1.1),  # ちからのハチマキ
-    26: IronBall,  # くろいてっきゅう
-    27: FocusBand,  # きあいのハチマキ
-    28: partial(ResistBerry, resist_type="みず"),  # イトケのみ
-    29: EvasionItem,  # ひかりのこな
-    30: BlackSludge,  # くろいヘドロ
-    31: partial(StatusCureBerry, cures_conditions=None, cures_confusion=True),  # ラムのみ
-    32: SitrusBerry,  # オボンのみ
+    9: LifeOrb,  # いのちのたま
+    10: partial(WeatherRock, weather="sun"),  # あついいわ
+    11: LightClay,  # ひかりのねんど
+    12: EvasionItem,  # のんきのおこう
+    13: partial(PinchBerry, stat_name="spd"),  # カムラのみ
+    14: partial(ResistBerry, resist_type="じめん"),  # シュカのみ
+    15: FlinchItem,  # おうじゃのしるし
+    16: partial(StatusCureBerry, cures_conditions=None, cures_confusion=True),  # ラムのみ
+    17: partial(PinchBerry, stat_name="atk"),  # チイラのみ
+    18: Leftovers,  # たべのこし
+    19: partial(ResistBerry, resist_type="ほのお"),  # オッカのみ
+    20: partial(ResistBerry, resist_type="みず"),  # イトケのみ
+    21: ExpertBelt,  # たつじんのおび
+    22: partial(ResistBerry, resist_type="くさ"),  # リンドのみ
+    23: partial(ResistBerry, resist_type="こおり"),  # ヤチェのみ
+    24: QuickClaw,  # せんせいのツメ
+    25: partial(ResistBerry, resist_type="ひこう"),  # バコウのみ
+    26: partial(CategoryBoostItem, category=CATEGORY_PHYSICAL, multiplier=1.1),  # ちからのハチマキ
+    27: CritBoostItem,  # するどいツメ
+    28: GripClaw,  # ねばりのかぎづめ
+    29: ThickClub,  # ふといホネ
+    30: partial(StatusCureBerry, cures_conditions=("paralysis",)),  # クラボのみ
+    31: partial(StatusCureBerry, cures_conditions=("sleep",)),  # カゴのみ
+    32: ChoiceSpecs,  # こだわりメガネ
     33: partial(ResistBerry, resist_type="ゴースト"),  # カシブのみ
-    34: EvasionItem,  # のんきのおこう
-    35: ToxicOrb,  # どくどくだま
-    36: partial(ResistBerry, resist_type="でんき"),  # ソクノのみ
-    37: QuickClaw,  # せんせいのツメ
-    38: Leftovers,  # たべのこし
-    39: partial(WeatherRock, weather="hail"),  # つめたいいわ
-    40: LightClay,  # ひかりのねんど
-    41: PowerHerb,  # パワフルハーブ
-    42: ThickClub,  # ふといホネ
-    43: partial(WeatherRock, weather="rain"),  # しめったいわ
-    44: ZoomLens,  # フォーカスレンズ
-    45: LifeOrb,  # いのちのたま
-    46: Metronome,  # メトロノーム
-    47: ExpertBelt,  # たつじんのおび
-    48: partial(ResistBerry, resist_type="むし"),  # ナモのみ
-    49: partial(CategoryBoostItem, category=CATEGORY_SPECIAL, multiplier=1.1),  # ものしりメガネ
-    50: ChoiceScarf,  # こだわりスカーフ
-    51: ChoiceSpecs,  # こだわりメガネ
-    52: ChoiceBand,  # こだわりハチマキ
-    53: partial(TypeBoostItem, move_type="みず", multiplier=1.2),  # さざなみのおこう
+    34: SitrusBerry,  # オボンのみ
+    35: FocusSash,  # きあいのタスキ
+    36: ToxicOrb,  # どくどくだま
+    37: partial(ResistBerry, resist_type="かくとう"),  # ヨプのみ
+    38: ChoiceBand,  # こだわりハチマキ
+    39: partial(StatusCureBerry, cures_confusion=True),  # キーのみ
+    40: ZoomLens,  # フォーカスレンズ
+    41: IronBall,  # くろいてっきゅう
+    42: WideLens,  # こうかくレンズ
+    43: FocusBand,  # きあいのハチマキ
+    44: FlinchItem,  # するどいキバ
+    45: partial(ResistBerry, resist_type="でんき"),  # ソクノのみ
+    46: partial(WeatherRock, weather="rain"),  # しめったいわ
+    47: partial(ResistBerry, resist_type="エスパー"),  # ウタンのみ
+    48: PowerHerb,  # パワフルハーブ
+    49: Metronome,  # メトロノーム
+    50: partial(ResistBerry, resist_type="むし"),  # ナモのみ
+    51: partial(TypeBoostItem, move_type="みず", multiplier=1.2),  # さざなみのおこう
+    52: ChoiceScarf,  # こだわりスカーフ
+    53: partial(WeatherRock, weather="hail"),  # つめたいいわ
     54: partial(ResistBerry, resist_type="いわ"),  # ヨロギのみ
 }
 

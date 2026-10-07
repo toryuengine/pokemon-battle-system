@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# シャドーボール
-class ShadowBall(BaseMove):
+# チャージビーム
+class ChargeBeam(BaseMove):
     def __init__(self):
         super().__init__(id=120)
-        self.effects = [('stat', 'target', 'spdef', -1, 0.2)]
+        self.effects = [('stat', 'self', 'spatk', 1, 0.7)]

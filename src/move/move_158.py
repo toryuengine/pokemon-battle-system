@@ -1,10 +1,8 @@
 from move.base_move import BaseMove
 
 
-# つじぎり
-class NightSlash(BaseMove):
+# ぼうぎょしれい
+class DefendOrder(BaseMove):
     def __init__(self):
         super().__init__(id=158)
-        self.makes_contact = True
-        self.effects = []
-        self.high_crit = True
+        self.effects = [('stat_multi', 'self', [('defense', 1), ('spdef', 1)], 1.0)]

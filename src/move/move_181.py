@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# テクスチャー2
-class Conversion2(BaseMove):
+# フラッシュ
+class Flash(BaseMove):
     def __init__(self):
         super().__init__(id=181)
-        self.effects = [("type_change_resist",)]
+        self.effects = [("stat", "target", "accuracy", -1, 1.0)]

@@ -1,9 +1,8 @@
 from move.base_move import BaseMove
 
 
-# ブレイブバード
-class BraveBird(BaseMove):
+# むしのさざめき
+class BugBuzz(BaseMove):
     def __init__(self):
         super().__init__(id=248)
-        self.makes_contact = True
-        self.effects = [('recoil', 0.3333333333333333)]
+        self.effects = [('stat', 'target', 'spdef', -1, 0.1)]

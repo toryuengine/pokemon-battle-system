@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# こわいかお
-class ScaryFace(BaseMove):
+# タネばくだん
+class SeedBomb(BaseMove):
     def __init__(self):
         super().__init__(id=7)
-        self.effects = [('stat', 'target', 'spd', -2, 1.0)]
+        self.effects = []

@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# むしのさざめき
-class BugBuzz(BaseMove):
+# がんせきほう
+class RockWrecker(BaseMove):
     def __init__(self):
         super().__init__(id=262)
-        self.effects = [('stat', 'target', 'spdef', -1, 0.1)]
+        self.effects = []
+        self.requires_recharge = True
