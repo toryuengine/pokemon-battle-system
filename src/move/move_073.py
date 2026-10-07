@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# だいちのちから
-class EarthPower(BaseMove):
+# とんぼがえり
+class UTurn(BaseMove):
     def __init__(self):
         super().__init__(id=73)
-        self.effects = [('stat', 'target', 'spdef', -1, 0.1)]
+        self.makes_contact = True
+        self.effects = [("self_switch",)]

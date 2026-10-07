@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# ビルドアップ
-class BulkUp(BaseMove):
+# とける
+class AcidArmor(BaseMove):
     def __init__(self):
         super().__init__(id=225)
-        self.effects = [('stat_multi', 'self', [('atk', 1), ('defense', 1)], 1.0)]
+        self.effects = [('stat', 'self', 'defense', 2, 1.0)]

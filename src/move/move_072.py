@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# ちょうはつ: 相手を3〜5ターンの間、変化技を使えない状態にする
-class Taunt(BaseMove):
+# インファイト
+class CloseCombat(BaseMove):
     def __init__(self):
         super().__init__(id=72)
-        self.effects = [("taunt",)]
+        self.makes_contact = True
+        self.effects = [('stat_multi', 'self', [('defense', -1), ('spdef', -1)], 1.0)]

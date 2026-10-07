@@ -1,9 +1,9 @@
 from move.base_move import BaseMove
 
 
-# はがねのつばさ
-class SteelWing(BaseMove):
+# アームハンマー
+class HammerArm(BaseMove):
     def __init__(self):
         super().__init__(id=66)
         self.makes_contact = True
-        self.effects = [('stat', 'self', 'defense', 1, 0.1)]
+        self.effects = [('stat', 'self', 'spd', -1, 1.0)]

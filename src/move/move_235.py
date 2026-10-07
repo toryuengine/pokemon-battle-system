@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# すなかけ
-class SandAttack(BaseMove):
+# じゅうでん
+class Charge(BaseMove):
     def __init__(self):
         super().__init__(id=235)
-        self.effects = [("stat", "target", "accuracy", -1, 1.0)]
+        self.effects = [('charge',)]

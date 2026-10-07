@@ -1,9 +1,10 @@
 from move.base_move import BaseMove
 
 
-# まきつく: 当たると相手を2〜5ターン締め付け、毎ターン最大HPの1/16を削る
-class Wrap(BaseMove):
+# バレットパンチ
+class BulletPunch(BaseMove):
     def __init__(self):
         super().__init__(id=230)
         self.makes_contact = True
-        self.effects = [("bind",)]
+        self.effects = []
+        self.priority = 1

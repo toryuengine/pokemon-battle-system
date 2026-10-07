@@ -1,13 +1,16 @@
 from move.base_move import BaseMove
 
 
-# ねこだまし: 優先度+1。場に出てから最初のターンにしか成功しない。成功すれば必ずひるませる
-class FakeOut(BaseMove):
+# ゆきなだれ: 優先度-4の後攻技。このターンに今の相手から攻撃を受けてダメージを負っていれば威力が2倍になる
+# (みがわりが受けた攻撃ではダメージを負っていない扱い)
+class Avalanche(BaseMove):
     def __init__(self):
         super().__init__(id=37)
         self.makes_contact = True
-        self.effects = [('flinch', 'target', 1.0)]
-        self.priority = 1
+        self.effects = []
+        self.priority = -4
 
-    def try_execute(self, battle, attacker, defender) -> bool:
-        return attacker.current_status.turns_on_field == 1
+    def get_power(self, battle, attacker, defender) -> int:
+        if attacker.current_status.damaged_by_this_turn is defender:
+            return self.power * 2
+        return self.power

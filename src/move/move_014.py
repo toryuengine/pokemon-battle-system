@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# こうごうせい
-class Synthesis(BaseMove):
+# かえんほうしゃ
+class Flamethrower(BaseMove):
     def __init__(self):
         super().__init__(id=14)
-        self.effects = [('heal', 0.5)]
+        self.effects = [('status', 'target', 'burn', 0.1)]

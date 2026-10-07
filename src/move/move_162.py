@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# リサイクル: 最後に消費した持ち物を取り戻す
-class Recycle(BaseMove):
+# ボルテッカー
+class VoltTackle(BaseMove):
     def __init__(self):
         super().__init__(id=162)
-        self.effects = [("recycle",)]
+        self.makes_contact = True
+        self.effects = [('recoil', 0.3333333333333333)]

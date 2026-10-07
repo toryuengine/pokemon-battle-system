@@ -1,9 +1,8 @@
 from move.base_move import BaseMove
 
 
-# シザークロス
-class XScissor(BaseMove):
+# じこさいせい
+class Recover(BaseMove):
     def __init__(self):
         super().__init__(id=97)
-        self.makes_contact = True
-        self.effects = []
+        self.effects = [('heal', 0.5)]

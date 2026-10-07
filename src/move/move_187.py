@@ -1,10 +1,8 @@
 from move.base_move import BaseMove
 
 
-# しんそく
-class ExtremeSpeed(BaseMove):
+# みずのはどう
+class WaterPulse(BaseMove):
     def __init__(self):
         super().__init__(id=187)
-        self.makes_contact = True
-        self.effects = []
-        self.priority = 2
+        self.effects = [('status', 'target', 'confusion', 0.2)]

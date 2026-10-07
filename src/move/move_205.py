@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# みちづれ: 次に自分が行動するまでに相手の攻撃で瀕死になると、相手も瀕死にする
-class DestinyBond(BaseMove):
+# ドラゴンダイブ
+class DragonRush(BaseMove):
     def __init__(self):
         super().__init__(id=205)
-        self.effects = [("destiny_bond",)]
+        self.makes_contact = True
+        self.effects = [('flinch', 'target', 0.2)]

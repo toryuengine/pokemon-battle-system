@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# いたみわけ
-class PainSplit(BaseMove):
+# ねっぷう
+class HeatWave(BaseMove):
     def __init__(self):
         super().__init__(id=236)
-        self.effects = [("pain_split",)]
+        self.effects = [('status', 'target', 'burn', 0.1)]

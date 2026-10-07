@@ -1,9 +1,10 @@
 from move.base_move import BaseMove
 
 
-# でんじは: じめんタイプには効果が無い
-class ThunderWave(BaseMove):
+# きしかいせい: じたばたと同じく、自分の残りHPが少ないほど威力が高くなる（20〜200）
+class Reversal(BaseMove):
     def __init__(self):
         super().__init__(id=50)
-        self.checks_type_immunity = True
-        self.effects = [('status', 'target', 'paralysis', 1.0)]
+        self.makes_contact = True
+        self.effects = []
+        self.has_hp_based_power = True

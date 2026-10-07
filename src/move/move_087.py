@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# ギガドレイン
-class GigaDrain(BaseMove):
+# すなあらし
+class Sandstorm(BaseMove):
     def __init__(self):
         super().__init__(id=87)
-        self.effects = [('drain', 0.5)]
+        self.effects = [("set_weather", "sandstorm")]

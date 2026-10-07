@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# のろい
-class Curse(BaseMove):
+# かげぶんしん
+class DoubleTeam(BaseMove):
     def __init__(self):
         super().__init__(id=34)
-        self.effects = [('curse',)]
+        self.effects = [("stat", "self", "evasion", 1, 1.0)]

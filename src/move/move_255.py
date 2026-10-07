@@ -1,9 +1,8 @@
 from move.base_move import BaseMove
 
 
-# こうげきしれい
-class AttackOrder(BaseMove):
+# なまける
+class SlackOff(BaseMove):
     def __init__(self):
         super().__init__(id=255)
-        self.effects = []
-        self.high_crit = True
+        self.effects = [('heal', 0.5)]

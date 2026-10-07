@@ -1,9 +1,9 @@
 from move.base_move import BaseMove
 
 
-# まもる
-class Protect(BaseMove):
+# たきのぼり
+class Waterfall(BaseMove):
     def __init__(self):
         super().__init__(id=32)
-        self.effects = [("protect",)]
-        self.priority = 3
+        self.makes_contact = True
+        self.effects = [('flinch', 'target', 0.2)]

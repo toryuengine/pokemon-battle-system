@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# ふぶき
-class Blizzard(BaseMove):
+# もろはのずつき
+class HeadSmash(BaseMove):
     def __init__(self):
         super().__init__(id=232)
-        self.effects = [('status', 'target', 'freeze', 0.1)]
+        self.makes_contact = True
+        self.effects = [('recoil', 0.5)]

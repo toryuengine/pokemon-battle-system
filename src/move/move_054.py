@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# うそなき
-class FakeTears(BaseMove):
+# いわなだれ
+class RockSlide(BaseMove):
     def __init__(self):
         super().__init__(id=54)
-        self.effects = [('stat', 'target', 'spdef', -2, 1.0)]
+        self.effects = [('flinch', 'target', 0.3)]

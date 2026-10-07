@@ -1,7 +1,7 @@
 from ability.base_ability import BaseAbility
 
 # 音の技のID（くさぶえ・ハイパーボイス・ほろびのうた・ほえる・いやなおと・うたう・むしのさざめき）
-SOUND_MOVE_IDS = {25, 198, 68, 98, 185, 128, 262}
+SOUND_MOVE_IDS = {58, 113, 140, 185, 204, 208, 248}
 
 
 # ぼうおん: 音の技を受けない

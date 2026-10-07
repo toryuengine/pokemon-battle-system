@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# ほうでん
-class Discharge(BaseMove):
+# いやなおと
+class Screech(BaseMove):
     def __init__(self):
         super().__init__(id=58)
-        self.effects = [('status', 'target', 'paralysis', 0.3)]
+        self.effects = [('stat', 'target', 'defense', -2, 1.0)]

@@ -7,6 +7,9 @@ CATEGORY_PHYSICAL = 0
 CATEGORY_SPECIAL = 1
 CATEGORY_STATUS = 2
 
+# 天候によって回復量が変わる回復技のID（こうごうせい・あさのひざし・つきのひかり）
+WEATHER_HEAL_MOVE_IDS = (13, 251, 253)
+
 
 class BaseMove:
     def __init__(self, id: int):
@@ -236,7 +239,7 @@ class BaseMove:
             elif kind == "heal":
                 _, ratio = effect
                 # こうごうせい・あさのひざし・つきのひかりは天候によって回復量が変わる
-                if self.id in (14, 263, 265):
+                if self.id in WEATHER_HEAL_MOVE_IDS:
                     weather = battle.get_effective_weather()
                     if weather == "sun":
                         ratio = 2 / 3

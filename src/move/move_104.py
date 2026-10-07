@@ -1,8 +1,9 @@
 from move.base_move import BaseMove
 
 
-# あまえる
-class Charm(BaseMove):
+# おんがえし
+class Return(BaseMove):
     def __init__(self):
         super().__init__(id=104)
-        self.effects = [('stat', 'target', 'atk', -2, 1.0)]
+        self.makes_contact = True
+        self.effects = []

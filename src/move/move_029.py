@@ -1,9 +1,8 @@
 from move.base_move import BaseMove
 
 
-# こらえる
-class Endure(BaseMove):
+# シグナルビーム
+class SignalBeam(BaseMove):
     def __init__(self):
         super().__init__(id=29)
-        self.effects = [("endure",)]
-        self.priority = 4
+        self.effects = [('status', 'target', 'confusion', 0.1)]

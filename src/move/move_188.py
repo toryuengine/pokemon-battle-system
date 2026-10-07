@@ -1,8 +1,8 @@
 from move.base_move import BaseMove
 
 
-# やどりぎのタネ
-class LeechSeed(BaseMove):
+# いちゃもん: 相手が同じ技を2回続けて出せなくする
+class Torment(BaseMove):
     def __init__(self):
         super().__init__(id=188)
-        self.effects = [("leech_seed",)]
+        self.effects = [("torment",)]
