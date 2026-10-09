@@ -6,6 +6,7 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 _pokemon_data = None
 _round_pools = None
+_nejiki_pools = None
 _move_data = None
 _type_data = None
 _type_chart_data = None
@@ -19,7 +20,10 @@ def _load_json(path):
         return json.load(f)
 
 
-# 周の番号 → 周の名前（"1周目"・"銀ネジキ"等）と、その周で使うセットのグループ（data/pokemon.jsonの"group"）
+# オープンレベルの周ごとのプールの定義（仕様書6.1・8節）
+# "rounds"：周の番号（0=1周目）→ 周の名前と、その周で使うセットのグループ（data/pokemon.jsonの"group"）。
+#   グループ4〜7はグループ2のバリエーション1〜4、グループ8は伝説（全バリエーション）。最後の項目は「5周目以降」
+# "nejiki"：ネジキ戦（"silver"=21戦目、"gold"=49戦目）で使うグループ。ネジキ戦は周の第7戦を置き換える
 def load_round_data(path=DATA_DIR / "round.json"):
     return _load_json(path)
 
@@ -36,12 +40,22 @@ def load_pokemon_data():
 
 
 # 周ごとに出てくるセットの一覧。(pokemon_id, indivisual_id)のリストで返す
-# その周のグループ（round.jsonの"groups"）に入っているセットを集める
+# その周のグループ（round.jsonの"groups"）に入っているセットを集める。
+# round.jsonに無い先の周（6周目以降）は、最後の項目（5周目以降）のプールになる
 def load_round_pool(round_index: int):
     global _round_pools
     if _round_pools is None:
         _round_pools = _build_round_pools()
-    return _round_pools[round_index]
+    return _round_pools[min(round_index, len(_round_pools) - 1)]
+
+
+# ネジキ戦（"silver"=21戦目・"gold"=49戦目）で出てくるセットの一覧
+def load_nejiki_pool(kind: str):
+    global _nejiki_pools
+    if _nejiki_pools is None:
+        nejiki = load_round_data()["nejiki"]
+        _nejiki_pools = {key: _sets_in_groups(nejiki[key]["groups"]) for key in nejiki}
+    return _nejiki_pools[kind]
 
 
 def _build_pokemon_data():
@@ -73,16 +87,19 @@ def _build_pokemon_data():
     return entries
 
 
+# 指定したグループ（data/pokemon.jsonの"group"）に入っているセットを集める
+def _sets_in_groups(groups):
+    groups = set(groups)
+    return [(pokemon_id, indivisual_id)
+            for pokemon_id, entry in enumerate(load_pokemon_data())
+            for indivisual_id, set_data in enumerate(entry["indivisual"])
+            if set_data["group"] in groups]
+
+
 def _build_round_pools():
     entries = load_pokemon_data()
-    rounds = load_round_data()
-    pools = []
-    for round_index in range(len(rounds)):
-        groups = set(rounds[str(round_index)]["groups"])
-        pools.append([(pokemon_id, indivisual_id)
-                      for pokemon_id, entry in enumerate(entries)
-                      for indivisual_id, set_data in enumerate(entry["indivisual"])
-                      if set_data["group"] in groups])
+    rounds = load_round_data()["rounds"]
+    pools = [_sets_in_groups(rounds[str(round_index)]["groups"]) for round_index in range(len(rounds))]
     used = {pokemon_id for pool in pools for pokemon_id, _ in pool}
     missing = [entry["name"] for pokemon_id, entry in enumerate(entries) if pokemon_id not in used]
     assert not missing, f"どの周にも出てこない種族があります: {missing}"

@@ -18,7 +18,7 @@ from move.base_move import BaseMove
 from move.movefactory import create_move
 from pokemon import Pokemon
 from readpokemondata import (load_ability_data, load_base_stats_data, load_item_data, load_move_data, load_pokemon_data,
-                             load_round_data, load_round_pool)
+                             load_nejiki_pool, load_round_data, load_round_pool)
 
 
 def pokemon_id_of(name):
@@ -36,25 +36,45 @@ def item_id_of(name):
 
 # ---- 周ごとのデータ ----
 
-# 周ごとのセット数（round.jsonの"groups"に入っているグループのセットの数）
+# 周ごとのセット数（オープンレベル。1〜4周目はグループ2のその周のバリエーションだけ（136種×1セット）、
+# 5周目以降は全バリエーション＋伝説（150種×4セット））
 def test_round_pool_sizes():
-    assert len(load_round_data()) == 9
-    assert [len(load_round_pool(r)) for r in range(9)] == [136, 272, 408, 600, 544, 600, 600, 600, 600]
+    assert len(load_round_data()["rounds"]) == 5
+    assert [len(load_round_pool(r)) for r in range(5)] == [136, 136, 136, 136, 600]
 
 
-# 周が進むごとにセットが増えていき、前の周のセットを全て含む（銀ネジキ・5周目以降は全セット）
-def test_round_pools_grow():
-    pools = [set(load_round_pool(r)) for r in range(9)]
-    assert pools[0] < pools[1] < pools[2] < pools[4] < pools[5]
-    assert pools[3] == pools[5] == pools[6] == pools[7] == pools[8]
+# 1〜4周目は周の番号に対応するバリエーションのセットだけが出てくる（仕様書6.1・オープンレベル）
+def test_round_pools_use_one_variation():
+    data = load_pokemon_data()
+    for r in range(4):
+        assert {data[p]["indivisual"][s]["variation"] for p, s in load_round_pool(r)} == {r + 1}
 
 
-# 伝説のポケモン（14種）は、銀ネジキ・5周目以降の周にだけ出てくる
+# 6周目以降は5周目以降と同じプール（round.jsonの最後の項目）
+def test_round_pool_after_last_round():
+    assert load_round_pool(5) == load_round_pool(20) == load_round_pool(4)
+
+
+# 伝説のポケモン（14種）は、5周目以降にだけ出てくる（仕様書6.1・オープンレベル）
 def test_legendary_rounds():
     legendary_ids = {i for i, entry in enumerate(load_pokemon_data()) if entry["legendary"]}
     assert len(legendary_ids) == 14
-    rounds_with_legendary = [r for r in range(9) if any(p in legendary_ids for p, _ in load_round_pool(r))]
-    assert rounds_with_legendary == [3, 5, 6, 7, 8]
+    rounds_with_legendary = [r for r in range(5) if any(p in legendary_ids for p, _ in load_round_pool(r))]
+    assert rounds_with_legendary == [4]
+
+
+# ネジキ戦のプール（仕様書8節）：21戦目はグループ2・1番目のバリエーションで伝説なし、
+# 49戦目はグループ2・4番目のバリエーション＋伝説（伝説はどのバリエーションでも可）
+def test_nejiki_pools():
+    data = load_pokemon_data()
+    silver = load_nejiki_pool("silver")
+    assert len(silver) == 136
+    assert all(data[p]["indivisual"][s]["variation"] == 1 and not data[p]["legendary"] for p, s in silver)
+    gold = load_nejiki_pool("gold")
+    assert len(gold) == 136 + 14 * 4
+    assert all(data[p]["indivisual"][s]["variation"] == 4 for p, s in gold if not data[p]["legendary"])
+    assert {(p, s) for p, s in gold if data[p]["legendary"]} == \
+        {(p, s) for p, entry in enumerate(data) if entry["legendary"] for s in range(4)}
 
 
 # セットはバリエーション番号の順に並ぶ（indivisual_id = バリエーション - 1）
@@ -67,7 +87,7 @@ def test_pokemon_data_contains_every_set_once():
     data = load_pokemon_data()
     assert len(data) == 150
     assert all(len(entry["indivisual"]) == 4 for entry in data)
-    assert set(load_round_pool(8)) == {(p, s) for p in range(150) for s in range(4)}
+    assert set(load_round_pool(4)) == {(p, s) for p in range(150) for s in range(4)}
 
 
 # 伝説の種族値は第4世代の値（クレセリアは第9世代で防御・特防が下がっているので、その前の値になっていること）
