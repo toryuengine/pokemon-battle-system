@@ -44,7 +44,7 @@ class ThickClub(BaseItem):
 
 # いのちのたま: ダメージ1.3倍、攻撃するたびに最大HPの1/10を失う
 class LifeOrb(BaseItem):
-    def get_damage_multiplier(self, attacker, effectiveness: float) -> float:
+    def get_damage_multiplier_before_random(self, attacker) -> float:
         return LIFE_ORB_MULTIPLIER
 
     def on_after_damage(self, battle, attacker, defender, move, total_damage: int):
@@ -60,7 +60,7 @@ class ExpertBelt(BaseItem):
 # メトロノーム: 同じ技を連続で使い続けると、1ターンごとにダメージが1割ずつ上がる（最大2倍）
 # 連続使用回数はBattle側がcurrent_status.consecutive_move_countに記録している
 class Metronome(BaseItem):
-    def get_damage_multiplier(self, attacker, effectiveness: float) -> float:
+    def get_damage_multiplier_before_random(self, attacker) -> float:
         multiplier = 1.0 + METRONOME_BOOST_PER_USE * attacker.current_status.consecutive_move_count
         return min(METRONOME_MAX_MULTIPLIER, multiplier)
 

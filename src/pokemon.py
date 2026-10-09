@@ -58,7 +58,7 @@ class CurrentStatus:
     is_protected: bool = False
     # こらえるでHP1耐え状態かどうか。このターンの間だけ有効で、Battle側が毎ターン開始時にリセットする
     is_enduring: bool = False
-    # まもる・みきり・こらえるを連続成功させた回数（本編仕様で成功率が1/3ずつ下がっていくため）。
+    # まもる・みきり・こらえるを連続成功させた回数（第4世代仕様で成功率が1/2ずつ下がっていくため）。
     # これら以外の技を使う、または失敗すると0に戻る。交代すると解除される
     protect_stall_counter: int = 0
     # じゅうでんの残りターン数。使ったターンの終わりと次のターンの終わりに1ずつ減り、
@@ -79,6 +79,12 @@ class CurrentStatus:
     consecutive_move_count: int = 0
     # このターンに既に行動（または行動を試みた）かどうか（フォーカスレンズの判定に使う）。毎ターン開始時にリセットする
     has_moved_this_turn: bool = False
+    # このターンに選んだ技のインスタンス（交代を選んだ・まだ選んでいないならNone）。ふいうちの成否判定に使う。
+    # 毎ターン開始時にリセットする
+    selected_move_this_turn: Optional[BaseMove] = None
+    # はねやすめでひこうタイプを無くしている間の、元のタイプ(type1, type2)。Noneならはねやすめの効果中ではない。
+    # ターンの終わり・場を退いたときに元に戻す
+    roost_original_types: Optional[tuple] = None
     # たくわえるで実際に上がった防御・特防のランク（はきだす・のみこむで、この分だけ元に戻す）。交代すると0に戻る
     stockpile_defense_boost: int = 0
     stockpile_spdef_boost: int = 0
@@ -167,6 +173,8 @@ class Pokemon:
         self.name: str = entry["name"]
         self.type1: int = entry["type1"]
         self.type2: Optional[int] = entry["type2"]
+        # 体重（kg）。くさむすびの威力に使う
+        self.weight: float = entry["weight"]
         # 性別（"male"/"female"。Noneなら性別不明）。個体データに"gender"があればそれを使い、
         # 無ければ種族のfemale_rate（メスになる確率。nullなら性別不明の種族）からこの時点でランダムに決める
         self.gender: Optional[str] = set_data["gender"] if "gender" in set_data else _roll_gender(entry.get("female_rate"), rng)
