@@ -2,7 +2,7 @@ import random
 
 from ability.base_ability import NO_ABILITY
 from battlelogic.stat_stage import stage_multiplier
-from battlelogic.type_chart import get_move_effectiveness, resolve_type_id
+from battlelogic.type_chart import get_move_effectiveness, get_move_effectiveness_factors, resolve_type_id
 from move.base_move import CATEGORY_PHYSICAL, CATEGORY_STATUS
 
 # 急所ランクごとの急所の発生率（第4世代仕様）。通常は1/16、急所に当たりやすい技(high_crit)や
@@ -15,7 +15,7 @@ BURN_DAMAGE_MULTIPLIER = 0.5
 
 TYPE_ID_ROCK = 12
 
-# ソーラービームのid。晴れ以外での溜め省略・雨での威力半減という固有仕様があるため個別に参照する
+# ソーラービームのid。晴れでの溜め省略・雨/すなあらし/あられでの威力半減という固有仕様があるため個別に参照する
 SOLAR_BEAM_ID = 19
 
 # じたばた等、自分の残りHP割合によって威力が変わる技の閾値テーブル
@@ -39,7 +39,7 @@ def get_hp_based_power(attacker) -> int:
     return HP_BASED_POWER_TABLE[-1][1]
 
 
-# 天候によるほのお/みず技の威力補正。ソーラービームは雨で別途さらに半減する
+# 天候によるほのお/みず技の威力補正。ソーラービームは雨・すなあらし・あられで別途さらに半減する
 def get_weather_power_multiplier(move, weather) -> float:
     multiplier = 1.0
 
@@ -53,8 +53,9 @@ def get_weather_power_multiplier(move, weather) -> float:
             multiplier *= 1.5
         elif move.type == "ほのお":
             multiplier *= 0.5
-        if move.id == SOLAR_BEAM_ID:
-            multiplier *= 0.5
+
+    if move.id == SOLAR_BEAM_ID and weather in ("rain", "sandstorm", "hail"):
+        multiplier *= 0.5
 
     return multiplier
 
@@ -167,30 +168,42 @@ def calculate_damage(attacker, defender, move, weather=None, screen_active=False
 
     power = int(power * attacker_item.get_power_multiplier(attacker, move) * ability_power_multiplier)
 
-    base_damage = (2 * attacker.level / 5 + 2) * power * attack_stat / defense_stat / 50
-    # やけど状態なら物理技のダメージが半分になる。第4世代の計算式では最後の+2より前に掛かる
+    # ここから先は第4世代のダメージ式の順番どおりに、補正を1つ掛けるたびに切り捨てる
+    #   ((((Lv×2÷5+2)×威力×攻撃÷50)÷防御)×Mod1+2)×急所×Mod2×乱数÷100×タイプ一致×タイプ1×タイプ2×Mod3
+    #   Mod1: やけど・壁・天候、Mod2: いのちのたま・メトロノーム、Mod3: たつじんのおび・いろめがね・フィルター・半減実
+    damage = (2 * attacker.level // 5 + 2) * power * attack_stat // 50 // defense_stat
+
+    # やけど状態なら物理技のダメージが半分になる（こんじょうなら受けない）
     if (move.category == CATEGORY_PHYSICAL and attacker.current_status.status_condition == "burn"
             and not attacker_ability.ignores_burn_damage_drop):
-        base_damage *= BURN_DAMAGE_MULTIPLIER
-    base_damage += 2
+        damage = int(damage * BURN_DAMAGE_MULTIPLIER)
+    # リフレクター/ひかりのかべによる軽減。急所に当たった場合は壁を無視する
+    if screen_active and not is_critical:
+        damage = int(damage * 0.5)
+    damage = int(damage * get_weather_power_multiplier(move, weather))
+    damage += 2
+
+    if is_critical:
+        damage = int(damage * CRIT_MULTIPLIER * attacker_ability.critical_multiplier_bonus)
+    damage = int(damage * attacker_item.get_damage_multiplier_before_random(attacker))
+    damage = damage * random.randint(85, 100) // 100
 
     # タイプを持たない技(わるあがき等)はタイプ一致による強化(STAB)も無い
     is_stab = not move.is_typeless and resolve_type_id(move.type) in (attacker.type1, attacker.type2)
-    stab = attacker_ability.stab_multiplier if is_stab else 1.0
+    if is_stab:
+        damage = int(damage * attacker_ability.stab_multiplier)
 
+    for factor in get_move_effectiveness_factors(move, defender, ignore_ghost_immunity):
+        damage = int(damage * factor)
     effectiveness = get_move_effectiveness(move, defender, ignore_ghost_immunity)
-    weather_multiplier = get_weather_power_multiplier(move, weather)
-    random_factor = random.randint(85, 100) / 100
+    if effectiveness == 0:
+        return 0
 
-    crit_multiplier = CRIT_MULTIPLIER * attacker_ability.critical_multiplier_bonus if is_critical else 1.0
+    for multiplier in (attacker_item.get_damage_multiplier(attacker, effectiveness),
+                       attacker_ability.get_damage_multiplier(attacker, move, effectiveness),
+                       defender_ability.get_received_damage_multiplier(defender, move, effectiveness),
+                       extra_multiplier):
+        damage = int(damage * multiplier)
 
-    # リフレクター/ひかりのかべによる軽減。急所に当たった場合は壁を無視する
-    screen_multiplier = 0.5 if (screen_active and not is_critical) else 1.0
-
-    item_multiplier = attacker_item.get_damage_multiplier(attacker, effectiveness) * extra_multiplier
-    ability_multiplier = (attacker_ability.get_damage_multiplier(attacker, move, effectiveness)
-                          * defender_ability.get_received_damage_multiplier(defender, move, effectiveness))
-
-    damage = (base_damage * stab * effectiveness * weather_multiplier * crit_multiplier * screen_multiplier
-              * item_multiplier * ability_multiplier * random_factor)
-    return int(damage)
+    # 効果がある技のダメージは最低1
+    return max(1, damage)

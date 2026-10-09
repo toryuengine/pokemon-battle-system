@@ -137,13 +137,13 @@ from move.move_134 import Spikes
 from move.move_135 import Dig
 from move.move_136 import Swagger
 from move.move_137 import Explosion
-from move.move_138 import TakeDown
+from move.move_138 import DoubleEdge
 from move.move_139 import SteelWing
 from move.move_140 import Roar
 from move.move_141 import Fly
 from move.move_142 import Roost
 from move.move_143 import BraveBird
-from move.move_144 import Feint
+from move.move_144 import SuckerPunch
 from move.move_145 import Taunt
 from move.move_146 import Punishment
 from move.move_147 import Thrash
@@ -171,7 +171,7 @@ from move.move_168 import Rest
 from move.move_169 import SleepTalk
 from move.move_170 import Bite
 from move.move_171 import Swift
-from move.move_172 import Flail
+from move.move_172 import Endeavor
 from move.move_173 import MudBomb
 from move.move_174 import DarkPulse
 from move.move_175 import Frustration
@@ -183,7 +183,7 @@ from move.move_180 import Stockpile
 from move.move_181 import Flash
 from move.move_182 import MagnetRise
 from move.move_183 import RazorLeaf
-from move.move_184 import SuckerPunch
+from move.move_184 import FeintAttack
 from move.move_185 import HyperVoice
 from move.move_186 import Extrasensory
 from move.move_187 import WaterPulse
@@ -198,7 +198,7 @@ from move.move_195 import LastResort
 from move.move_196 import TrickRoom
 from move.move_197 import Nightmare
 from move.move_198 import Megahorn
-from move.move_199 import ZapCannon
+from move.move_199 import ShockWave
 from move.move_200 import Grudge
 from move.move_201 import FutureSight
 from move.move_202 import Brine
@@ -227,7 +227,7 @@ from move.move_224 import Minimize
 from move.move_225 import AcidArmor
 from move.move_226 import Spite
 from move.move_227 import BellyDrum
-from move.move_228 import Flail2
+from move.move_228 import Flail
 from move.move_229 import Guillotine
 from move.move_230 import BulletPunch
 from move.move_231 import Whirlpool
@@ -410,13 +410,13 @@ _MOVE_CLASSES = {
     135: Dig,
     136: Swagger,
     137: Explosion,
-    138: TakeDown,
+    138: DoubleEdge,
     139: SteelWing,
     140: Roar,
     141: Fly,
     142: Roost,
     143: BraveBird,
-    144: Feint,
+    144: SuckerPunch,
     145: Taunt,
     146: Punishment,
     147: Thrash,
@@ -444,7 +444,7 @@ _MOVE_CLASSES = {
     169: SleepTalk,
     170: Bite,
     171: Swift,
-    172: Flail,
+    172: Endeavor,
     173: MudBomb,
     174: DarkPulse,
     175: Frustration,
@@ -456,7 +456,7 @@ _MOVE_CLASSES = {
     181: Flash,
     182: MagnetRise,
     183: RazorLeaf,
-    184: SuckerPunch,
+    184: FeintAttack,
     185: HyperVoice,
     186: Extrasensory,
     187: WaterPulse,
@@ -471,7 +471,7 @@ _MOVE_CLASSES = {
     196: TrickRoom,
     197: Nightmare,
     198: Megahorn,
-    199: ZapCannon,
+    199: ShockWave,
     200: Grudge,
     201: FutureSight,
     202: Brine,
@@ -500,7 +500,7 @@ _MOVE_CLASSES = {
     225: AcidArmor,
     226: Spite,
     227: BellyDrum,
-    228: Flail2,
+    228: Flail,
     229: Guillotine,
     230: BulletPunch,
     231: Whirlpool,

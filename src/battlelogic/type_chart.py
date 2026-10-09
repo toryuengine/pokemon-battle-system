@@ -52,8 +52,17 @@ def get_effectiveness(attack_type, defend_type1, defend_type2=None) -> float:
 # 相手のゴーストタイプを無いものとして相性を計算する（ゴースト無効化の解除）
 # 相手がくろいてっきゅうを持っている、またはねをはるで根を張っている場合、じめん技は相手のひこうタイプを無いものとして相性を計算する
 def get_move_effectiveness(move, defender, ignore_ghost_immunity=False) -> float:
+    multiplier = 1.0
+    for factor in get_move_effectiveness_factors(move, defender, ignore_ghost_immunity):
+        multiplier *= factor
+    return multiplier
+
+
+# get_move_effectivenessの倍率を、相手のタイプ1つずつに分けたリスト（タイプ1の倍率, タイプ2の倍率）で返す
+# 第4世代のダメージ計算は、タイプ1・タイプ2の倍率を1つずつ掛けてそのたびに切り捨てるため、分けて使う
+def get_move_effectiveness_factors(move, defender, ignore_ghost_immunity=False) -> list:
     if move.is_typeless:
-        return 1.0
+        return []
 
     attack_id = resolve_type_id(move.type)
 
@@ -63,19 +72,8 @@ def get_move_effectiveness(move, defender, ignore_ghost_immunity=False) -> float
     if attack_id == TYPE_ID_GROUND and defender.is_forced_grounded:
         ignored_type_ids.add(TYPE_ID_FLYING)
 
-    if ignored_type_ids:
-        defend_types = [
-            t for t in (defender.type1, defender.type2)
-            if t is not None and t not in ignored_type_ids
-        ]
-        if not defend_types:
-            return 1.0
-        multiplier = 1.0
-        for defend_type in defend_types:
-            multiplier *= get_multiplier(attack_id, defend_type)
-        return multiplier
-
-    return get_effectiveness(move.type, defender.type1, defender.type2)
+    defend_types = [t for t in (defender.type1, defender.type2) if t is not None and t not in ignored_type_ids]
+    return [get_multiplier(attack_id, defend_type) for defend_type in defend_types]
 
 
 def describe_effectiveness(multiplier: float) -> str:

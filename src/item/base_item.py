@@ -3,6 +3,7 @@ from readpokemondata import load_item_data
 # なげつけるで投げた時の威力（第4世代仕様）。持ち物ID（data/item.jsonのキー）→ 威力。ここに無い持ち物は10
 FLING_POWERS = {
     2: 30,  # くろいヘドロ
+    5: 30,  # ピントレンズ
     7: 30,  # しんぴのしずく
     8: 30,  # かいがらのすず
     9: 30,  # いのちのたま
@@ -70,7 +71,11 @@ class BaseItem:
     def get_power_multiplier(self, attacker, move) -> float:
         return 1.0
 
-    # 最終ダメージに掛かる倍率
+    # 急所の後・乱数の前に掛かるダメージ倍率（第4世代のダメージ式のMod2。いのちのたま・メトロノーム）
+    def get_damage_multiplier_before_random(self, attacker) -> float:
+        return 1.0
+
+    # 最終ダメージに掛かる倍率（第4世代のダメージ式のMod3。たつじんのおび）
     def get_damage_multiplier(self, attacker, effectiveness: float) -> float:
         return 1.0
 

@@ -101,6 +101,9 @@ class BaseMove:
         # 場にしめりけのポケモンがいると失敗する（自分も瀕死にならない）技（だいばくはつ）はサブクラス側でTrueに上書きする
         self.is_explosive = False
 
+        # こおり状態でも使え、使うと自分のこおりが解ける技（フレアドライブ）はサブクラス側でTrueに上書きする
+        self.thaws_user = False
+
         # 接触技（せいでんき・ほのおのからだ・ゆうばく等、接触技を受けると発動する特性の対象）はサブクラス側でTrueに上書きする
         self.makes_contact = False
 
@@ -165,6 +168,7 @@ class BaseMove:
         #   ("trick_room",) 5ターンの間、素早さの遅い順に行動する（トリックルーム）
         #   ("acupressure",) ランダムな能力ランクを+2する（つぼをつく）
         #   ("eat_berry",)  相手のきのみを奪って食べ、その効果を自分が得る（むしくい・ついばむ）
+        #   ("roost",)      最大HPの1/2を回復し、そのターンの間ひこうタイプが無くなる（はねやすめ）
         # target は "self"（attacker） か "target"（defender）
         self.effects = []
 
@@ -396,6 +400,9 @@ class BaseMove:
 
             elif kind == "eat_berry":
                 battle.perform_eat_berry(attacker, defender)
+
+            elif kind == "roost":
+                battle.perform_roost(attacker)
 
     def __repr__(self):
         parts = []

@@ -5,7 +5,8 @@ from ability.base_ability import NO_ABILITY, BaseAbility
 from battlelogic.accuracy import check_hit
 from battlelogic.damage import calculate_confusion_damage, calculate_damage, roll_critical
 from battlelogic.stat_stage import StatStages, accuracy_stage_multiplier, stage_multiplier
-from battlelogic.type_chart import TYPE_ID_FLYING, TYPE_ID_GHOST, get_effectiveness, get_move_effectiveness, get_multiplier
+from battlelogic.type_chart import (TYPE_ID_FLYING, TYPE_ID_GHOST, TYPE_ID_NORMAL, get_effectiveness, get_move_effectiveness,
+                                    get_multiplier)
 from move.base_move import CATEGORY_PHYSICAL, CATEGORY_SPECIAL, CATEGORY_STATUS, BaseMove
 from move.movefactory import create_move
 from move.struggle import Struggle
@@ -71,8 +72,9 @@ BRICK_BREAK_ID = 77
 
 # まもる・みきり・こらえる（本編仕様で連続成功の可否を共通の1つのカウンタで管理する）
 PROTECT_FAMILY_MOVE_IDS = {51, 65, 96}  # こらえる、まもる、みきり
-# 連続成功するたびに次回の成功率が1/3倍になっていく（3世代以降共通の仕様）
-PROTECT_STALL_SUCCESS_RATIO = 1 / 3
+# 連続成功するたびに次回の成功率が1/2倍になっていき、1/8で下げ止まる（第4世代仕様。1/3ずつ下がるのは第6世代以降）
+PROTECT_STALL_SUCCESS_RATIO = 1 / 2
+PROTECT_STALL_MIN_SUCCESS_CHANCE = 1 / 8
 
 # しめつけ系の技（まきつく・すなじごく・うずしお・マグマストーム）の毎ターンのダメージ（第4世代仕様）
 BIND_DAMAGE_RATIO = 1 / 16
@@ -114,6 +116,10 @@ PERISH_SONG_DURATION = 4
 INFATUATION_IMMOBILIZE_CHANCE = 1 / 2
 # トリックルームは使ったターンを含めて5ターン続く
 TRICK_ROOM_DURATION = 5
+# ねむり状態で行動できないターン数の範囲（第4世代仕様。1〜3ターンになったのは第5世代以降）
+SLEEP_TURNS_RANGE = (1, 4)
+# はねやすめの回復量（最大HPに対する割合）
+ROOST_HEAL_RATIO = 1 / 2
 # つぼをつくで上がるランクと、その対象になる能力
 ACUPRESSURE_STAGES = 2
 ACUPRESSURE_STATS = ("atk", "defense", "spatk", "spdef", "spd", "accuracy", "evasion")
@@ -169,6 +175,7 @@ class Battle:
                 pokemon.current_status.is_enduring = False
                 pokemon.current_status.is_flinched = False
                 pokemon.current_status.has_moved_this_turn = False
+                pokemon.current_status.selected_move_this_turn = None
                 pokemon.current_status.damaged_by_this_turn = None
                 pokemon.current_status.last_damage_taken_this_turn = 0
                 pokemon.current_status.last_damage_category_this_turn = None
@@ -179,6 +186,9 @@ class Battle:
             switch2 = self.choose_switch(self.trainer2)
             move1 = self.select_move(self.pokemon1) if switch1 is None else None #技のインスタンスが入っている
             move2 = self.select_move(self.pokemon2) if switch2 is None else None #技のインスタンスが入っている
+            # ふいうちが「相手が攻撃技を選んだか」を見られるよう、選んだ技を記録しておく
+            self.pokemon1.current_status.selected_move_this_turn = move1
+            self.pokemon2.current_status.selected_move_this_turn = move2
 
             if switch1 is not None or switch2 is not None:
                 # 片方だけが交代する場合の、技を出す側（両者が交代するなら誰も技を出さない）
@@ -187,7 +197,7 @@ class Battle:
                 # 交代は技より先に行う（おいうちは交代する相手に、交代の前に当たる）
                 if self.perform_manual_switches(switch1, switch2, move1, move2):
                     break
-                # 技を出す側が、おいうちで既に行動した・反動等で瀕死になり入れ替わった場合は、もう行動しない
+                # 技を出す側が、おいうちで既に行動した・ほえる等で入れ替わった場合は、もう行動しない
                 if (mover_move is not None and not mover.current_status.has_moved_this_turn
                         and mover in (self.pokemon1, self.pokemon2)):
                     if self.execute_move_action(mover, mover_move):
@@ -201,49 +211,59 @@ class Battle:
                 if self.execute_move_action(first_mover, first_move):
                     break
 
-                # 後攻側(second_mover)がこの攻撃で瀕死になり別の個体に交代していたら、
-                # 交代してきたばかりの個体は今ターンもう行動できない
-                if second_trainer.active is not second_mover:
-                    continue
+                # 後攻側が先攻の技（ほえる等）で別の個体に入れ替わっていたら、入れ替わった個体は今ターン行動しない
+                # (後攻側が瀕死になっていた場合は、execute_move_actionの中で行動せずに終わる)
+                if second_trainer.active is second_mover:
+                    if self.execute_move_action(second_mover, second_move):
+                        break
 
-                if self.execute_move_action(second_mover, second_move):
-                    break
-
-            # みらいよちの攻撃
-            self.apply_future_sight()
-            self.activate_held_items_on_field()
-            self.resolve_faints()
-            if self.is_battle_over():
+            if self.process_end_of_turn():
                 break
 
-            # 毎ターン終了時のねをはる・アクアリングの回復、やどりぎのタネの吸収、どく・やけど・のろい・あくむ・しめつけのダメージ
-            self.apply_end_of_turn_recovery()
-            self.apply_end_of_turn_leech_seed()
-            self.apply_end_of_turn_status_damage()
-            self.activate_held_items_on_field()
-            self.resolve_faints()
-            if self.is_battle_over():
-                break
+    # ターン終了時の処理。対戦が終われば（全滅した側がいれば）Trueを返す
+    # 本編どおり、瀕死になった個体の代わりはターン終了時の処理が全部終わってから出す
+    # (ターンの途中で瀕死になった個体は、ターン終了時の処理を受けない。各処理が瀕死の個体を飛ばす)
+    def process_end_of_turn(self) -> bool:
+        # はねやすめで無くしたひこうタイプは、そのターンの終わりに戻る
+        for pokemon in (self.pokemon1, self.pokemon2):
+            self.restore_roost_types(pokemon)
 
-            self.apply_end_of_turn_weather_damage()
-            # あめうけざら・かそく等、ターン終了時に発動する特性
-            self.apply_end_of_turn_abilities()
-            # たべのこし・くろいヘドロの回復/ダメージ
-            self.apply_end_of_turn_items()
-            self.tick_weather()
-            self.tick_screens()
-            self.tick_charge()
-            self.tick_trick_room()
-            # ちょうはつ・アンコール・かなしばり・でんじふゆう・あくびの残りターン
-            self.tick_volatile_statuses()
-            # ほろびのうたのカウント
-            self.apply_perish_song()
-            # どくどくだまはターンの最後に発動する
-            self.apply_end_of_turn_orbs()
-            self.activate_held_items_on_field()
-            self.resolve_faints()
-            if self.is_battle_over():
-                break
+        # みらいよちの攻撃
+        self.apply_future_sight()
+        self.activate_held_items_on_field()
+        if self.is_battle_over():
+            return True
+
+        # 毎ターン終了時のねをはる・アクアリングの回復、やどりぎのタネの吸収、どく・やけど・のろい・あくむ・しめつけのダメージ
+        self.apply_end_of_turn_recovery()
+        self.apply_end_of_turn_leech_seed()
+        self.apply_end_of_turn_status_damage()
+        self.activate_held_items_on_field()
+        if self.is_battle_over():
+            return True
+
+        self.apply_end_of_turn_weather_damage()
+        # あめうけざら・かそく等、ターン終了時に発動する特性
+        self.apply_end_of_turn_abilities()
+        # たべのこし・くろいヘドロの回復/ダメージ
+        self.apply_end_of_turn_items()
+        self.tick_weather()
+        self.tick_screens()
+        self.tick_charge()
+        self.tick_trick_room()
+        # ちょうはつ・アンコール・かなしばり・でんじふゆう・あくびの残りターン
+        self.tick_volatile_statuses()
+        # ほろびのうたのカウント
+        self.apply_perish_song()
+        # どくどくだまはターンの最後に発動する
+        self.apply_end_of_turn_orbs()
+        self.activate_held_items_on_field()
+        if self.is_battle_over():
+            return True
+
+        # 瀕死になった個体の代わりを出す（設置技もここで発動する）
+        self.resolve_faints()
+        return self.is_battle_over()
 
     # どちらかのトレーナーが全滅していれば対戦は終了（get_winner()は引き分けの場合Noneを返すため、
     # 「決着したか」の判定にはget_winner()ではなくこちらを使う）
@@ -269,9 +289,12 @@ class Battle:
             self.activate_switch_in_abilities([trainer.active for trainer in switched_trainers])
             self.activate_held_items_on_field()
 
-    # pokemonがmoveを出し、その結果（持ち物の発動・瀕死による交代）を処理する。対戦が終わればTrueを返す
-    # 攻撃対象は、先に行動した側が反動等で自滅して交代していた場合に備えて、今現在の相手を取得する
+    # pokemonがmoveを出し、その結果（持ち物の発動）を処理する。対戦が終わればTrueを返す
+    # 瀕死になった個体の代わりはターン終了時に出すので、ここでは交代させない。
+    # 瀕死の個体は行動せず、相手が瀕死なら相手に向けた技は失敗する（use_moveで判定する）
     def execute_move_action(self, pokemon: Pokemon, move: BaseMove) -> bool:
+        if self.is_fainted(pokemon):
+            return self.is_battle_over()
         # can_actが反動硬直・ひるみ・状態異常（ねむり/こおり/まひ/こんらん）による行動不能を
         # まとめて判定する。行動不能ならその技は不発のまま次に進む
         if self.can_act(pokemon, move):
@@ -282,8 +305,6 @@ class Battle:
         pokemon.current_status.has_moved_this_turn = True
         # HPが減った・状態異常になった・能力が下がった等で、きのみ・しろいハーブが発動する
         self.activate_held_items_on_field()
-        # 瀕死になった側がいれば手持ちから次の1体に自動で交代させる（設置技もここで発動する）
-        self.resolve_faints()
         return self.is_battle_over()
 
     # ---- 手動の交代 ----
@@ -330,14 +351,13 @@ class Battle:
                 outgoing.current_status.is_switching_out = False
                 if battle_over:
                     return True
-                # おいうちで瀕死になった場合は、resolve_faintsで次の個体が出ているので交代しない
-                if trainer.active is not outgoing:
+                # おいうちで瀕死になった場合は交代しない（代わりの個体はターン終了時に出る）
+                if self.is_fainted(outgoing):
                     continue
 
             self.switch_in(trainer, new_index)
             self.activate_held_items_on_field()
-            # 交代先が設置技で瀕死になれば、手持ちから次の1体を出す
-            self.resolve_faints()
+            # 交代先が設置技で瀕死になった場合も、代わりの個体はターン終了時に出る
             if self.is_battle_over():
                 return True
         return False
@@ -384,6 +404,8 @@ class Battle:
             outgoing.ability = outgoing_status.ability_before_trace
             outgoing_status.ability_before_trace = None
 
+        # はねやすめで無くしたひこうタイプは、場を退くと戻る
+        self.restore_roost_types(outgoing)
         # みやぶるの「見破られた」状態、まもる・みきり・こらえるの連続成功カウンタは、場を退くと解除される
         outgoing_status.is_identified = False
         outgoing_status.protect_stall_counter = 0
@@ -414,6 +436,9 @@ class Battle:
             opponent_status.infatuated_by = None
 
         trainer.active_index = new_index
+        # 場に出てきた個体は、このターンまだ行動しておらず技も選んでいない（前に場にいたときの値が残らないようにする）
+        trainer.active.current_status.has_moved_this_turn = False
+        trainer.active.current_status.selected_move_this_turn = None
         new_stages = passed_stages if passed_stages is not None else StatStages()
         if trainer is self.trainer1:
             self.stages1 = new_stages
@@ -595,8 +620,9 @@ class Battle:
                 if move is None or not move.usable_while_asleep:
                     return False
 
+        # フレアドライブはこおり状態でも使え、自分のこおりが解ける
         if condition == "freeze":
-            if random.random() < FREEZE_THAW_CHANCE:
+            if (move is not None and move.thaws_user) or random.random() < FREEZE_THAW_CHANCE:
                 status.status_condition = None
             else:
                 return False
@@ -633,12 +659,12 @@ class Battle:
             elif condition == "poison":
                 damage = max(1, int(pokemon.status.hp * POISON_DAMAGE_RATIO))
                 self.apply_damage(pokemon, damage)
-            # もうどくのカウンタは、ポイズンヒールでダメージを受けなかったターンも増える
-            if condition == "poison" and 0 < pokemon.current_status.toxic_counter < TOXIC_COUNTER_MAX:
-                pokemon.current_status.toxic_counter += 1
             elif condition == "burn":
                 damage = max(1, int(pokemon.status.hp * BURN_DAMAGE_RATIO))
                 self.apply_damage(pokemon, damage)
+            # もうどくのカウンタは、ポイズンヒールでダメージを受けなかったターンも増える
+            if condition == "poison" and 0 < pokemon.current_status.toxic_counter < TOXIC_COUNTER_MAX:
+                pokemon.current_status.toxic_counter += 1
 
             # あくむ状態なら、ねむっている間は最大HPの1/4を失う（目覚めていれば解除される）
             status = pokemon.current_status
@@ -814,6 +840,11 @@ class Battle:
         if self.is_no_guard_active(attacker, defender):
             return 0
 
+        # 一撃必殺技の命中率は「30＋（自分のレベル−相手のレベル）」で、命中率・回避率のランクや持ち物・特性の補正を受けない
+        # (相手の方がレベルが高い場合は、命中判定の前に失敗する。_resolve_move_hitで判定する)
+        if move.is_ohko:
+            return max(1, min(100, move.hitrate + attacker.level - defender.level))
+
         weather = self.get_effective_weather()
         base_hitrate = move.hitrate
         if move.id == THUNDER_ID:
@@ -930,6 +961,10 @@ class Battle:
             # PPは命中/失敗に関わらず、使った時点で1消費する
             self.consume_pp(attacker, defender, move)
 
+        # 相手が既に瀕死（先に行動した側の技・反動等で倒れ、代わりがまだ出ていない）なら、相手に向けた技は失敗する
+        if self.is_fainted(defender) and self.is_move_blocked_by_protect(move, attacker):
+            return result
+
         # はかいこうせん等は命中・失敗に関わらず、使った時点で次ターンの反動硬直が確定する
         if move.requires_recharge:
             attacker.current_status.must_recharge = True
@@ -1006,6 +1041,10 @@ class Battle:
         # 相手に向けた技かどうか（自分自身・場に向けた変化技は、相手の回避状態やまもるの影響を受けない）
         targets_opponent = self.is_move_blocked_by_protect(move, attacker)
 
+        # 相手が既に瀕死なら、相手に向けた技は失敗する（ねごとで呼び出した技など、use_moveの判定を通らない場合のため）
+        if targets_opponent and self.is_fainted(defender):
+            return result
+
         # 相手が回避状態（あなをほる等で溜め中）なら、命中率に関わらず必ず外れる
         # (ノーガードなら当たる。じしん→あなをほる等、溜めている技に対応する技も当たる)
         if (defender.current_status.is_invulnerable and targets_opponent
@@ -1046,6 +1085,10 @@ class Battle:
         # 吸収技（ギガドレイン・ゆめくい等）も失敗する（第4世代仕様）
         if targets_opponent and self.has_substitute(defender) and self.is_move_blocked_by_substitute(move, attacker):
             result["blocked_by_substitute"] = True
+            return result
+
+        # 一撃必殺技は、相手の方がレベルが高いと必ず失敗する（ノーガードでも当たらない）
+        if move.is_ohko and defender.level > attacker.level:
             return result
 
         if not check_hit(self.get_effective_hitrate(move, attacker, defender)):
@@ -1131,6 +1174,11 @@ class Battle:
             # テクスチャー2が参照できるよう、受けた技のタイプを記録しておく（みがわりが受けた場合は本体は受けていない）
             if result["hit_count"] > 0 and not last_hit_absorbed:
                 defender.current_status.last_hit_by_type = move.type
+
+            # こおり状態の相手は、ほのおタイプの攻撃技を本体に受けると、こおりが解ける
+            if (result["hit_count"] > 0 and not last_hit_absorbed and move.type == "ほのお" and not move.is_typeless
+                    and defender.current_status.status_condition == "freeze" and not self.is_fainted(defender)):
+                defender.current_status.status_condition = None
 
             # 身代わりが受け止めた攻撃の追加効果・持ち物の効果は、相手本体には届かない
             if last_hit_absorbed:
@@ -1290,10 +1338,10 @@ class Battle:
                    for effect in move.effects)
 
     # まもる・みきり・こらえるの連続使用による成功率の減衰を判定し、成功していればis_protected/is_enduringを立てる
-    # 本編仕様: 初回100%、以降連続成功するたびに1/3倍。失敗、またはこれら以外の技を使うと0に戻る
+    # 第4世代仕様: 初回100%、以降連続成功するたびに1/2倍（1/8で下げ止まる）。失敗、またはこれら以外の技を使うと0に戻る
     def attempt_protect_family_move(self, attacker: Pokemon, is_endure: bool):
         stall_count = attacker.current_status.protect_stall_counter
-        success_chance = PROTECT_STALL_SUCCESS_RATIO ** stall_count
+        success_chance = max(PROTECT_STALL_MIN_SUCCESS_CHANCE, PROTECT_STALL_SUCCESS_RATIO ** stall_count)
 
         if random.random() < success_chance:
             if is_endure:
@@ -1315,7 +1363,7 @@ class Battle:
     # chanceの確率で複数の能力ランクを同時に変える（げんしのちからのような複合効果用。1回の判定で全部まとめて適用する）
     # 特性で防がれた能力だけは変化しない
     def try_apply_stat_multi_change(self, target, stat_changes, chance, source=None):
-        if self.is_shielded_by_substitute(target, source):
+        if self.is_fainted(target) or self.is_shielded_by_substitute(target, source):
             return False
         if random.random() < chance:
             for stat_name, stage_amount in stat_changes:
@@ -1335,7 +1383,13 @@ class Battle:
         badly_poisoned = condition == "toxic"
         if badly_poisoned:
             condition = "poison"
+        # 瀕死の相手には状態異常が付かない（シンクロも発動しない）
+        if self.is_fainted(target):
+            return False
         if not bypass_substitute and self.is_shielded_by_substitute(target, source):
+            return False
+        # にほんばれの間は、こおり状態にならない
+        if condition == "freeze" and self.get_effective_weather() == "sun":
             return False
         if not self.can_receive_status(target, condition, source):
             return False
@@ -1355,7 +1409,7 @@ class Battle:
             target.current_status.status_condition = condition
             target.current_status.toxic_counter = 1 if badly_poisoned else 0
             if condition == "sleep":
-                target.current_status.sleep_turns_remaining = random.randint(1, 3)
+                target.current_status.sleep_turns_remaining = random.randint(*SLEEP_TURNS_RANGE)
             self.get_ability(target).on_status_inflicted(self, target, condition, source)
             return True
         return False
@@ -1363,7 +1417,7 @@ class Battle:
     # chanceの確率でtargetをひるませる（そのターンだけ行動不能。start_battle側で判定・解除する）
     # せいしんりょくならひるまない（sourceがかたやぶりなら無視する）
     def try_apply_flinch(self, target, chance, source=None):
-        if self.is_shielded_by_substitute(target, source):
+        if self.is_fainted(target) or self.is_shielded_by_substitute(target, source):
             return False
         if self.get_target_ability(target, source).prevents_flinch:
             return False
@@ -1536,6 +1590,9 @@ class Battle:
     # (交代先はswitch_policyには聞かず、resolve_faintsと同じ選び方＝手持ち順で最初に見つかった生存個体にする)
     # 手持ちに他に生きている個体がいなければ何もしない（交代せず攻撃だけで終わる）
     def perform_self_switch(self, pokemon: Pokemon):
+        # 攻撃の反動・さめはだ等で瀕死になっていれば交代しない（代わりの個体はターン終了時に出る）
+        if self.is_fainted(pokemon):
+            return
         trainer = self.get_trainer(pokemon)
         next_index = trainer.find_next_alive_index()
         if next_index is None:
@@ -1749,6 +1806,8 @@ class Battle:
 
     # バトンタッチ: 能力ランク等を引き継いで、手持ちの生きている次の1体に交代する（いなければ失敗）
     def perform_baton_pass(self, pokemon: Pokemon):
+        if self.is_fainted(pokemon):
+            return
         trainer = self.get_trainer(pokemon)
         next_index = trainer.find_next_alive_index()
         if next_index is None:
@@ -1839,7 +1898,7 @@ class Battle:
     # 命中判定は攻撃する時に行う。相手の場に既にみらいよちが向けられていれば失敗する
     def perform_future_sight(self, attacker: Pokemon, defender: Pokemon, move: BaseMove, result: dict) -> dict:
         trainer = self.get_trainer(defender)
-        if trainer.future_sight_turns_remaining > 0:
+        if trainer.future_sight_turns_remaining > 0 or self.is_fainted(defender):
             return result
 
         damage = calculate_damage(
@@ -2013,6 +2072,28 @@ class Battle:
         if self.get_target_ability(target, attacker).prevents_infatuation:
             return
         target.current_status.infatuated_by = attacker
+
+    # ---- はねやすめ ----
+
+    # はねやすめ: 最大HPの1/2を回復し、そのターンの終わりまでひこうタイプが無くなる（HPが満タンなら失敗する。Roost.try_executeで判定済み）
+    # ひこう・他のタイプの2タイプなら他のタイプだけの単タイプになる。ひこう単タイプはノーマルタイプとして扱う（推測。第4世代のデータに該当する種族はいない）
+    def perform_roost(self, attacker: Pokemon):
+        self.apply_heal(attacker, ROOST_HEAL_RATIO)
+        status = attacker.current_status
+        if TYPE_ID_FLYING not in (attacker.type1, attacker.type2) or status.roost_original_types is not None:
+            return
+        status.roost_original_types = (attacker.type1, attacker.type2)
+        remaining_types = [t for t in (attacker.type1, attacker.type2) if t is not None and t != TYPE_ID_FLYING]
+        attacker.type1 = remaining_types[0] if remaining_types else TYPE_ID_NORMAL
+        attacker.type2 = None
+
+    # はねやすめで無くしたひこうタイプを元に戻す（ターンの終わり・場を退いたとき）
+    def restore_roost_types(self, pokemon: Pokemon):
+        status = pokemon.current_status
+        if status.roost_original_types is None:
+            return
+        pokemon.type1, pokemon.type2 = status.roost_original_types
+        status.roost_original_types = None
 
     # ---- トリックルーム・つぼをつく ----
 

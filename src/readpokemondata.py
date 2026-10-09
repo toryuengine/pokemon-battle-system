@@ -26,7 +26,7 @@ def load_round_data(path=DATA_DIR / "round.json"):
 
 # 全種族・全セットのデータ（Pokemon(pokemon_id, indivisual_id)はこのリストの位置で指定する）
 # data/pokemon.jsonはセットしか持たないので、種族名(pokemon_name.json)と種族ごとの情報(species.json:
-# 図鑑番号・メスになる確率・伝説か)、種族値(base_stats.json。図鑑番号で引く)を合わせる。
+# 図鑑番号・メスになる確率・伝説か)、種族値・体重(base_stats.json。図鑑番号で引く)を合わせる。
 # セットの並びはバリエーション番号の順（バリエーション1が0番目…）
 def load_pokemon_data():
     global _pokemon_data
@@ -68,6 +68,7 @@ def _build_pokemon_data():
         assert (dex_entry["name"], dex_entry["type1"], dex_entry["type2"]) == \
             (entry["name"], entry["type1"], entry["type2"]), entry["name"]
         entry["base_stats"] = dex_entry["base_stats"]
+        entry["weight"] = dex_entry["weight"]
         entries.append(entry)
     return entries
 
@@ -88,7 +89,7 @@ def _build_round_pools():
     return pools
 
 
-# 図鑑番号（文字列）→ 種族名・タイプ・種族値（第4世代の全493種。data/base_stats.csvから tools/build_base_stats.py で作る）
+# 図鑑番号（文字列）→ 種族名・タイプ・種族値・体重（第4世代の全493種。data/base_stats.csv・weight.csvから tools/build_base_stats.py で作る）
 # ファクトリーに出てこない種族も入っている（グループ1のデータを足すときなどに使う）
 def load_base_stats_data(path=DATA_DIR / "base_stats.json"):
     global _base_stats_data
