@@ -1,4 +1,3 @@
-import random
 from typing import Callable, List, Optional
 
 from pokemon import Pokemon
@@ -9,23 +8,39 @@ from pokemon import Pokemon
 SwitchPolicy = Callable[["Battle", "Trainer"], Optional[int]]
 
 
+# 技選択の判断を決める関数の型。手動で交代しないターンに(battle, trainer, 選べる技の一覧)で呼ばれ、
+# その一覧の中から1つ選んで返す。固定（溜め技・げきりん・アンコール・こだわり系）・制限（かなしばり・ちょうはつ・
+# いちゃもん・PP切れ）の処理はBattle側で済ませてあり、選べる技が無い（わるあがき）・1つに固定されている場合は呼ばれない
+MovePolicy = Callable[["Battle", "Trainer", List["BaseMove"]], "BaseMove"]
+
+# 瀕死・とんぼがえり・バトンタッチで交代するとき、次に出す個体を決める関数の型。
+# (battle, trainer, 交代先に選べる手持ちのインデックスの一覧, 理由)で呼ばれ、その一覧の中から1つ選んで返す。
+# 理由は"faint"（瀕死）・"u_turn"（とんぼがえり）・"baton_pass"（バトンタッチ）のどれか
+ReplacementPolicy = Callable[["Battle", "Trainer", List[int], str], int]
+
+
 # 毎ターンchanceの確率で、交代できる手持ちの中からランダムに1体選んで交代する判断
 def random_switch_policy(chance: float) -> SwitchPolicy:
     def policy(battle, trainer: "Trainer") -> Optional[int]:
         candidates = trainer.find_switch_candidates()
-        if not candidates or random.random() >= chance:
+        if not candidates or battle.rng.random() >= chance:
             return None
-        return random.choice(candidates)
+        return battle.rng.choice(candidates)
     return policy
 
 
 # 手持ちポケモンと、場に設置された罠（相手側からの設置技）を管理する
 class Trainer:
     # switch_policyは手動交代の判断。Noneなら自分の意思では交代しない（瀕死時・とんぼがえり等の自動交代のみ）
-    def __init__(self, party: List[Pokemon], switch_policy: Optional[SwitchPolicy] = None):
+    # move_policyは技選択の判断。Noneなら選べる技の中からランダムに選ぶ
+    # replacement_policyは瀕死・とんぼがえり・バトンタッチの交代先の判断。Noneなら手持ち順で最初の生存個体を出す
+    def __init__(self, party: List[Pokemon], switch_policy: Optional[SwitchPolicy] = None,
+                 move_policy: Optional[MovePolicy] = None, replacement_policy: Optional[ReplacementPolicy] = None):
         self.party = party
         self.active_index = 0
         self.switch_policy = switch_policy
+        self.move_policy = move_policy
+        self.replacement_policy = replacement_policy
 
         # 自分の場に設置されている罠。設置技はここを書き換える
         self.stealth_rock = False

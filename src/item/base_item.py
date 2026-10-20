@@ -120,7 +120,7 @@ class BaseItem:
         return 1.0
 
     # 同じ優先度の中で先に行動するならTrueを返す（せんせいのツメ）
-    def try_move_first(self) -> bool:
+    def try_move_first(self, battle) -> bool:
         return False
 
     # ---- 技の使用 ----

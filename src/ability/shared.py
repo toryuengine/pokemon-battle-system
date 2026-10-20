@@ -1,4 +1,3 @@
-import random
 
 from ability.base_ability import BaseAbility
 
@@ -122,9 +121,9 @@ class ContactStatusAbility(BaseAbility):
     conditions = ()
 
     def on_contact_received(self, battle, pokemon, attacker, move):
-        if random.random() >= CONTACT_EFFECT_CHANCE:
+        if battle.rng.random() >= CONTACT_EFFECT_CHANCE:
             return
-        battle.try_apply_status(attacker, random.choice(self.conditions), 1.0, source=pokemon, bypass_substitute=True,
+        battle.try_apply_status(attacker, battle.rng.choice(self.conditions), 1.0, source=pokemon, bypass_substitute=True,
                                bypass_safeguard=True)
 
 

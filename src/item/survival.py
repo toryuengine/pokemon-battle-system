@@ -1,5 +1,3 @@
-import random
-
 from item.base_item import BaseItem
 
 FOCUS_BAND_CHANCE = 0.1
@@ -18,4 +16,4 @@ class FocusSash(BaseItem):
 # きあいのハチマキ: 10%の確率で瀕死になる攻撃をHP1で耐える（消費しない）
 class FocusBand(BaseItem):
     def try_endure_fatal_hit(self, battle, defender) -> bool:
-        return random.random() < FOCUS_BAND_CHANCE
+        return battle.rng.random() < FOCUS_BAND_CHANCE
