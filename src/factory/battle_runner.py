@@ -5,6 +5,7 @@ choose_action・choose_replacement に繋ぐ。エンジンは毎ターン「交
 交代を聞かれたときに Agent に行動を1つ選ばせ、技を選んだならそれを覚えておいて技選択のときに返す。
 交代できないターン（くろいまなざし等）は、技選択のときに初めて Agent に聞く。
 技が固定されていて交代もできないターン（溜め技・げきりん等）は、Agent には聞かない。
+対戦が終わったら、Agent に on_battle_end があれば最後の経過と結果を渡す。
 """
 import random
 from dataclasses import dataclass
@@ -13,8 +14,10 @@ from typing import Dict, List, Optional, Sequence
 from battlelogic.battle import Battle
 from factory.generation import FactoryPokemon
 from factory.hint import Hint
-from factory.observation import (ACTION_SWITCH, FactoryContext, MoveView, OpponentPokemonView,
-                                 OwnPokemonView, SideConditions, TurnAction, TurnObservation)
+from battlelogic.events import BattleEvent
+from factory.observation import (ACTION_SWITCH, OWNER_OPPONENT, OWNER_OWN, BattleEndObservation, FactoryContext,
+                                 MoveView, OpponentPokemonView, OwnPokemonView, SideConditions, TurnAction,
+                                 TurnObservation, VisibleEvent)
 from pokemon import Pokemon
 from trainer import Trainer
 
@@ -78,6 +81,24 @@ class OpponentKnowledge:
         self._next_event_index = len(events)
 
 
+# BattleEvent を、side の側のプレイヤーから見える VisibleEvent にする（観測の new_events）
+def to_visible_event(event: BattleEvent, side: int) -> VisibleEvent:
+    owner = None if event.side is None else (OWNER_OWN if event.side == side else OWNER_OPPONENT)
+    data = dict(event.data)
+    party_index = data.pop("party_index", None)
+    if event.kind == "switch_in":
+        data.pop("indivisual_id", None)
+    elif event.kind == "move_result":
+        data.pop("damage", None)
+    elif event.kind == "hp" and owner == OWNER_OPPONENT:
+        max_hp = data["max_hp"]
+        data = {"before_ratio": data["before"] / max_hp, "after_ratio": data["after"] / max_hp}
+    elif event.kind == "battle_end":
+        winner_side = data.pop("winner_side")
+        data["won"] = winner_side == side
+    return VisibleEvent(event.turn, event.kind, owner, party_index, data)
+
+
 def _stages_of(battle: Battle, pokemon: Pokemon) -> Dict[str, int]:
     stages = battle.get_stages(pokemon)
     return {name: getattr(stages, name) for name in STAGE_NAMES}
@@ -121,12 +142,27 @@ class AgentSide:
         self.knowledge = OpponentKnowledge(3 - side)
         # 交代を聞いたときに Agent が技を選んだ場合の、(ターン数, 技の位置)
         self._pending_move = None
+        # 次の観測の new_events に入れる、battle.events の位置
+        self._next_visible_index = 0
 
     def make_trainer(self) -> Trainer:
         return Trainer([spec.build() for spec in self.team], switch_policy=self.switch_policy,
                        move_policy=self.move_policy, replacement_policy=self.replacement_policy)
 
     # ---- 観測 ----
+
+    # 前回の観測から今までの、見える出来事
+    def take_new_events(self, battle: Battle) -> tuple:
+        events = battle.events
+        visible = tuple(to_visible_event(event, self.side) for event in events[self._next_visible_index:])
+        self._next_visible_index = len(events)
+        return visible
+
+    def notify_battle_end(self, battle: Battle, won: bool, is_draw: bool, timed_out: bool):
+        on_battle_end = getattr(self.agent, "on_battle_end", None)
+        if on_battle_end is not None:
+            on_battle_end(BattleEndObservation(self.context, won, is_draw, timed_out, battle.turn,
+                                               self.take_new_events(battle)))
 
     def observe(self, battle: Battle, legal_actions: Sequence[TurnAction]) -> TurnObservation:
         self.knowledge.update(battle)
@@ -165,6 +201,7 @@ class AgentSide:
             weather=battle.weather,
             trick_room_turns=battle.trick_room_turns_remaining,
             legal_actions=tuple(legal_actions),
+            new_events=self.take_new_events(battle),
         )
 
     # 場の個体が今出せる技を、行動（技の位置）の一覧にする。わるあがきしか出せなければ TurnAction.move(None) だけ
@@ -228,18 +265,25 @@ def run_factory_battle(player_team: Sequence[FactoryPokemon], player_agent,
                        rng: random.Random, opponent_agent=None) -> FactoryBattleResult:
     player_side = AgentSide(player_agent, 1, player_team, context, hint)
     player = player_side.make_trainer()
+    opponent_side = None
     if opponent_agent is None:
         opponent = Trainer([spec.build() for spec in opponent_team])
     else:
-        opponent = AgentSide(opponent_agent, 2, opponent_team, context, None).make_trainer()
+        opponent_side = AgentSide(opponent_agent, 2, opponent_team, context, None)
+        opponent = opponent_side.make_trainer()
 
     battle = Battle(player, opponent, rng=rng)
     battle.start_battle()
     winner = battle.get_winning_trainer(draw_winner=opponent)
-    return FactoryBattleResult(
+    result = FactoryBattleResult(
         won=winner is player,
         is_draw=player.is_defeated() and opponent.is_defeated(),
         timed_out=winner is None,
         turns=battle.turn,
         battle=battle,
     )
+    player_side.notify_battle_end(battle, result.won, result.is_draw, result.timed_out)
+    if opponent_side is not None:
+        # 相手の Agent から見た勝ち負け（同時全滅・ターン上限は、プレイヤーの負け＝相手の勝ちとして扱う）
+        opponent_side.notify_battle_end(battle, not result.won, result.is_draw, result.timed_out)
+    return result

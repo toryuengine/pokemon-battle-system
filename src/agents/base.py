@@ -7,7 +7,7 @@
 from abc import ABC, abstractmethod
 from typing import Optional, Sequence, Tuple
 
-from factory.observation import OrderObservation, RentalObservation, TradeObservation, TurnAction, TurnObservation
+from factory.observation import BattleEndObservation, OrderObservation, RentalObservation, TradeObservation, TurnAction, TurnObservation
 
 
 class FactoryAgent(ABC):
@@ -36,3 +36,7 @@ class FactoryAgent(ABC):
     @abstractmethod
     def choose_trade(self, observation: TradeObservation) -> Optional[Tuple[int, int]]:
         ...
+
+    # 対戦が終わったときに呼ばれる（最後のターンの経過と勝敗）。判断はしないので、必要な Agent だけが上書きする
+    def on_battle_end(self, observation: BattleEndObservation):
+        pass

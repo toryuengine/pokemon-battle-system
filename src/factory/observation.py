@@ -5,6 +5,7 @@ Agent には Battle や相手の Pokemon そのものを渡さず、ここで作
 - 相手側：場に出てきた個体の種族、見た目で分かるタイプ・HPの割合・状態異常・能力ランク、使った技、
   消費・はたきおとす等で判明した持ち物だけ。場に出ていない個体は数しか分からない
 - 交換の時：直前の相手3体の種族だけ（技・持ち物は見られない。仕様書5節）
+- 対戦の経過：画面のメッセージで分かる出来事（VisibleEvent）。相手のHPは割合だけ、相手のセットの番号は入らない
 
 観測はすべて作った時点の写しで、Agent が書き換えても対戦には影響しない。
 """
@@ -130,6 +131,25 @@ class SideConditions:
     toxic_spikes: int
 
 
+# 対戦の経過のうち、プレイヤーに見える出来事（battlelogic.events.BattleEvent から、見えない情報を除いたもの）
+# ownerは"own"（自分の側）/"opponent"（相手の側）/None（場全体）。kindとdataはBattleEventとほぼ同じだが:
+#   "switch_in"   pokemon_id・reason（セットの番号 indivisual_id は入れない）
+#   "move_result" damage を入れない（相手に与えたダメージの実数は見えない。HPの変化は"hp"で分かる）
+#   "hp"          自分の側は before・after・max_hp、相手の側は before_ratio・after_ratio（0〜1）だけ
+#   "battle_end"  won（自分の勝ち）・is_draw
+@dataclass(frozen=True)
+class VisibleEvent:
+    turn: int
+    kind: str
+    owner: Optional[str]
+    party_index: Optional[int]
+    data: Dict[str, object]
+
+
+OWNER_OWN = "own"
+OWNER_OPPONENT = "opponent"
+
+
 # 毎ターンの行動・瀕死時の交代先を決めるときの観測
 @dataclass(frozen=True)
 class TurnObservation:
@@ -154,6 +174,8 @@ class TurnObservation:
     trick_room_turns: int
     # 今選べる行動。ターンの行動ならこの中から1つ返す。瀕死時等の交代先選びでは交代だけが並ぶ
     legal_actions: Tuple[TurnAction, ...] = field(default_factory=tuple)
+    # この側に前回観測を渡してから今までに起きた、見える出来事（対戦の最初の観測なら対戦開始から）
+    new_events: Tuple[VisibleEvent, ...] = field(default_factory=tuple)
 
     @property
     def own_active(self) -> OwnPokemonView:
@@ -165,3 +187,15 @@ class TurnObservation:
             if pokemon.party_index == self.opponent_active_index:
                 return pokemon
         return None
+
+
+# 対戦が終わったときの観測（FactoryAgent.on_battle_end に渡す）
+# new_eventsは、最後に観測を渡してから決着までの見える出来事（最後のターンの経過と"battle_end"）
+@dataclass(frozen=True)
+class BattleEndObservation:
+    context: FactoryContext
+    won: bool
+    is_draw: bool
+    timed_out: bool
+    turns: int
+    new_events: Tuple[VisibleEvent, ...]
