@@ -42,13 +42,13 @@ class ThickClub(BaseItem):
         return 1.0
 
 
-# いのちのたま: ダメージ1.3倍、攻撃するたびに最大HPの1/10を失う
+# いのちのたま: ダメージ1.3倍、攻撃するたびに最大HPの1/10を失う（マジックガードなら失わない）
 class LifeOrb(BaseItem):
     def get_damage_multiplier_before_random(self, attacker) -> float:
         return LIFE_ORB_MULTIPLIER
 
     def on_after_damage(self, battle, attacker, defender, move, total_damage: int):
-        battle.apply_damage(attacker, max(1, int(attacker.status.hp * LIFE_ORB_RECOIL_RATIO)))
+        battle.apply_indirect_damage(attacker, max(1, int(attacker.status.hp * LIFE_ORB_RECOIL_RATIO)))
 
 
 # たつじんのおび: 効果抜群の技のダメージ1.2倍

@@ -149,6 +149,10 @@ class BaseItem:
     def activate(self, battle, pokemon):
         pass
 
+    # 持ち主がsourceにメロメロ状態にされた時に呼ばれる（あかいいと）
+    def on_infatuated(self, battle, pokemon, source):
+        pass
+
     # ターン終了時、天候ダメージの後に呼ばれる（たべのこし・くろいヘドロ）
     def on_end_of_turn(self, battle, pokemon):
         pass

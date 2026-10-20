@@ -5,7 +5,9 @@ from item.base_item import BaseItem
 class ToxicOrb(BaseItem):
     def on_end_of_turn_late(self, battle, pokemon):
         # めんえき等の特性でどくにならないポケモンには効果がない
-        if pokemon.current_status.status_condition is None and battle.can_receive_status(pokemon, "poison"):
+        # 第4世代では、しんぴのまもりの場でも効果がない
+        if (pokemon.current_status.status_condition is None and battle.can_receive_status(pokemon, "poison")
+                and not battle.is_safeguarded(pokemon)):
             battle.inflict_poison(pokemon, badly=True)
 
     # なげつけるで投げつけられた相手をもうどく状態にする

@@ -44,6 +44,8 @@ class BaseAbility:
     ignores_burn_damage_drop = False
     # ぶきよう: 持っている持ち物の効果が無くなる（Pokemon.held_itemで判定する）
     ignores_held_item = False
+    # マジックガード: 技による攻撃以外のダメージ（状態異常・天候・罠・反動等）を受けない（Battle.apply_indirect_damageで判定する）
+    prevents_indirect_damage = False
 
     # 天候ダメージを受けない天候（すながくれ: {"sandstorm"}、ゆきがくれ・アイスボディ: {"hail"}）
     weather_immunities = frozenset()

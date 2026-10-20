@@ -12,6 +12,9 @@ class Synchronize(BaseAbility):
     def on_status_inflicted(self, battle, pokemon, condition, source):
         if source is None or source is pokemon or condition not in SYNCHRONIZED_CONDITIONS:
             return
+        # 相手の場がしんぴのまもりで守られていれば、うつせない
+        if battle.is_safeguarded(source):
+            return
         if condition == "poison" and pokemon.current_status.toxic_counter > 0:
             condition = "toxic"
         battle.try_apply_status(source, condition, 1.0)

@@ -19,13 +19,13 @@ class Leftovers(BaseItem):
         _heal_by_max_hp_ratio(pokemon, LEFTOVERS_HEAL_RATIO)
 
 
-# くろいヘドロ: 毎ターン終了時、どくタイプなら最大HPの1/16回復、それ以外は1/8ダメージ
+# くろいヘドロ: 毎ターン終了時、どくタイプなら最大HPの1/16回復、それ以外は1/8ダメージ（マジックガードならダメージを受けない）
 class BlackSludge(BaseItem):
     def on_end_of_turn(self, battle, pokemon):
         if TYPE_ID_POISON in (pokemon.type1, pokemon.type2):
             _heal_by_max_hp_ratio(pokemon, LEFTOVERS_HEAL_RATIO)
         else:
-            battle.apply_damage(pokemon, max(1, int(pokemon.status.hp * BLACK_SLUDGE_DAMAGE_RATIO)))
+            battle.apply_indirect_damage(pokemon, max(1, int(pokemon.status.hp * BLACK_SLUDGE_DAMAGE_RATIO)))
 
 
 # かいがらのすず: 与えたダメージの1/8回復

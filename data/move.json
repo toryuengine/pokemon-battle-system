@@ -2166,5 +2166,29 @@
     "category": 0,
     "hitrate": 100,
     "power": 1
+  },
+  "271": {
+    "name": "こうそくスピン",
+    "type": "ノーマル",
+    "pp": 40,
+    "category": 0,
+    "hitrate": 100,
+    "power": 20
+  },
+  "272": {
+    "name": "しんぴのまもり",
+    "type": "ノーマル",
+    "pp": 25,
+    "category": 2,
+    "hitrate": 0,
+    "power": 0
+  },
+  "273": {
+    "name": "とびはねる",
+    "type": "ひこう",
+    "pp": 5,
+    "category": 0,
+    "hitrate": 85,
+    "power": 85
   }
 }

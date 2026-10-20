@@ -13,7 +13,9 @@ from ability import ability_014 as soundproof_module
 from move import base_move as base_move_module
 from move import move_008 as dig_module  # じしん（あなをほる中の相手に当たる）
 from move import move_081 as dive_module  # なみのり（ダイビング中の相手に当たる）
-from move import move_126 as fly_module  # スカイアッパー（そらをとぶ中の相手に当たる）
+from move import move_124 as thunder_module  # かみなり（そらをとぶ・とびはねる中の相手に当たる）
+from move import move_126 as fly_module  # スカイアッパー（そらをとぶ・とびはねる中の相手に当たる）
+from move import move_260 as twister_module  # たつまき（そらをとぶ・とびはねる中の相手に当たる）
 from move.base_move import BaseMove
 from move.movefactory import create_move
 from pokemon import Pokemon
@@ -161,6 +163,9 @@ def test_move_id_constants():
     assert names[str(dig_module.DIG_ID)] == "あなをほる"
     assert names[str(dive_module.DIVE_ID)] == "ダイビング"
     assert names[str(fly_module.FLY_ID)] == "そらをとぶ"
+    for module in (thunder_module, fly_module, twister_module):
+        assert names[str(module.FLY_ID)] == "そらをとぶ"
+        assert names[str(module.BOUNCE_ID)] == "とびはねる"
     assert {names[str(i)] for i in soundproof_module.SOUND_MOVE_IDS} == {
         "いやなおと", "うたう", "ほえる", "ハイパーボイス", "ほろびのうた", "くさぶえ", "むしのさざめき"}
     assert {names[str(i)] for i in base_move_module.WEATHER_HEAL_MOVE_IDS} == {"こうごうせい", "あさのひざし", "つきのひかり"}

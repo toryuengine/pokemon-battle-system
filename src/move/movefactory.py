@@ -270,6 +270,9 @@ from move.move_267 import MistBall
 from move.move_268 import LusterPurge
 from move.move_269 import MagmaStorm
 from move.move_270 import CrushGrip
+from move.move_271 import RapidSpin
+from move.move_272 import Safeguard
+from move.move_273 import Bounce
 
 _MOVE_CLASSES = {
     0: LeafStorm,
@@ -543,6 +546,9 @@ _MOVE_CLASSES = {
     268: LusterPurge,
     269: MagmaStorm,
     270: CrushGrip,
+    271: RapidSpin,
+    272: Safeguard,
+    273: Bounce,
 }
 
 
