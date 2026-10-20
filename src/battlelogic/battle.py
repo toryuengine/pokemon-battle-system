@@ -1,4 +1,5 @@
 import random
+from typing import List, Tuple
 
 from ability.abilityfactory import create_ability
 from ability.base_ability import NO_ABILITY, BaseAbility
@@ -839,11 +840,7 @@ class Battle:
                 return Struggle()
             status.choice_locked_move = None
 
-        usable_moves = []
-        for move in attacker.moves:
-            if move.current_pp > 0 and self.is_move_selectable(attacker, move):
-                usable_moves.append(move)
-
+        usable_moves = self.get_usable_moves(attacker)
         if not usable_moves:
             return Struggle()
         trainer = self.get_trainer(attacker)
@@ -854,6 +851,29 @@ class Battle:
         if not any(move is chosen for move in usable_moves):
             raise ValueError(f"move_policy returned {chosen!r}, which is not a selectable move")
         return chosen
+
+    # 固定されていないときに、pokemonが選べる技（PPが残っていて、かなしばり・ちょうはつ・いちゃもんの制限を受けない技）の一覧
+    def get_usable_moves(self, pokemon: Pokemon) -> List[BaseMove]:
+        return [move for move in pokemon.moves if move.current_pp > 0 and self.is_move_selectable(pokemon, move)]
+
+    # pokemonがこのターンに出せる技の一覧と、それが固定されているか（選ぶ余地が無いか）を、状態を書き換えずに返す。
+    # select_moveと同じ順で判定する（溜め技・げきりん等→アンコール→こだわり系→制限）。一覧が空ならわるあがき。
+    # Agentに「このターンに選べる行動」を見せるために使う
+    def get_selectable_moves(self, pokemon: Pokemon) -> Tuple[List[BaseMove], bool]:
+        status = pokemon.current_status
+        if status.charging_move is not None:
+            return [status.charging_move], True
+        if status.rampage_move is not None:
+            return [status.rampage_move], True
+        encore_move = status.encore_move
+        if encore_move is not None and encore_move.current_pp > 0 and any(move is encore_move for move in pokemon.moves):
+            return [encore_move], True
+        locked_move = status.choice_locked_move
+        if locked_move is not None and pokemon.held_item.locks_move and any(move is locked_move for move in pokemon.moves):
+            if locked_move.current_pp > 0 and self.is_move_selectable(pokemon, locked_move):
+                return [locked_move], True
+            return [], True
+        return self.get_usable_moves(pokemon), False
 
     # かなしばり・ちょうはつ・いちゃもんの制限を受けず、pokemonがmoveを選べるかどうか（PPの残りは見ない）
     def is_move_selectable(self, pokemon: Pokemon, move: BaseMove) -> bool:

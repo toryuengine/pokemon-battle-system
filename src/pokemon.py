@@ -14,6 +14,8 @@ from readpokemondata import load_pokemon_data
 # レベル・個体値を指定しなかったときの値（以前のデータの実数値がLv.100・個体値0で計算されていたため、それに合わせている）
 DEFAULT_LEVEL = 100
 DEFAULT_IV = 0
+# Pokemon(gender=...)を省略したことを表す値（性別不明はNoneで表すので、Noneとは別の値が要る）
+ROLL_GENDER = object()
 
 
 @dataclass
@@ -156,8 +158,10 @@ class CurrentStatus:
 class Pokemon:
     # levelはレベル、ivは個体値（バトルフロンティアのポケモンは全能力が同じ個体値なので1つの整数で受け取る）
     # rngは性別・特性を決める乱数。省略するとrandomモジュールを使う（シードを固定したい呼び出し側はrandom.Randomを渡す）
+    # gender・ability_idを渡すと、乱数で決めずにその性別・特性にする（ファクトリーで、レンタルした個体を
+    # 対戦のたびに作り直しても同じ個体になるようにするため）
     def __init__(self, pokemon_id: int, indivisual_id: int, level: int = DEFAULT_LEVEL, iv: int = DEFAULT_IV,
-                 rng: Optional[random.Random] = None):
+                 rng: Optional[random.Random] = None, gender=ROLL_GENDER, ability_id: Optional[int] = None):
         pokemon_data = load_pokemon_data()
         rng = rng if rng is not None else random
 
@@ -177,9 +181,16 @@ class Pokemon:
         self.weight: float = entry["weight"]
         # 性別（"male"/"female"。Noneなら性別不明）。個体データに"gender"があればそれを使い、
         # 無ければ種族のfemale_rate（メスになる確率。nullなら性別不明の種族）からこの時点でランダムに決める
-        self.gender: Optional[str] = set_data["gender"] if "gender" in set_data else _roll_gender(entry.get("female_rate"), rng)
+        if gender is not ROLL_GENDER:
+            self.gender: Optional[str] = gender
+        else:
+            self.gender = set_data["gender"] if "gender" in set_data else _roll_gender(entry.get("female_rate"), rng)
         # 種族が持ちうる特性の中からこの個体の特性をランダムに1つ選び、特性クラスのインスタンスとして持つ
-        self.ability: BaseAbility = create_ability(rng.choice(entry["ability"]))
+        if ability_id is None:
+            ability_id = rng.choice(entry["ability"])
+        elif ability_id not in entry["ability"]:
+            raise ValueError(f"{entry['name']} cannot have ability {ability_id!r}")
+        self.ability: BaseAbility = create_ability(ability_id)
         # 実数値は種族値・努力値・性格・個体値・レベルから計算する
         self.status: PokemonStatus = _parse_status(
             calc_stats(entry["base_stats"], set_data["ev"], iv=iv, level=level, nature=self.nature))
