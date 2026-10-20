@@ -12,21 +12,14 @@ import random
 import subprocess
 import time
 from dataclasses import dataclass, field
-from typing import Callable, Dict, List, Optional
+from typing import Dict, List, Optional
 
-from agents.random_agent import RandomAgent
+from agents.registry import AGENTS
 from factory import rules
 from factory.challenge import ChallengeResult, FactoryChallenge
 
 # 挑戦の番号ごとの乱数のシードを作るときの倍数（シードが違えば挑戦の乱数が重ならないように）
 SEED_STRIDE = 1_000_003
-
-# --agent で選べる Agent。(Agent用の乱数) -> Agent
-AGENTS: Dict[str, Callable[[random.Random], object]] = {
-    "random": lambda rng: RandomAgent(rng),
-    "random-noswitch": lambda rng: RandomAgent(rng, switch_chance=0.0),
-}
-
 
 @dataclass
 class EvaluationSummary:

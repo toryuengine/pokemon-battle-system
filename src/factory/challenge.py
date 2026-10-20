@@ -12,7 +12,7 @@ Agent は次のメソッドを持つ（agents/base.py の FactoryAgent）。fact
 """
 import random
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import Callable, List, Optional
 
 from factory import rules
 from factory.battle_runner import FactoryBattleResult, run_factory_battle
@@ -136,25 +136,34 @@ class FactoryChallenge:
 
     # ---- 挑戦全体 ----
 
-    # 負けるまで（max_battlesを渡したらその戦数まで）挑戦する。負けたら連勝等を0に戻す（BP・プリントは残る）
+    # 次の1戦を進める。周の始めならレンタルから行い、第1〜6戦に勝てば交換まで聞く。
+    # 負けたら連勝等を0に戻す（BP・プリントは残る）。人間のCLIのように、1戦ずつ結果を見せたいときに使う
+    # on_battle_endを渡すと、対戦が終わって連勝・BPを更新した直後（交換を聞く前）に、その戦の記録を渡して呼ぶ
+    def play_next(self, on_battle_end: Optional[Callable[[BattleRecord], None]] = None) -> BattleRecord:
+        state = self.state
+        if state.battle_in_round == 1:
+            self.rent()
+        battle_in_round = state.battle_in_round
+        record = self.play_battle()
+        if on_battle_end is not None:
+            on_battle_end(record)
+        if not record.won:
+            state.reset_streak()
+        elif rules.can_trade_after(battle_in_round):
+            record.trade = self.offer_trade()
+        return record
+
+    # 負けるまで（max_battlesを渡したらその戦数まで）挑戦する
     def play_challenge(self, max_battles: Optional[int] = None) -> ChallengeResult:
         state = self.state
         bp_before = state.bp
         battles = []
-        lost = False
         while max_battles is None or len(battles) < max_battles:
-            if state.battle_in_round == 1:
-                self.rent()
-            battle_in_round = state.battle_in_round
-            record = self.play_battle()
-            battles.append(record)
-            if not record.won:
-                lost = True
+            battles.append(self.play_next())
+            if not battles[-1].won:
                 break
-            if rules.can_trade_after(battle_in_round):
-                record.trade = self.offer_trade()
 
-        result = ChallengeResult(state.win_streak, lost, state.bp - bp_before, battles)
-        if lost:
-            state.reset_streak()
-        return result
+        lost = bool(battles) and not battles[-1].won
+        # 負けたときは play_next で連勝が0に戻っているので、負けた対戦の番号から連勝数を出す
+        win_streak = battles[-1].battle_number - 1 if lost else state.win_streak
+        return ChallengeResult(win_streak, lost, state.bp - bp_before, battles)
