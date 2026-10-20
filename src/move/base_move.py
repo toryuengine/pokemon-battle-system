@@ -1,4 +1,3 @@
-import random
 
 from readpokemondata import load_move_data
 
@@ -210,8 +209,8 @@ class BaseMove:
             elif kind == "status_random":
                 _, target_key, conditions, chance = effect
                 target = attacker if target_key == "self" else defender
-                if random.random() < min(1.0, chance * chance_multiplier):
-                    battle.try_apply_status(target, random.choice(conditions), 1.0, source=attacker)
+                if battle.rng.random() < min(1.0, chance * chance_multiplier):
+                    battle.try_apply_status(target, battle.rng.choice(conditions), 1.0, source=attacker)
 
             elif kind == "stat":
                 _, target_key, stat_name, stages, chance = effect

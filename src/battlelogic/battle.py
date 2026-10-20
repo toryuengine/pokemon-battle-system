@@ -4,6 +4,7 @@ from ability.abilityfactory import create_ability
 from ability.base_ability import NO_ABILITY, BaseAbility
 from battlelogic.accuracy import check_hit
 from battlelogic.damage import calculate_confusion_damage, calculate_damage, roll_critical
+from battlelogic.events import BattleEvent
 from battlelogic.stat_stage import StatStages, accuracy_stage_multiplier, stage_multiplier
 from battlelogic.type_chart import (TYPE_ID_FLYING, TYPE_ID_GHOST, TYPE_ID_NORMAL, get_effectiveness, get_move_effectiveness,
                                     get_multiplier)
@@ -132,9 +133,20 @@ class Battle:
     # (交代しても引き継がれる状態のため)
     # side1/side2はTrainerを渡す想定だが、単体のPokemonを渡した場合は
     # 手持ち1体だけのTrainerとして扱う（今までのBattle(pokemon1, pokemon2)呼び出しと互換）
-    def __init__(self, side1, side2):
+    # rngは対戦中の乱数（random.Randomのインスタンス）。シードを固定したrandom.Randomを渡せば同じ対戦を再現できる。
+    # 省略するとrandomモジュールを使う
+    # record_events=Falseなら、対戦の経過（self.events）を記録しない（大量に対戦を回すときの速度のため）
+    def __init__(self, side1, side2, rng=None, record_events: bool = True):
         self.trainer1: Trainer = side1 if isinstance(side1, Trainer) else Trainer([side1])
         self.trainer2: Trainer = side2 if isinstance(side2, Trainer) else Trainer([side2])
+        self.rng = rng if rng is not None else random
+
+        # 対戦の経過（BattleEventのリスト）と、今のターン数（対戦開始時の処理は0ターン目）
+        self.record_events = record_events
+        self.events: list = []
+        self.turn = 0
+        # 前回イベントを記録した時点の、手持ち全員のHP・状態異常・持ち物。差分から"hp"等のイベントを作る
+        self._last_snapshot = self._take_snapshot()
 
         self.stages1 = StatStages()
         self.stages2 = StatStages()
@@ -165,11 +177,16 @@ class Battle:
 
     #バトルスタート
     def start_battle(self):
+        for trainer in (self.trainer1, self.trainer2):
+            self.record_switch_in(trainer, "lead")
         # 対戦開始時に場に出ている両者の特性（いかく・すなおこし等）を発動させる
         self.activate_switch_in_abilities([self.pokemon1, self.pokemon2])
         self.activate_held_items_on_field()
+        self.record_state_changes()
 
         for _ in range(self.MAX_TURNS):
+            self.turn += 1
+            self.record_event("turn_start")
             # まもる・みきり・こらえる・ひるみの効果は使ったそのターン限りなので、新しいターンの頭でリセットする
             # (後攻の技でひるんだ先攻側が、次のターンに行動不能にならないようにするため、ひるみもここで解除する)
             for pokemon in (self.pokemon1, self.pokemon2):
@@ -222,6 +239,12 @@ class Battle:
             if self.process_end_of_turn():
                 break
 
+        winner = self.get_winning_trainer()
+        self.record_event("battle_end", data={
+            "winner_side": None if winner is None else self.get_side(winner),
+            "is_draw": self.trainer1.is_defeated() and self.trainer2.is_defeated(),
+        })
+
     # ターン終了時の処理。対戦が終われば（全滅した側がいれば）Trueを返す
     # 本編どおり、瀕死になった個体の代わりはターン終了時の処理が全部終わってから出す
     # (ターンの途中で瀕死になった個体は、ターン終了時の処理を受けない。各処理が瀕死の個体を飛ばす)
@@ -233,6 +256,7 @@ class Battle:
         # みらいよちの攻撃
         self.apply_future_sight()
         self.activate_held_items_on_field()
+        self.record_state_changes()
         if self.is_battle_over():
             return True
 
@@ -241,6 +265,7 @@ class Battle:
         self.apply_end_of_turn_leech_seed()
         self.apply_end_of_turn_status_damage()
         self.activate_held_items_on_field()
+        self.record_state_changes()
         if self.is_battle_over():
             return True
 
@@ -260,6 +285,7 @@ class Battle:
         # どくどくだまはターンの最後に発動する
         self.apply_end_of_turn_orbs()
         self.activate_held_items_on_field()
+        self.record_state_changes()
         if self.is_battle_over():
             return True
 
@@ -272,24 +298,44 @@ class Battle:
     def is_battle_over(self) -> bool:
         return self.trainer1.is_defeated() or self.trainer2.is_defeated()
 
-    # 場に出ているポケモンが瀕死なら、手持ちの中から生きている次の1体に自動で交代させる
+    # 場に出ているポケモンが瀕死なら、交代先（trainer.replacement_policyで選ぶ）に交代させる
     # (交代先も設置技等で瀕死になる可能性があるため、生きている個体が出るか手持ちが尽きるまで繰り返す)
-    # 両者が同時に瀕死になった場合に、相手の交代先が出る前に特性（いかく等）が発動しないよう、
-    # 特性は両者の交代が済んでからまとめて発動させる
+    # 両者が同時に瀕死になった場合は、本編どおり相手の交代先を見ずに選べるよう、両者が選び終えてから交代する
+    # また相手の交代先が出る前に特性（いかく等）が発動しないよう、特性は両者の交代が済んでからまとめて発動させる
     def resolve_faints(self):
         switched_trainers = []
-        for trainer in (self.trainer1, self.trainer2):
-            while self.is_fainted(trainer.active) and not trainer.is_defeated():
-                next_index = trainer.find_next_alive_index()
-                if next_index is None:
-                    break
-                self.switch_in(trainer, next_index, activate_ability=False)
+        while True:
+            choices = []
+            for trainer in (self.trainer1, self.trainer2):
+                if self.is_fainted(trainer.active) and not trainer.is_defeated():
+                    next_index = self.choose_replacement(trainer, "faint")
+                    if next_index is not None:
+                        choices.append((trainer, next_index))
+            if not choices:
+                break
+            for trainer, next_index in choices:
+                self.switch_in(trainer, next_index, activate_ability=False, reason="faint")
                 if trainer not in switched_trainers:
                     switched_trainers.append(trainer)
 
         if switched_trainers:
             self.activate_switch_in_abilities([trainer.active for trainer in switched_trainers])
             self.activate_held_items_on_field()
+            self.record_state_changes()
+
+    # trainerが瀕死・とんぼがえり・バトンタッチで次に出す個体の、手持ちのインデックスを返す（交代先がいなければNone）
+    # reasonは"faint"/"u_turn"/"baton_pass"。trainer.replacement_policyがNoneなら手持ち順で最初の生存個体を選ぶ
+    def choose_replacement(self, trainer: Trainer, reason: str):
+        candidates = trainer.find_switch_candidates()
+        if not candidates:
+            return None
+        if trainer.replacement_policy is None:
+            return candidates[0]
+        index = trainer.replacement_policy(self, trainer, candidates, reason)
+        # 交代先は必ず出さなければならないので、不正な値は手動交代のように無視せず誤りとして扱う
+        if index not in candidates:
+            raise ValueError(f"replacement_policy returned {index!r}, which is not in {candidates!r}")
+        return index
 
     # pokemonがmoveを出し、その結果（持ち物の発動）を処理する。対戦が終わればTrueを返す
     # 瀕死になった個体の代わりはターン終了時に出すので、ここでは交代させない。
@@ -297,16 +343,27 @@ class Battle:
     def execute_move_action(self, pokemon: Pokemon, move: BaseMove) -> bool:
         if self.is_fainted(pokemon):
             return self.is_battle_over()
+        trainer = self.get_trainer(pokemon)
+        side = self.get_side(trainer)
+        party_index = trainer.active_index
         # can_actが反動硬直・ひるみ・状態異常（ねむり/こおり/まひ/こんらん）による行動不能を
         # まとめて判定する。行動不能ならその技は不発のまま次に進む
         if self.can_act(pokemon, move):
-            self.use_move(pokemon, self.get_opponent(pokemon), move)
+            # こんらんの自傷等、行動できるかの判定で起きた変化を、技より前のイベントとして記録する
+            self.record_state_changes()
+            self.record_event("move", side, {"party_index": party_index, "move_id": move.id})
+            result = self.use_move(pokemon, self.get_opponent(pokemon), move)
+            self.record_state_changes()
+            self.record_event("move_result", side, dict(result))
         else:
             # げきりん・あばれるの固定中に行動できなければ、こんらんせずに固定が解ける
             self.end_rampage(pokemon)
+            self.record_state_changes()
+            self.record_event("cant_move", side, {"party_index": party_index})
         pokemon.current_status.has_moved_this_turn = True
         # HPが減った・状態異常になった・能力が下がった等で、きのみ・しろいハーブが発動する
         self.activate_held_items_on_field()
+        self.record_state_changes()
         return self.is_battle_over()
 
     # ---- 手動の交代 ----
@@ -343,7 +400,7 @@ class Battle:
     def perform_manual_switches(self, switch1, switch2, move1, move2) -> bool:
         switches = [(self.trainer1, self.pokemon1, switch1, move2), (self.trainer2, self.pokemon2, switch2, move1)]
         switches = [entry for entry in switches if entry[2] is not None]
-        switches.sort(key=lambda entry: (self.get_effective_speed(entry[1]), random.random()), reverse=True)
+        switches.sort(key=lambda entry: (self.get_effective_speed(entry[1]), self.rng.random()), reverse=True)
 
         for trainer, outgoing, new_index, opponent_move in switches:
             if opponent_move is not None and opponent_move.hits_switching_target:
@@ -366,7 +423,7 @@ class Battle:
 
     # 場に出たpokemonsの特性を、素早さが高い順に発動させる（同速ならランダム）
     def activate_switch_in_abilities(self, pokemons):
-        ordered = sorted(pokemons, key=lambda p: (self.get_effective_speed(p), random.random()), reverse=True)
+        ordered = sorted(pokemons, key=lambda p: (self.get_effective_speed(p), self.rng.random()), reverse=True)
         for pokemon in ordered:
             if pokemon is not self.pokemon1 and pokemon is not self.pokemon2:
                 continue
@@ -377,7 +434,11 @@ class Battle:
     # trainerの場のポケモンをnew_indexの個体に交代させる。能力ランクをリセットし、設置技の効果を適用する
     # activate_ability=Falseなら、場に出た時の特性は呼び出し側でまとめて発動させる
     # baton_pass=Trueなら、能力ランク・こんらん等のバトンタッチで引き継がれる状態を交代先に引き継ぐ
-    def switch_in(self, trainer: Trainer, new_index: int, activate_ability: bool = True, baton_pass: bool = False):
+    # reasonはイベントに記録する交代の理由（"manual"/"faint"/"u_turn"/"baton_pass"/"forced"）
+    def switch_in(self, trainer: Trainer, new_index: int, activate_ability: bool = True, baton_pass: bool = False,
+                  reason: str = "manual"):
+        # 交代の前に起きた変化（とんぼがえりのダメージ等）を、交代より前のイベントとして記録しておく
+        self.record_state_changes()
         outgoing = trainer.active
         outgoing_status = outgoing.current_status
 
@@ -438,6 +499,7 @@ class Battle:
             opponent_status.infatuated_by = None
 
         trainer.active_index = new_index
+        self.record_switch_in(trainer, reason)
         # 場に出てきた個体は、このターンまだ行動しておらず技も選んでいない（前に場にいたときの値が残らないようにする）
         trainer.active.current_status.has_moved_this_turn = False
         trainer.active.current_status.selected_move_this_turn = None
@@ -459,6 +521,7 @@ class Battle:
             # どくびしでどくになった直後にラムのみで回復する、といった持ち物の発動
             # (いかくで下がった攻撃をしろいハーブで戻す等、特性の発動後に判定する)
             self.activate_held_items_on_field()
+        self.record_state_changes()
 
     # trainerが持つ罠(ステルスロック・まきびし・どくびし)を、今場に出ている個体に適用する
     def apply_entry_hazards(self, trainer: Trainer):
@@ -638,7 +701,7 @@ class Battle:
 
         # フレアドライブはこおり状態でも使え、自分のこおりが解ける
         if condition == "freeze":
-            if (move is not None and move.thaws_user) or random.random() < FREEZE_THAW_CHANCE:
+            if (move is not None and move.thaws_user) or self.rng.random() < FREEZE_THAW_CHANCE:
                 status.status_condition = None
             else:
                 return False
@@ -647,17 +710,17 @@ class Battle:
         # 残りターンが尽きていれば、このターンの行動前に解ける
         if status.confusion_turns_remaining > 0:
             status.confusion_turns_remaining -= 1
-            if status.confusion_turns_remaining > 0 and random.random() < CONFUSION_SELF_HIT_CHANCE:
-                self.apply_damage(pokemon, calculate_confusion_damage(pokemon, self.get_stages(pokemon)))
+            if status.confusion_turns_remaining > 0 and self.rng.random() < CONFUSION_SELF_HIT_CHANCE:
+                self.apply_damage(pokemon, calculate_confusion_damage(pokemon, self.get_stages(pokemon), self.rng))
                 return False
 
         # メロメロ状態なら、1/2の確率で動けない
-        if status.infatuated_by is not None and random.random() < INFATUATION_IMMOBILIZE_CHANCE:
+        if status.infatuated_by is not None and self.rng.random() < INFATUATION_IMMOBILIZE_CHANCE:
             return False
 
         # マジックガードは第4世代だけの仕様で、まひで動けなくなることが無い（素早さは下がる）
         if (condition == "paralysis" and not ability.prevents_indirect_damage
-                and random.random() < PARALYSIS_FULL_PARA_CHANCE):
+                and self.rng.random() < PARALYSIS_FULL_PARA_CHANCE):
             return False
 
         return True
@@ -746,10 +809,10 @@ class Battle:
                 continue
             self.get_ability(pokemon).on_end_of_turn(self, pokemon)
 
-    # ここ
-    # attackerが持つ技のうちPPが残っているものからランダムに1つ選ぶ。全て0ならわるあがきを選ぶ
+    # attackerが持つ技のうちPPが残っているものから1つ選ぶ。全て0ならわるあがきを選ぶ
     # 溜め中（ソーラービーム等の1ターン目を終えた状態）なら、選択せず溜めていた技を強制的に返す
     # かなしばり・ちょうはつ・いちゃもんで選べない技は除き、アンコール中はその技しか選べない
+    # 選べる技の中からどれを選ぶかはトレーナーのmove_policyに聞く（Noneならランダムに選ぶ）
     def select_move(self, attacker: Pokemon) -> BaseMove:
         status = attacker.current_status
         if status.charging_move is not None:
@@ -783,7 +846,14 @@ class Battle:
 
         if not usable_moves:
             return Struggle()
-        return random.choice(usable_moves)
+        trainer = self.get_trainer(attacker)
+        if trainer.move_policy is None:
+            return self.rng.choice(usable_moves)
+        chosen = trainer.move_policy(self, trainer, usable_moves)
+        # 技は必ず選ばなければならないので、不正な値は手動交代のように無視せず誤りとして扱う
+        if not any(move is chosen for move in usable_moves):
+            raise ValueError(f"move_policy returned {chosen!r}, which is not a selectable move")
+        return chosen
 
     # かなしばり・ちょうはつ・いちゃもんの制限を受けず、pokemonがmoveを選べるかどうか（PPの残りは見ない）
     def is_move_selectable(self, pokemon: Pokemon, move: BaseMove) -> bool:
@@ -805,8 +875,8 @@ class Battle:
             return self.pokemon2, self.pokemon1
 
         # せんせいのツメは、同じ優先度の中でだけ20%の確率で先に行動できる（両方発動した場合は素早さで比べる）
-        quick_claw1 = self.pokemon1.held_item.try_move_first()
-        quick_claw2 = self.pokemon2.held_item.try_move_first()
+        quick_claw1 = self.pokemon1.held_item.try_move_first(self)
+        quick_claw2 = self.pokemon2.held_item.try_move_first(self)
         if quick_claw1 != quick_claw2:
             if quick_claw1:
                 return self.pokemon1, self.pokemon2
@@ -821,7 +891,7 @@ class Battle:
             return self.pokemon1, self.pokemon2
         if speed2 > speed1:
             return self.pokemon2, self.pokemon1
-        return random.sample([self.pokemon1, self.pokemon2], 2)
+        return self.rng.sample([self.pokemon1, self.pokemon2], 2)
 
     # 素早さランク・持ち物（こだわりスカーフ1.5倍・くろいてっきゅう1/2）・特性（すいすい等）・まひ(1/4)を反映した、
     # 行動順の判定に使う素早さを返す
@@ -913,8 +983,8 @@ class Battle:
     # 2〜5回攻撃(ボーンラッシュ等)は3/8, 3/8, 1/8, 1/8という第4世代仕様の確率分布、それ以外(固定回数)はそのまま使う
     def roll_hit_count(self, move: BaseMove) -> int:
         if move.min_hits == 2 and move.max_hits == 5:
-            return random.choices([2, 3, 4, 5], weights=[3, 3, 1, 1])[0]
-        return random.randint(move.min_hits, move.max_hits)
+            return self.rng.choices([2, 3, 4, 5], weights=[3, 3, 1, 1])[0]
+        return self.rng.randint(move.min_hits, move.max_hits)
 
     # attackerがdefenderにmoveを撃つ。命中判定→(変化技でなければ)ダメージ計算・適用の順で行い、結果を返す
     # 複数回攻撃技は命中判定を1回だけ行い、そのあと決めたヒット回数分ダメージを繰り返し与える（相手が瀕死になったら打ち切り）
@@ -1006,7 +1076,7 @@ class Battle:
         # げきりん・あばれるは、最初に使った時点で2〜3ターンの間その技に固定される
         if move.is_rampage and not is_continuing_rampage:
             attacker.current_status.rampage_move = move
-            attacker.current_status.rampage_turns_remaining = random.randint(2, 3)
+            attacker.current_status.rampage_turns_remaining = self.rng.randint(2, 3)
 
         if move.calls_own_random_move:
             # ねごと: 自分の他の技をランダムに1つ呼び出して使う
@@ -1117,7 +1187,7 @@ class Battle:
         if move.is_ohko and defender.level > attacker.level:
             return result
 
-        if not check_hit(self.get_effective_hitrate(move, attacker, defender)):
+        if not check_hit(self.get_effective_hitrate(move, attacker, defender), self.rng):
             return result
 
         result["hit"] = True
@@ -1151,11 +1221,11 @@ class Battle:
                                        else defender_item.get_received_damage_multiplier(defender, move, effectiveness))
 
                 # いかりのつぼの判定のため、急所判定はダメージ計算の外で行う
-                is_critical = roll_critical(attacker, move, attacker_ability, defender_ability)
+                is_critical = roll_critical(attacker, move, attacker_ability, defender_ability, self.rng)
                 damage = calculate_damage(
                     attacker, defender, move, self.get_effective_weather(), screen_active, ignore_ghost_immunity,
                     self.get_stages(attacker), self.get_stages(defender), received_multiplier,
-                    attacker_ability, defender_ability, is_critical, battle=self,
+                    attacker_ability, defender_ability, is_critical, battle=self, rng=self.rng,
                 )
                 if received_multiplier != 1.0 and damage > 0:
                     defender_item.on_received_damage_reduced(self, defender)
@@ -1294,6 +1364,75 @@ class Battle:
             return self.pokemon1
         return None
 
+    # 勝ったトレーナーを返す。決着していなければ（ターン上限に達した場合も）None
+    # 引き分け（同時全滅）ならdraw_winnerを返す。バトルファクトリーでは引き分けはプレイヤーの負けなので
+    # （仕様書10節）、ファクトリー側は相手のトレーナーを渡す。省略すると引き分けはNone
+    def get_winning_trainer(self, draw_winner: Trainer = None):
+        trainer1_defeated = self.trainer1.is_defeated()
+        trainer2_defeated = self.trainer2.is_defeated()
+        if trainer1_defeated and trainer2_defeated:
+            return draw_winner
+        if trainer1_defeated:
+            return self.trainer2
+        if trainer2_defeated:
+            return self.trainer1
+        return None
+
+    # trainerがどちらの側か（trainer1なら1、trainer2なら2）
+    def get_side(self, trainer: Trainer) -> int:
+        if trainer is self.trainer1:
+            return 1
+        if trainer is self.trainer2:
+            return 2
+        raise ValueError("trainer is not part of this battle")
+
+    # ---- 対戦の経過（イベント）の記録 ----
+
+    def record_event(self, kind: str, side: int = None, data: dict = None):
+        if self.record_events:
+            self.events.append(BattleEvent(self.turn, kind, side, data if data is not None else {}))
+
+    # trainerの場に今出ている個体が出てきたことを記録する
+    def record_switch_in(self, trainer: Trainer, reason: str):
+        pokemon = trainer.active
+        self.record_event("switch_in", self.get_side(trainer), {
+            "party_index": trainer.active_index, "pokemon_id": pokemon.pokemon_id,
+            "indivisual_id": pokemon.indivisual_id, "reason": reason,
+        })
+
+    # 手持ち全員の(HP, 状態異常, 持ち物のID)を、(側, 手持ちのインデックス)をキーにして取る
+    def _take_snapshot(self) -> dict:
+        snapshot = {}
+        for side, trainer in ((1, self.trainer1), (2, self.trainer2)):
+            for index, pokemon in enumerate(trainer.party):
+                item_id = pokemon.item.id if pokemon.item is not None else None
+                snapshot[(side, index)] = (pokemon.current_status.current_hp, pokemon.current_status.status_condition,
+                                           item_id)
+        return snapshot
+
+    # 前回記録した時点からの、HP・状態異常・持ち物の変化をイベントとして記録する
+    # (HPを変える処理は技・特性・持ち物のあちこちにあるので、変える側ではなく差分で拾う)
+    def record_state_changes(self):
+        if not self.record_events:
+            return
+        snapshot = self._take_snapshot()
+        for key, (hp, condition, item_id) in snapshot.items():
+            last_hp, last_condition, last_item_id = self._last_snapshot[key]
+            side, index = key
+            if hp != last_hp:
+                max_hp = self.get_party(side)[index].status.hp
+                self.record_event("hp", side, {"party_index": index, "before": last_hp, "after": hp, "max_hp": max_hp})
+                if hp <= 0 < last_hp:
+                    self.record_event("faint", side, {"party_index": index})
+            if condition != last_condition:
+                self.record_event("status", side, {"party_index": index, "before": last_condition, "after": condition})
+            if item_id != last_item_id:
+                self.record_event("item", side, {"party_index": index, "before": last_item_id, "after": item_id})
+        self._last_snapshot = snapshot
+
+    def get_party(self, side: int):
+        return (self.trainer1 if side == 1 else self.trainer2).party
+
     # targetがpokemon1/pokemon2のどちらかを見て、対応するランク補正(StatStages)を返す
     def get_stages(self, target: Pokemon) -> StatStages:
         if target is self.pokemon1:
@@ -1369,7 +1508,7 @@ class Battle:
         stall_count = attacker.current_status.protect_stall_counter
         success_chance = max(PROTECT_STALL_MIN_SUCCESS_CHANCE, PROTECT_STALL_SUCCESS_RATIO ** stall_count)
 
-        if random.random() < success_chance:
+        if self.rng.random() < success_chance:
             if is_endure:
                 attacker.current_status.is_enduring = True
             else:
@@ -1391,7 +1530,7 @@ class Battle:
     def try_apply_stat_multi_change(self, target, stat_changes, chance, source=None):
         if self.is_fainted(target) or self.is_shielded_by_substitute(target, source):
             return False
-        if random.random() < chance:
+        if self.rng.random() < chance:
             for stat_name, stage_amount in stat_changes:
                 if self.is_stat_drop_prevented(target, stat_name, stage_amount, source):
                     continue
@@ -1428,19 +1567,19 @@ class Battle:
         if condition == "confusion":
             if target.current_status.confusion_turns_remaining > 0:
                 return False
-            if random.random() < chance:
+            if self.rng.random() < chance:
                 # 行動前に1減らしてから判定するため、実際に混乱したまま行動する1〜4ターン分+1を設定する
-                target.current_status.confusion_turns_remaining = random.randint(2, 5)
+                target.current_status.confusion_turns_remaining = self.rng.randint(2, 5)
                 return True
             return False
 
         if target.current_status.status_condition is not None:
             return False
-        if random.random() < chance:
+        if self.rng.random() < chance:
             target.current_status.status_condition = condition
             target.current_status.toxic_counter = 1 if badly_poisoned else 0
             if condition == "sleep":
-                target.current_status.sleep_turns_remaining = random.randint(*SLEEP_TURNS_RANGE)
+                target.current_status.sleep_turns_remaining = self.rng.randint(*SLEEP_TURNS_RANGE)
             self.get_ability(target).on_status_inflicted(self, target, condition, source)
             return True
         return False
@@ -1452,7 +1591,7 @@ class Battle:
             return False
         if self.get_target_ability(target, source).prevents_flinch:
             return False
-        if random.random() < chance:
+        if self.rng.random() < chance:
             target.current_status.is_flinched = True
             return True
         return False
@@ -1619,18 +1758,18 @@ class Battle:
             copied_moves.append(copied_move)
         attacker.moves = copied_moves
 
-    # とんぼがえり: 攻撃したpokemon自身が、手持ちの生きている次の1体に強制的に交代する
-    # (交代先はswitch_policyには聞かず、resolve_faintsと同じ選び方＝手持ち順で最初に見つかった生存個体にする)
+    # とんぼがえり: 攻撃したpokemon自身が、手持ちの生きている個体に強制的に交代する
+    # (交代先はswitch_policyではなく、瀕死のときと同じreplacement_policyに聞く)
     # 手持ちに他に生きている個体がいなければ何もしない（交代せず攻撃だけで終わる）
     def perform_self_switch(self, pokemon: Pokemon):
         # 攻撃の反動・さめはだ等で瀕死になっていれば交代しない（代わりの個体はターン終了時に出る）
         if self.is_fainted(pokemon):
             return
         trainer = self.get_trainer(pokemon)
-        next_index = trainer.find_next_alive_index()
+        next_index = self.choose_replacement(trainer, "u_turn")
         if next_index is None:
             return
-        self.switch_in(trainer, next_index)
+        self.switch_in(trainer, next_index, reason="u_turn")
 
     # テクスチャー2: 直前に受けた技のタイプを半減または無効にするタイプの中から1つ選び、単一タイプに変わる
     # (現在自分が持っているタイプは候補から除く)。まだ何も技を受けていない、外れた技しか受けていない、
@@ -1652,7 +1791,7 @@ class Battle:
         if not candidates:
             return
 
-        attacker.type1 = random.choice(candidates)
+        attacker.type1 = self.rng.choice(candidates)
         attacker.type2 = None
 
     # ---- 交代・拘束・特殊なターン管理が必要な効果 ----
@@ -1806,7 +1945,7 @@ class Battle:
         status = target.current_status
         if self.is_fainted(target) or status.bound_turns_remaining > 0 or self.is_shielded_by_substitute(target, attacker):
             return
-        turns = random.choices([2, 3, 4, 5], weights=[3, 3, 1, 1])[0]
+        turns = self.rng.choices([2, 3, 4, 5], weights=[3, 3, 1, 1])[0]
         status.bound_turns_remaining = attacker.held_item.get_binding_turns(turns)
         status.bound_by = attacker
 
@@ -1835,23 +1974,24 @@ class Battle:
                       if index != trainer.active_index and not self.is_fainted(pokemon)]
         if not candidates:
             return
-        self.switch_in(trainer, random.choice(candidates))
+        self.switch_in(trainer, self.rng.choice(candidates), reason="forced")
 
-    # バトンタッチ: 能力ランク等を引き継いで、手持ちの生きている次の1体に交代する（いなければ失敗）
+    # バトンタッチ: 能力ランク等を引き継いで、手持ちの生きている個体に交代する（いなければ失敗）
+    # 交代先はreplacement_policyに聞く
     def perform_baton_pass(self, pokemon: Pokemon):
         if self.is_fainted(pokemon):
             return
         trainer = self.get_trainer(pokemon)
-        next_index = trainer.find_next_alive_index()
+        next_index = self.choose_replacement(trainer, "baton_pass")
         if next_index is None:
             return
-        self.switch_in(trainer, next_index, baton_pass=True)
+        self.switch_in(trainer, next_index, baton_pass=True, reason="baton_pass")
 
     # ちょうはつ: 相手を3〜5ターンの間、変化技を使えなくする。既にちょうはつ状態なら失敗する
     def perform_taunt(self, target: Pokemon):
         if target.current_status.taunt_turns_remaining > 0:
             return
-        target.current_status.taunt_turns_remaining = random.randint(*TAUNT_TURNS_RANGE)
+        target.current_status.taunt_turns_remaining = self.rng.randint(*TAUNT_TURNS_RANGE)
 
     # アンコール: 相手が直前に使った技を、4〜8ターンの間それしか出せなくする
     # 既にアンコール状態、まだ技を使っていない、その技のPPが無い、固定できない技（アンコール・まねっこ・ものまね・
@@ -1866,7 +2006,7 @@ class Battle:
         if any(effect[0] in ("mimic", "transform") for effect in move.effects):
             return
         status.encore_move = move
-        status.encore_turns_remaining = random.randint(*ENCORE_TURNS_RANGE)
+        status.encore_turns_remaining = self.rng.randint(*ENCORE_TURNS_RANGE)
 
     # かなしばり: 相手が直前に使った技を、4〜7ターンの間使えなくする
     # 既にかなしばり状態、まだ技を使っていない、その技のPPが無いなら失敗する
@@ -1878,7 +2018,7 @@ class Battle:
         if move is None or move.current_pp <= 0:
             return
         status.disabled_move = move
-        status.disable_turns_remaining = random.randint(*DISABLE_TURNS_RANGE)
+        status.disable_turns_remaining = self.rng.randint(*DISABLE_TURNS_RANGE)
 
     # いちゃもん: 相手が同じ技を2回続けて出せなくする（交代するまで）。既にいちゃもん状態なら失敗する
     def perform_torment(self, target: Pokemon):
@@ -1915,7 +2055,7 @@ class Battle:
         if not candidates:
             return result
 
-        called_move = random.choice(candidates)
+        called_move = self.rng.choice(candidates)
         if called_move.requires_recharge:
             attacker.current_status.must_recharge = True
         if called_move.is_explosive and self.is_explosion_prevented(attacker):
@@ -1937,7 +2077,7 @@ class Battle:
         damage = calculate_damage(
             attacker, defender, move, self.get_effective_weather(), self.is_screen_active(defender, move), False,
             self.get_stages(attacker), self.get_stages(defender), 1.0,
-            self.get_ability(attacker), self.get_target_ability(defender, attacker), is_critical=False,
+            self.get_ability(attacker), self.get_target_ability(defender, attacker), is_critical=False, rng=self.rng,
         )
         trainer.future_sight_turns_remaining = FUTURE_SIGHT_DELAY
         trainer.future_sight_damage = damage
@@ -1955,7 +2095,7 @@ class Battle:
                 continue
 
             target = trainer.active
-            if self.is_fainted(target) or not check_hit(trainer.future_sight_hitrate):
+            if self.is_fainted(target) or not check_hit(trainer.future_sight_hitrate, self.rng):
                 continue
             damage = self.apply_survival_effects(target, trainer.future_sight_damage)
             self.apply_damage(target, damage)
@@ -2174,4 +2314,4 @@ class Battle:
         candidates = [stat for stat in ACUPRESSURE_STATS if getattr(stages, stat) < 6]
         if not candidates:
             return
-        self.change_stage(attacker, random.choice(candidates), ACUPRESSURE_STAGES)
+        self.change_stage(attacker, self.rng.choice(candidates), ACUPRESSURE_STAGES)

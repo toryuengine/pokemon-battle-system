@@ -1,5 +1,3 @@
-import random
-
 from ability.base_ability import BaseAbility
 from ability.shared import CONTACT_EFFECT_CHANCE
 
@@ -11,6 +9,6 @@ class CuteCharm(BaseAbility):
         super().__init__(id=39)
 
     def on_contact_received(self, battle, pokemon, attacker, move):
-        if random.random() >= CONTACT_EFFECT_CHANCE:
+        if battle.rng.random() >= CONTACT_EFFECT_CHANCE:
             return
         battle.perform_attract(pokemon, attacker)

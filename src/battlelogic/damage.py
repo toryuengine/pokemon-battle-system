@@ -75,14 +75,14 @@ def apply_stage_to_stat(stat: int, stage: int, is_critical: bool, is_attack_side
 CONFUSION_SELF_HIT_POWER = 40
 
 
-def calculate_confusion_damage(pokemon, stages=None) -> int:
+def calculate_confusion_damage(pokemon, stages=None, rng=random) -> int:
     attack_stat = apply_stage_to_stat(pokemon.status.atk, stages.atk if stages else 0, False, is_attack_side=True)
     defense_stat = max(1, apply_stage_to_stat(pokemon.status.defense, stages.defense if stages else 0, False, is_attack_side=False))
 
     base_damage = (2 * pokemon.level / 5 + 2) * CONFUSION_SELF_HIT_POWER * attack_stat / defense_stat
     base_damage = base_damage / 50 + 2
 
-    random_factor = random.randint(85, 100) / 100
+    random_factor = rng.randint(85, 100) / 100
     return max(1, int(base_damage * random_factor))
 
 
@@ -93,12 +93,12 @@ def get_crit_chance(crit_stage: int) -> float:
 
 # 急所に当たるかどうかを判定する。急所ランクは技(high_crit)・持ち物・特性（きょううん）で上がり、
 # 受ける側の特性がカブトアーマー・シェルアーマーなら急所に当たらない（固定ダメージ技も急所に当たらない）
-def roll_critical(attacker, move, attacker_ability=NO_ABILITY, defender_ability=NO_ABILITY) -> bool:
+def roll_critical(attacker, move, attacker_ability=NO_ABILITY, defender_ability=NO_ABILITY, rng=random) -> bool:
     if defender_ability.prevents_critical_hit or move.has_fixed_damage:
         return False
     crit_stage = ((1 if move.high_crit else 0) + attacker.held_item.get_crit_stage_bonus(attacker)
                   + attacker_ability.crit_stage_bonus)
-    return random.random() < get_crit_chance(crit_stage)
+    return rng.random() < get_crit_chance(crit_stage)
 
 
 # attacker_stages/defender_stagesは両者のStatStages。省略時はランク補正なし（0段階）として計算する
@@ -106,10 +106,11 @@ def roll_critical(attacker, move, attacker_ability=NO_ABILITY, defender_ability=
 # 半減実のように発動すると消費される（Battle側で状態を変える必要がある）倍率は、Battle側からextra_multiplierで渡す
 # attacker_ability/defender_abilityは両者の特性（いえきで消されている・かたやぶりで無視される場合はNO_ABILITY）。
 # is_criticalを省略すると、ここで急所判定を行う（Battle側はいかりのつぼの判定のため、事前にroll_criticalで決めて渡す）
+# rngは急所・乱数(85〜100%)の判定に使う乱数。省略するとrandomモジュールを使う
 # battleは状況によって威力が変わる技（しおみず・しっぺがえし等）の威力判定に使う。省略時は技の基本の威力で計算する
 def calculate_damage(attacker, defender, move, weather=None, screen_active=False, ignore_ghost_immunity=False,
                      attacker_stages=None, defender_stages=None, extra_multiplier=1.0,
-                     attacker_ability=NO_ABILITY, defender_ability=NO_ABILITY, is_critical=None, battle=None) -> int:
+                     attacker_ability=NO_ABILITY, defender_ability=NO_ABILITY, is_critical=None, battle=None, rng=random) -> int:
     # 変化技(CATEGORY_STATUS)はダメージを与えない
     if move.category == CATEGORY_STATUS:
         return 0
@@ -129,7 +130,7 @@ def calculate_damage(attacker, defender, move, weather=None, screen_active=False
     # 急所判定はランク補正の扱いに影響するため、実数値を決める前に行う
     attacker_item = attacker.held_item
     if is_critical is None:
-        is_critical = roll_critical(attacker, move, attacker_ability, defender_ability)
+        is_critical = roll_critical(attacker, move, attacker_ability, defender_ability, rng)
 
     # 物理技(CATEGORY_PHYSICAL)はatk/defense、それ以外(特殊)はspatk/spdefを使う
     if move.category == CATEGORY_PHYSICAL:
@@ -186,7 +187,7 @@ def calculate_damage(attacker, defender, move, weather=None, screen_active=False
     if is_critical:
         damage = int(damage * CRIT_MULTIPLIER * attacker_ability.critical_multiplier_bonus)
     damage = int(damage * attacker_item.get_damage_multiplier_before_random(attacker))
-    damage = damage * random.randint(85, 100) // 100
+    damage = damage * rng.randint(85, 100) // 100
 
     # タイプを持たない技(わるあがき等)はタイプ一致による強化(STAB)も無い
     is_stab = not move.is_typeless and resolve_type_id(move.type) in (attacker.type1, attacker.type2)

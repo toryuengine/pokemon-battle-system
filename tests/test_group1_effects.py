@@ -165,7 +165,7 @@ def test_safeguard_blocks_toxic_spikes_and_toxic_orb():
 
 # 第4世代では、せいでんき等の接触技を受けて発動する特性は防げない
 def test_safeguard_does_not_block_contact_abilities(monkeypatch):
-    monkeypatch.setattr("ability.shared.random.random", lambda: 0.0)
+    monkeypatch.setattr("random.random", lambda: 0.0)
     attacker = make("カビゴン", ["だましうち"])
     static = make("ハガネール", ["だましうち"], ability="せいでんき")
     battle = Battle(attacker, static)
