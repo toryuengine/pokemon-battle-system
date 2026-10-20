@@ -117,14 +117,15 @@ class SuperEffectiveReductionAbility(BaseAbility):
 
 
 # 接触技を受けると、CONTACT_EFFECT_CHANCEの確率で相手をconditionsのどれか1つ（ランダム）の状態異常にする
-# 相手にみがわりがいても防げない。かたやぶりの相手にも発動する
+# 相手にみがわりがいても防げない。かたやぶりの相手にも発動する。第4世代では相手のしんぴのまもりでも防げない
 class ContactStatusAbility(BaseAbility):
     conditions = ()
 
     def on_contact_received(self, battle, pokemon, attacker, move):
         if random.random() >= CONTACT_EFFECT_CHANCE:
             return
-        battle.try_apply_status(attacker, random.choice(self.conditions), 1.0, source=pokemon, bypass_substitute=True)
+        battle.try_apply_status(attacker, random.choice(self.conditions), 1.0, source=pokemon, bypass_substitute=True,
+                               bypass_safeguard=True)
 
 
 # 第4世代のシングルバトルでは対戦結果に影響しない特性（野生との遭遇・ダブルバトル専用の効果等）

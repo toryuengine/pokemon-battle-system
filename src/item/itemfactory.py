@@ -5,6 +5,7 @@ from item.attack import CategoryBoostItem, CritBoostItem, ExpertBelt, FlinchItem
 from item.base_item import BaseItem
 from item.berry import PinchBerry, ResistBerry, SitrusBerry, StatusCureBerry
 from item.choice import ChoiceBand, ChoiceScarf, ChoiceSpecs
+from item.destiny_knot import DestinyKnot
 from item.duration import GripClaw, LightClay, WeatherRock
 from item.herb import PowerHerb, WhiteHerb
 from item.recovery import BigRoot, BlackSludge, Leftovers, ShellBell
@@ -71,6 +72,7 @@ _ITEM_CLASSES = {
     52: ChoiceScarf,  # こだわりスカーフ
     53: partial(WeatherRock, weather="hail"),  # つめたいいわ
     54: partial(ResistBerry, resist_type="いわ"),  # ヨロギのみ
+    55: DestinyKnot,  # あかいいと
 }
 
 

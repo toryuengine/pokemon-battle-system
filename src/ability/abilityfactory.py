@@ -89,6 +89,8 @@ from ability.ability_086 import FlameBody
 from ability.ability_087 import Hustle
 from ability.ability_088 import Truant
 from ability.ability_089 import SlowStart
+from ability.ability_090 import MagicGuard
+from ability.ability_091 import VitalSpirit
 
 # 特性のID（data/ability.jsonのキー） → 特性クラス
 _ABILITY_CLASSES = {
@@ -182,6 +184,8 @@ _ABILITY_CLASSES = {
     87: Hustle,
     88: Truant,
     89: SlowStart,
+    90: MagicGuard,
+    91: VitalSpirit,
 }
 
 

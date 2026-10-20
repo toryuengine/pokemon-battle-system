@@ -35,6 +35,8 @@ class Trainer:
         # 自分の場に張られている壁の残りターン数。0なら無効
         self.reflect_turns_remaining = 0
         self.light_screen_turns_remaining = 0
+        # 自分の場に張られているしんぴのまもりの残りターン数。0なら無効
+        self.safeguard_turns_remaining = 0
 
         # 自分の場に向けて撃たれたみらいよちの、攻撃が来るまでの残りターン数（0なら無し）と、
         # 使った時点で計算済みのダメージ・命中率。攻撃はその時点で場に出ている個体が受ける

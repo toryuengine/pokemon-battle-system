@@ -67,6 +67,8 @@ TYPE_ID_POISON = 7
 
 # 壁（リフレクター・ひかりのかべ）の持続ターン数
 SCREEN_DURATION = 5
+# しんぴのまもりの持続ターン数（使ったターンを含めて5ターン）
+SAFEGUARD_DURATION = 5
 # かわらわりは攻撃前に相手の場の壁を破壊する
 BRICK_BREAK_ID = 77
 
@@ -470,19 +472,21 @@ class Battle:
         if trainer.spikes > 0 and is_grounded:
             ratio = SPIKES_DAMAGE_RATIOS[trainer.spikes]
             damage = max(1, int(pokemon.status.hp * ratio))
-            self.apply_damage(pokemon, damage)
+            self.apply_indirect_damage(pokemon, damage)
 
         if trainer.stealth_rock:
             effectiveness = get_effectiveness(TYPE_ID_ROCK, pokemon.type1, pokemon.type2)
             damage = max(1, int(pokemon.status.hp * STEALTH_ROCK_DAMAGE_RATIO * effectiveness))
-            self.apply_damage(pokemon, damage)
+            self.apply_indirect_damage(pokemon, damage)
 
         if trainer.toxic_spikes > 0 and is_grounded:
             if TYPE_ID_POISON in (pokemon.type1, pokemon.type2):
                 # どくタイプが出ると、どくびしはその場から消滅する
                 trainer.toxic_spikes = 0
-            elif pokemon.current_status.status_condition is None and self.can_receive_status(pokemon, "poison"):
+            elif (pokemon.current_status.status_condition is None and self.can_receive_status(pokemon, "poison")
+                  and not self.is_safeguarded(pokemon) and not self.get_ability(pokemon).prevents_indirect_damage):
                 # 1層ならどく、2層ならもうどくになる
+                # しんぴのまもりの場、マジックガード（第4世代だけの仕様）ならどくにならない
                 self.inflict_poison(pokemon, badly=trainer.toxic_spikes >= 2)
 
     # pokemonが地面にいるかどうか（まきびし・どくびしを受けるか）。くろいてっきゅうを持っている、
@@ -563,13 +567,25 @@ class Battle:
         elif screen_type == "light_screen":
             trainer.light_screen_turns_remaining = duration
 
-    # 両トレーナーの壁の残りターンを1減らす
+    # 両トレーナーの壁・しんぴのまもりの残りターンを1減らす
     def tick_screens(self):
         for trainer in (self.trainer1, self.trainer2):
             if trainer.reflect_turns_remaining > 0:
                 trainer.reflect_turns_remaining -= 1
             if trainer.light_screen_turns_remaining > 0:
                 trainer.light_screen_turns_remaining -= 1
+            if trainer.safeguard_turns_remaining > 0:
+                trainer.safeguard_turns_remaining -= 1
+
+    # しんぴのまもり: trainerの場を5ターンの間、相手からの状態異常・こんらんから守る。既に効果中なら失敗する
+    def set_safeguard(self, trainer: Trainer):
+        if trainer.safeguard_turns_remaining > 0:
+            return
+        trainer.safeguard_turns_remaining = SAFEGUARD_DURATION
+
+    # pokemonの場がしんぴのまもりで守られているか
+    def is_safeguarded(self, pokemon: Pokemon) -> bool:
+        return self.get_trainer(pokemon).safeguard_turns_remaining > 0
 
     # moveのカテゴリに対応する壁が、defenderの場に張られているかどうか
     def is_screen_active(self, defender: Pokemon, move: BaseMove) -> bool:
@@ -639,7 +655,9 @@ class Battle:
         if status.infatuated_by is not None and random.random() < INFATUATION_IMMOBILIZE_CHANCE:
             return False
 
-        if condition == "paralysis" and random.random() < PARALYSIS_FULL_PARA_CHANCE:
+        # マジックガードは第4世代だけの仕様で、まひで動けなくなることが無い（素早さは下がる）
+        if (condition == "paralysis" and not ability.prevents_indirect_damage
+                and random.random() < PARALYSIS_FULL_PARA_CHANCE):
             return False
 
         return True
@@ -655,13 +673,13 @@ class Battle:
                 pass
             elif condition == "poison" and pokemon.current_status.toxic_counter > 0:
                 damage = max(1, pokemon.status.hp * pokemon.current_status.toxic_counter // TOXIC_DAMAGE_DENOMINATOR)
-                self.apply_damage(pokemon, damage)
+                self.apply_indirect_damage(pokemon, damage)
             elif condition == "poison":
                 damage = max(1, int(pokemon.status.hp * POISON_DAMAGE_RATIO))
-                self.apply_damage(pokemon, damage)
+                self.apply_indirect_damage(pokemon, damage)
             elif condition == "burn":
                 damage = max(1, int(pokemon.status.hp * BURN_DAMAGE_RATIO))
-                self.apply_damage(pokemon, damage)
+                self.apply_indirect_damage(pokemon, damage)
             # もうどくのカウンタは、ポイズンヒールでダメージを受けなかったターンも増える
             if condition == "poison" and 0 < pokemon.current_status.toxic_counter < TOXIC_COUNTER_MAX:
                 pokemon.current_status.toxic_counter += 1
@@ -671,16 +689,16 @@ class Battle:
             if status.has_nightmare and status.status_condition != "sleep":
                 status.has_nightmare = False
             if status.has_nightmare and not self.is_fainted(pokemon):
-                self.apply_damage(pokemon, max(1, int(pokemon.status.hp * NIGHTMARE_DAMAGE_RATIO)))
+                self.apply_indirect_damage(pokemon, max(1, int(pokemon.status.hp * NIGHTMARE_DAMAGE_RATIO)))
 
             # のろい状態なら、どく・やけどとは別に最大HPの1/4を失う
             if pokemon.current_status.is_cursed and not self.is_fainted(pokemon):
                 damage = max(1, int(pokemon.status.hp * CURSE_DAMAGE_RATIO))
-                self.apply_damage(pokemon, damage)
+                self.apply_indirect_damage(pokemon, damage)
 
             # しめつけ系の技で締め付けられていれば、最大HPの1/16を失う
             if status.bound_turns_remaining > 0 and not self.is_fainted(pokemon):
-                self.apply_damage(pokemon, max(1, int(pokemon.status.hp * BIND_DAMAGE_RATIO)))
+                self.apply_indirect_damage(pokemon, max(1, int(pokemon.status.hp * BIND_DAMAGE_RATIO)))
                 status.bound_turns_remaining -= 1
                 if status.bound_turns_remaining <= 0:
                     status.bound_by = None
@@ -719,7 +737,7 @@ class Battle:
             if weather in self.get_ability(pokemon).weather_immunities:
                 continue
             damage = max(1, int(pokemon.status.hp * WEATHER_DAMAGE_RATIO))
-            self.apply_damage(pokemon, damage)
+            self.apply_indirect_damage(pokemon, damage)
 
     # ターン終了時に発動する特性（あめうけざら・アイスボディ・かんそうはだ・うるおいボディ・かそく）
     def apply_end_of_turn_abilities(self):
@@ -827,6 +845,14 @@ class Battle:
         if target is not self.pokemon1 and target is not self.pokemon2:
             raise ValueError("target is not part of this battle")
         target.current_status.current_hp = max(0, target.current_status.current_hp - damage)
+
+    # 技による攻撃以外の、状態異常・天候・罠・反動・持ち物等によるダメージ。マジックガードなら受けない
+    # 実際にダメージを受けたかどうかを返す
+    def apply_indirect_damage(self, target: Pokemon, damage: int) -> bool:
+        if self.get_ability(target).prevents_indirect_damage:
+            return False
+        self.apply_damage(target, damage)
+        return True
 
     # 残りHPが0以下なら瀕死。交代でベンチに下がった後の個体にも呼べるよう、
     # get_current_hpの「今場に出ているか」チェックは経由せず直接HPを見る
@@ -1379,7 +1405,9 @@ class Battle:
     # conditionが"toxic"ならもうどくにする（status_conditionは"poison"で、toxic_counterを1にする）
     # sourceは状態異常にした相手。めんえき等の特性で防がれる判定（かたやぶり）と、シンクロの発動に使う
     # bypass_substituteがTrueなら、targetのみがわりに防がれない（せいでんき等、接触技を受けて発動する特性）
-    def try_apply_status(self, target, condition, chance, source=None, bypass_substitute=False):
+    # 相手(source)からの状態異常・こんらんは、しんぴのまもりで防がれる。bypass_safeguardがTrueなら防がれない
+    # (第4世代では、せいでんき等の接触技を受けて発動する特性はしんぴのまもりで防げない)
+    def try_apply_status(self, target, condition, chance, source=None, bypass_substitute=False, bypass_safeguard=False):
         badly_poisoned = condition == "toxic"
         if badly_poisoned:
             condition = "poison"
@@ -1387,6 +1415,9 @@ class Battle:
         if self.is_fainted(target):
             return False
         if not bypass_substitute and self.is_shielded_by_substitute(target, source):
+            return False
+        if (not bypass_safeguard and source is not None and source is not target
+                and self.is_safeguarded(target)):
             return False
         # にほんばれの間は、こおり状態にならない
         if condition == "freeze" and self.get_effective_weather() == "sun":
@@ -1432,9 +1463,10 @@ class Battle:
         if self.get_ability(attacker).prevents_recoil:
             return
         recoil_damage = max(1, int(damage * ratio))
-        self.apply_damage(attacker, recoil_damage)
+        self.apply_indirect_damage(attacker, recoil_damage)
 
     # attacker自身が最大HPのratio分だけ反動ダメージを受ける（わるあがきなど、与ダメージに依存しない反動）
+    # 第4世代でも、わるあがきの反動はマジックガードで防げない
     def apply_max_hp_recoil(self, attacker, ratio):
         recoil_damage = max(1, int(attacker.status.hp * ratio))
         self.apply_damage(attacker, recoil_damage)
@@ -1447,8 +1479,9 @@ class Battle:
             return
         heal_amount = int(damage * ratio)
         heal_amount = int(heal_amount * attacker.held_item.get_drain_multiplier())
+        # マジックガードなら、ヘドロえきのダメージを受けない（回復もしない）
         if target is not None and self.get_ability(target).damages_drainer:
-            self.apply_damage(attacker, heal_amount)
+            self.apply_indirect_damage(attacker, heal_amount)
             return
         max_hp = attacker.status.hp
         attacker.current_status.current_hp = min(max_hp, attacker.current_status.current_hp + heal_amount)
@@ -2017,12 +2050,14 @@ class Battle:
                 continue
             receiver = self.get_opponent(pokemon)
             drained = min(pokemon.current_status.current_hp, max(1, int(pokemon.status.hp * LEECH_SEED_DRAIN_RATIO)))
-            self.apply_damage(pokemon, drained)
+            # マジックガードならHPを奪われず、相手も回復しない
+            if not self.apply_indirect_damage(pokemon, drained):
+                continue
             if self.is_fainted(receiver):
                 continue
             amount = int(drained * receiver.held_item.get_drain_multiplier())
             if self.get_ability(pokemon).damages_drainer:
-                self.apply_damage(receiver, amount)
+                self.apply_indirect_damage(receiver, amount)
             else:
                 self.restore_hp(receiver, amount)
 
@@ -2036,6 +2071,9 @@ class Battle:
         if self.is_fainted(target) or status.status_condition is not None or status.yawn_turns_remaining > 0:
             return
         if not self.can_receive_status(target, "sleep", attacker):
+            return
+        # しんぴのまもりの場では、ねむけ状態にならない（既にねむけ状態なら、しんぴのまもりを張ってもねむる）
+        if self.is_safeguarded(target):
             return
         status.yawn_turns_remaining = YAWN_DURATION
 
@@ -2072,6 +2110,24 @@ class Battle:
         if self.get_target_ability(target, attacker).prevents_infatuation:
             return
         target.current_status.infatuated_by = attacker
+        # あかいいと: メロメロにされた側が持っていれば、メロメロにした相手もメロメロにする
+        target.held_item.on_infatuated(self, target, attacker)
+
+    # ---- こうそくスピン ----
+
+    # こうそくスピン: 自分にかかっているしめつけ系の技・やどりぎのタネと、自分の場のまきびし・どくびし・ステルスロックを取り除く
+    # (反動等で瀕死になっていれば何もしない)
+    def perform_rapid_spin(self, attacker: Pokemon):
+        if self.is_fainted(attacker):
+            return
+        status = attacker.current_status
+        status.bound_turns_remaining = 0
+        status.bound_by = None
+        status.is_seeded = False
+        trainer = self.get_trainer(attacker)
+        trainer.stealth_rock = False
+        trainer.spikes = 0
+        trainer.toxic_spikes = 0
 
     # ---- はねやすめ ----
 

@@ -169,6 +169,8 @@ class BaseMove:
         #   ("acupressure",) ランダムな能力ランクを+2する（つぼをつく）
         #   ("eat_berry",)  相手のきのみを奪って食べ、その効果を自分が得る（むしくい・ついばむ）
         #   ("roost",)      最大HPの1/2を回復し、そのターンの間ひこうタイプが無くなる（はねやすめ）
+        #   ("rapid_spin",) 自分のしめつけ・やどりぎのタネと、自分の場の罠を取り除く（こうそくスピン）
+        #   ("safeguard",)  5ターンの間、自分の場を相手からの状態異常・こんらんから守る（しんぴのまもり）
         # target は "self"（attacker） か "target"（defender）
         self.effects = []
 
@@ -403,6 +405,12 @@ class BaseMove:
 
             elif kind == "roost":
                 battle.perform_roost(attacker)
+
+            elif kind == "rapid_spin":
+                battle.perform_rapid_spin(attacker)
+
+            elif kind == "safeguard":
+                battle.set_safeguard(battle.get_trainer(attacker))
 
     def __repr__(self):
         parts = []
