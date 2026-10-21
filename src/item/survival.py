@@ -16,4 +16,7 @@ class FocusSash(BaseItem):
 # きあいのハチマキ: 10%の確率で瀕死になる攻撃をHP1で耐える（消費しない）
 class FocusBand(BaseItem):
     def try_endure_fatal_hit(self, battle, defender) -> bool:
-        return battle.rng.random() < FOCUS_BAND_CHANCE
+        if battle.rng.random() >= FOCUS_BAND_CHANCE:
+            return False
+        battle.reveal_item(defender)
+        return True

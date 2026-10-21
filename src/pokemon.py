@@ -191,6 +191,8 @@ class Pokemon:
         elif ability_id not in entry["ability"]:
             raise ValueError(f"{entry['name']} cannot have ability {ability_id!r}")
         self.ability: BaseAbility = create_ability(ability_id)
+        # 元の特性のID（トレース・へんしんで特性が変わっても変わらない。特性が判明したイベントで、元の特性かどうかの判定に使う）
+        self.original_ability_id: int = ability_id
         # 実数値は種族値・努力値・性格・個体値・レベルから計算する
         self.status: PokemonStatus = _parse_status(
             calc_stats(entry["base_stats"], set_data["ev"], iv=iv, level=level, nature=self.nature))

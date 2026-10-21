@@ -13,4 +13,8 @@ class Levitate(BaseAbility):
     def on_try_hit(self, battle, attacker, defender, move) -> bool:
         if move.is_typeless or move.type != "じめん" or move.category == CATEGORY_STATUS:
             return False
-        return not defender.is_forced_grounded
+        if defender.is_forced_grounded:
+            return False
+        # タイプでは説明できない、じめん技の無効化が見えるので判明する
+        battle.reveal_ability(defender, self)
+        return True

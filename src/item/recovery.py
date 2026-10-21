@@ -7,6 +7,11 @@ BIG_ROOT_MULTIPLIER = 1.3
 TYPE_ID_POISON = 7
 
 
+# HPが満タンなら回復せず、メッセージも出ない（持ち物は判明しない）
+def _can_heal(pokemon) -> bool:
+    return pokemon.current_status.current_hp < pokemon.status.hp
+
+
 def _heal_by_max_hp_ratio(pokemon, ratio):
     max_hp = pokemon.status.hp
     heal_amount = max(1, int(max_hp * ratio))
@@ -16,6 +21,8 @@ def _heal_by_max_hp_ratio(pokemon, ratio):
 # たべのこし: 毎ターン終了時に最大HPの1/16回復
 class Leftovers(BaseItem):
     def on_end_of_turn(self, battle, pokemon):
+        if _can_heal(pokemon):
+            battle.reveal_item(pokemon)
         _heal_by_max_hp_ratio(pokemon, LEFTOVERS_HEAL_RATIO)
 
 
@@ -23,14 +30,18 @@ class Leftovers(BaseItem):
 class BlackSludge(BaseItem):
     def on_end_of_turn(self, battle, pokemon):
         if TYPE_ID_POISON in (pokemon.type1, pokemon.type2):
+            if _can_heal(pokemon):
+                battle.reveal_item(pokemon)
             _heal_by_max_hp_ratio(pokemon, LEFTOVERS_HEAL_RATIO)
-        else:
-            battle.apply_indirect_damage(pokemon, max(1, int(pokemon.status.hp * BLACK_SLUDGE_DAMAGE_RATIO)))
+        elif battle.apply_indirect_damage(pokemon, max(1, int(pokemon.status.hp * BLACK_SLUDGE_DAMAGE_RATIO))):
+            battle.reveal_item(pokemon)
 
 
 # かいがらのすず: 与えたダメージの1/8回復
 class ShellBell(BaseItem):
     def on_after_damage(self, battle, attacker, defender, move, total_damage: int):
+        if _can_heal(attacker):
+            battle.reveal_item(attacker)
         heal_amount = max(1, int(total_damage * SHELL_BELL_RATIO))
         attacker.current_status.current_hp = min(attacker.status.hp, attacker.current_status.current_hp + heal_amount)
 

@@ -3,7 +3,7 @@
 Agent には Battle や相手の Pokemon そのものを渡さず、ここで作る観測だけを渡す（CLAUDE.md 3.3節）。
 - 自分側：全部見える（セット・現在HP・PP・状態異常・能力ランク等）
 - 相手側：場に出てきた個体の種族、見た目で分かるタイプ・HPの割合・状態異常・能力ランク、使った技、
-  消費・はたきおとす等で判明した持ち物だけ。場に出ていない個体は数しか分からない
+  発動して判明した特性・持ち物（消費・はたきおとす・たべのこしの回復等）だけ。場に出ていない個体は数しか分からない
 - 交換の時：直前の相手3体の種族だけ（技・持ち物は見られない。仕様書5節）
 - 対戦の経過：画面のメッセージで分かる出来事（VisibleEvent）。相手のHPは割合だけ、相手のセットの番号は入らない
 
@@ -111,9 +111,12 @@ class OpponentPokemonView:
     status_condition: Optional[str]
     # 使ったのを見た技のID（使った順、重複なし）
     revealed_move_ids: Tuple[int, ...]
-    # 消費・はたきおとす・トリック等で判明した、元の持ち物のID（分かっていなければNone）
+    # 消費・はたきおとす・トリック等で変わった、または消費されずに発動した（たべのこし・いのちのたま等）ことで判明した、
+    # 元の持ち物のID（分かっていなければNone）
     revealed_item_id: Optional[int]
     is_active: bool
+    # 発動して判明した元の特性のID（いかく・プレッシャー・ちくでん等。分かっていなければNone）
+    revealed_ability_id: Optional[int] = None
 
     @property
     def is_fainted(self) -> bool:
@@ -136,6 +139,8 @@ class SideConditions:
 #   "switch_in"   pokemon_id・reason（セットの番号 indivisual_id は入れない）
 #   "move_result" damage を入れない（相手に与えたダメージの実数は見えない。HPの変化は"hp"で分かる）
 #   "hp"          自分の側は before・after・max_hp、相手の側は before_ratio・after_ratio（0〜1）だけ
+#   "ability"     ability_id・is_original（特性が発動して判明した）
+#   "item_activate" item_id（持ち物が消費されずに発動して判明した）
 #   "battle_end"  won（自分の勝ち）・is_draw
 @dataclass(frozen=True)
 class VisibleEvent:

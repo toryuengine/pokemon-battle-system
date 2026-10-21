@@ -20,6 +20,10 @@ class DrySkin(HealingAbsorbAbility):
     def on_end_of_turn(self, battle, pokemon):
         weather = battle.get_effective_weather()
         if weather == "rain":
+            # HPが満タンなら回復せず、メッセージも出ない
+            if pokemon.current_status.current_hp < pokemon.status.hp:
+                battle.reveal_ability(pokemon, self)
             battle.apply_heal(pokemon, DRY_SKIN_WEATHER_RATIO)
         elif weather == "sun":
+            battle.reveal_ability(pokemon, self)
             battle.apply_damage(pokemon, max(1, int(pokemon.status.hp * DRY_SKIN_WEATHER_RATIO)))

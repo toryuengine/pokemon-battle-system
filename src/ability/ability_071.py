@@ -13,6 +13,9 @@ class Trace(BaseAbility):
         opponent = battle.get_opponent(pokemon)
         if battle.is_fainted(opponent) or opponent.ability.id == self.id:
             return
+        # 「〜の特性をトレースした」とメッセージが出るので、トレースと相手の特性の両方が判明する
+        battle.reveal_ability(pokemon, self)
+        battle.reveal_ability(opponent, opponent.ability)
         traced = create_ability(opponent.ability.id)
         pokemon.current_status.ability_before_trace = self
         pokemon.ability = traced

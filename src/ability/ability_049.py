@@ -17,4 +17,5 @@ class Synchronize(BaseAbility):
             return
         if condition == "poison" and pokemon.current_status.toxic_counter > 0:
             condition = "toxic"
-        battle.try_apply_status(source, condition, 1.0)
+        if battle.try_apply_status(source, condition, 1.0):
+            battle.reveal_ability(pokemon, self)

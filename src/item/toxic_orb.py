@@ -8,6 +8,7 @@ class ToxicOrb(BaseItem):
         # 第4世代では、しんぴのまもりの場でも効果がない
         if (pokemon.current_status.status_condition is None and battle.can_receive_status(pokemon, "poison")
                 and not battle.is_safeguarded(pokemon)):
+            battle.reveal_item(pokemon)
             battle.inflict_poison(pokemon, badly=True)
 
     # なげつけるで投げつけられた相手をもうどく状態にする

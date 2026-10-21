@@ -598,10 +598,21 @@ class Battle:
     # pokemonがconditionの状態異常にかかるかどうか（タイプ・特性による無効化）
     # sourceがかたやぶりなら特性は無視するが、タイプによる無効化は無視できない
     def can_receive_status(self, pokemon: Pokemon, condition: str, source: Pokemon = None) -> bool:
-        immune_type_ids = STATUS_IMMUNE_TYPE_IDS.get(condition, ())
-        if pokemon.type1 in immune_type_ids or pokemon.type2 in immune_type_ids:
+        if self.is_status_immune_by_type(pokemon, condition):
             return False
         return self.get_target_ability(pokemon, source).can_receive_status(self, pokemon, condition)
+
+    def is_status_immune_by_type(self, pokemon: Pokemon, condition: str) -> bool:
+        immune_type_ids = STATUS_IMMUNE_TYPE_IDS.get(condition, ())
+        return pokemon.type1 in immune_type_ids or pokemon.type2 in immune_type_ids
+
+    # conditionの状態異常にならなかったのが、タイプではなく特性（ふみん・めんえき等）のせいなら、その特性が判明したことを記録する
+    def reveal_status_immunity_ability(self, pokemon: Pokemon, condition: str, source: Pokemon = None):
+        if self.is_status_immune_by_type(pokemon, condition):
+            return
+        ability = self.get_target_ability(pokemon, source)
+        if not ability.can_receive_status(self, pokemon, condition):
+            self.reveal_ability(pokemon, ability)
 
     # targetのトレーナー（罠等を管理している側）を返す
     def get_trainer(self, target: Pokemon) -> Trainer:
@@ -1128,10 +1139,16 @@ class Battle:
         pokemon.current_status.rampage_turns_remaining = 0
 
     # 場にいるどちらかのポケモンがしめりけなら、だいばくはつは失敗する（使う側がかたやぶりなら相手のしめりけは無視する）
+    # 失敗するときは「しめりけで使えない」とメッセージが出るので、しめりけが判明したことも記録する
     def is_explosion_prevented(self, attacker: Pokemon) -> bool:
         opponent = self.get_opponent(attacker)
-        return (self.get_ability(attacker).prevents_self_destruct
-                or self.get_target_ability(opponent, attacker).prevents_self_destruct)
+        if self.get_ability(attacker).prevents_self_destruct:
+            self.reveal_ability(attacker)
+            return True
+        if self.get_target_ability(opponent, attacker).prevents_self_destruct:
+            self.reveal_ability(opponent)
+            return True
+        return False
 
     # 場にいるどちらかのポケモンがしめりけなら、ゆうばくは発動しない
     def is_damp_active(self) -> bool:
@@ -1420,6 +1437,31 @@ class Battle:
             "indivisual_id": pokemon.indivisual_id, "reason": reason,
         })
 
+    # pokemonが今どちらの側の、手持ちの何番目にいるか（場に出ていない個体も探す）
+    def locate(self, pokemon: Pokemon) -> Tuple[int, int]:
+        for side, trainer in ((1, self.trainer1), (2, self.trainer2)):
+            for index, member in enumerate(trainer.party):
+                if member is pokemon:
+                    return side, index
+        raise ValueError("pokemon is not part of this battle")
+
+    # pokemonの特性abilityが発動して、画面のメッセージで判明したことを記録する（特性の側から呼ぶ）
+    # 本編でメッセージが出る場面だけで呼ぶ。テクニシャン等の倍率だけの特性や、追加効果を黙って防ぐ場面では呼ばない
+    def reveal_ability(self, pokemon: Pokemon, ability: BaseAbility = None):
+        if not self.record_events:
+            return
+        ability = ability if ability is not None else pokemon.ability
+        side, index = self.locate(pokemon)
+        self.record_event("ability", side, {"party_index": index, "ability_id": ability.id,
+                                            "is_original": ability.id == pokemon.original_ability_id})
+
+    # pokemonの持ち物が消費されずに発動して、画面のメッセージで判明したことを記録する（たべのこし・いのちのたま等）
+    def reveal_item(self, pokemon: Pokemon):
+        if not self.record_events or pokemon.item is None:
+            return
+        side, index = self.locate(pokemon)
+        self.record_event("item_activate", side, {"party_index": index, "item_id": pokemon.item.id})
+
     # 手持ち全員の(HP, 状態異常, 持ち物のID)を、(側, 手持ちのインデックス)をキーにして取る
     def _take_snapshot(self) -> dict:
         snapshot = {}
@@ -1553,6 +1595,9 @@ class Battle:
         if self.rng.random() < chance:
             for stat_name, stage_amount in stat_changes:
                 if self.is_stat_drop_prevented(target, stat_name, stage_amount, source):
+                    # 必ず発動する効果（なきごえ・いかく等）を防いだときは「クリアボディで下がらない」等のメッセージが出る
+                    if chance >= 1:
+                        self.reveal_ability(target, self.get_target_ability(target, source))
                     continue
                 self.change_stage(target, stat_name, stage_amount)
             return True
@@ -1582,6 +1627,10 @@ class Battle:
         if condition == "freeze" and self.get_effective_weather() == "sun":
             return False
         if not self.can_receive_status(target, condition, source):
+            # 状態異常にする技（必ず発動する効果）が特性で防がれたときは「ふみんで眠らない」等のメッセージが出る
+            # (追加効果が確率で発動する技は、防がれても何も表示されないので判明しない)
+            if chance >= 1:
+                self.reveal_status_immunity_ability(target, condition, source)
             return False
 
         if condition == "confusion":
@@ -1640,6 +1689,7 @@ class Battle:
         heal_amount = int(heal_amount * attacker.held_item.get_drain_multiplier())
         # マジックガードなら、ヘドロえきのダメージを受けない（回復もしない）
         if target is not None and self.get_ability(target).damages_drainer:
+            self.reveal_ability(target, self.get_ability(target))
             self.apply_indirect_damage(attacker, heal_amount)
             return
         max_hp = attacker.status.hp
@@ -1913,7 +1963,10 @@ class Battle:
     def perform_knock_off(self, attacker: Pokemon, target: Pokemon):
         if self.is_shielded_by_substitute(target, attacker):
             return
-        if target.item is None or self.get_target_ability(target, attacker).prevents_item_removal:
+        if target.item is None:
+            return
+        if self.get_target_ability(target, attacker).prevents_item_removal:
+            self.reveal_ability(target)
             return
         target.item = None
         self.on_item_lost(target)
@@ -1925,7 +1978,10 @@ class Battle:
         if self.is_shielded_by_substitute(target, attacker):
             return
         berry = target.item
-        if berry is None or not berry.is_berry or self.get_target_ability(target, attacker).prevents_item_removal:
+        if berry is None or not berry.is_berry:
+            return
+        if self.get_target_ability(target, attacker).prevents_item_removal:
+            self.reveal_ability(target)
             return
         target.item = None
         self.on_item_lost(target)
@@ -1938,6 +1994,7 @@ class Battle:
         if attacker.item is None and target.item is None:
             return
         if self.get_target_ability(target, attacker).prevents_item_removal:
+            self.reveal_ability(target)
             return
         attacker.item, target.item = target.item, attacker.item
         for pokemon in (attacker, target):
@@ -1985,7 +2042,10 @@ class Battle:
     # ほえる: 相手を強制的に交代させる。交代先は手持ちの生きている個体からランダムに選ぶ
     # 交代できる個体がいない、相手がきゅうばん、またはねをはるで根を張っていれば失敗する
     def perform_force_switch(self, attacker: Pokemon, target: Pokemon):
-        if self.is_fainted(target) or self.get_target_ability(target, attacker).prevents_forced_switch:
+        if self.is_fainted(target):
+            return
+        if self.get_target_ability(target, attacker).prevents_forced_switch:
+            self.reveal_ability(target)
             return
         if target.current_status.is_ingrained:
             return
@@ -2231,6 +2291,7 @@ class Battle:
         if self.is_fainted(target) or status.status_condition is not None or status.yawn_turns_remaining > 0:
             return
         if not self.can_receive_status(target, "sleep", attacker):
+            self.reveal_status_immunity_ability(target, "sleep", attacker)
             return
         # しんぴのまもりの場では、ねむけ状態にならない（既にねむけ状態なら、しんぴのまもりを張ってもねむる）
         if self.is_safeguarded(target):
@@ -2268,6 +2329,7 @@ class Battle:
         if target.current_status.infatuated_by is not None:
             return
         if self.get_target_ability(target, attacker).prevents_infatuation:
+            self.reveal_ability(target)
             return
         target.current_status.infatuated_by = attacker
         # あかいいと: メロメロにされた側が持っていれば、メロメロにした相手もメロメロにする

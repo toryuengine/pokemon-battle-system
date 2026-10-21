@@ -45,6 +45,7 @@ class TypeAbsorbAbility(BaseAbility):
     def on_try_hit(self, battle, attacker, defender, move) -> bool:
         if move.is_typeless or move.type != self.absorbed_type:
             return False
+        battle.reveal_ability(defender, self)
         self.on_absorb(battle, defender)
         return True
 
@@ -89,8 +90,12 @@ class WeatherHealAbility(BaseAbility):
     weather = None
 
     def on_end_of_turn(self, battle, pokemon):
-        if battle.get_effective_weather() == self.weather:
-            battle.apply_heal(pokemon, WEATHER_HEAL_RATIO)
+        if battle.get_effective_weather() != self.weather:
+            return
+        # HPが満タンなら回復せず、メッセージも出ない
+        if pokemon.current_status.current_hp < pokemon.status.hp:
+            battle.reveal_ability(pokemon, self)
+        battle.apply_heal(pokemon, WEATHER_HEAL_RATIO)
 
 
 # 場に出ると天候を変える。第4世代仕様で、特性による天候はターン経過で終わらない
@@ -98,6 +103,7 @@ class WeatherSetterAbility(BaseAbility):
     weather = None
 
     def on_switch_in(self, battle, pokemon):
+        battle.reveal_ability(pokemon, self)
         battle.set_weather(self.weather, permanent=True)
 
 
@@ -123,8 +129,15 @@ class ContactStatusAbility(BaseAbility):
     def on_contact_received(self, battle, pokemon, attacker, move):
         if battle.rng.random() >= CONTACT_EFFECT_CHANCE:
             return
-        battle.try_apply_status(attacker, battle.rng.choice(self.conditions), 1.0, source=pokemon, bypass_substitute=True,
-                               bypass_safeguard=True)
+        if battle.try_apply_status(attacker, battle.rng.choice(self.conditions), 1.0, source=pokemon,
+                                   bypass_substitute=True, bypass_safeguard=True):
+            battle.reveal_ability(pokemon, self)
+
+
+# 場に出た時に、特性の名前のメッセージが出るだけの特性（プレッシャー・かたやぶり）
+class AnnouncedOnSwitchInAbility(BaseAbility):
+    def on_switch_in(self, battle, pokemon):
+        battle.reveal_ability(pokemon, self)
 
 
 # 第4世代のシングルバトルでは対戦結果に影響しない特性（野生との遭遇・ダブルバトル専用の効果等）

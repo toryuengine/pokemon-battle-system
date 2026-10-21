@@ -7,4 +7,5 @@ class AngerPoint(BaseAbility):
         super().__init__(id=48)
 
     def on_critical_hit_received(self, battle, pokemon):
+        battle.reveal_ability(pokemon, self)
         battle.get_stages(pokemon).atk = 6

@@ -10,4 +10,5 @@ class Intimidate(BaseAbility):
         opponent = battle.get_opponent(pokemon)
         if battle.is_fainted(opponent):
             return
+        battle.reveal_ability(pokemon, self)
         battle.try_apply_stat_change(opponent, "atk", -1, 1.0, source=pokemon)

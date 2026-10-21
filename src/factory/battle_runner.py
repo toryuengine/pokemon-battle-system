@@ -50,10 +50,13 @@ VOLATILE_FLAGS = (
 class _OpponentRecord:
     revealed_move_ids: List[int]
     revealed_item_id: Optional[int] = None
+    revealed_ability_id: Optional[int] = None
+    # 持ち物が一度でも変わったか（変わった後に発動した持ち物は、元の持ち物とは限らない）
+    item_changed: bool = False
 
 
 # 相手側（side）について、対戦の経過（Battle.events）から見えた情報を集める
-# 場に出てきた個体・使った技・判明した持ち物を、イベントを読み進めながら貯めていく
+# 場に出てきた個体・使った技・判明した特性・持ち物を、イベントを読み進めながら貯めていく
 class OpponentKnowledge:
     def __init__(self, side: int):
         self.side = side
@@ -76,8 +79,19 @@ class OpponentKnowledge:
             elif event.kind == "item":
                 record = self.records.setdefault(event.data["party_index"], _OpponentRecord([]))
                 # 最初に持ち物が変わったとき（消費・はたきおとす・トリック等）の、変わる前の持ち物が元の持ち物
-                if record.revealed_item_id is None and event.data["before"] is not None:
+                if not record.item_changed and record.revealed_item_id is None and event.data["before"] is not None:
                     record.revealed_item_id = event.data["before"]
+                record.item_changed = True
+            elif event.kind == "item_activate":
+                record = self.records.setdefault(event.data["party_index"], _OpponentRecord([]))
+                # 持ち物が一度も変わっていなければ、発動した持ち物が元の持ち物（トリックで渡された物は数えない）
+                if not record.item_changed and record.revealed_item_id is None:
+                    record.revealed_item_id = event.data["item_id"]
+            elif event.kind == "ability":
+                record = self.records.setdefault(event.data["party_index"], _OpponentRecord([]))
+                # トレース・へんしんでコピーした特性は、その個体の元の特性ではないので数えない
+                if event.data["is_original"] and record.revealed_ability_id is None:
+                    record.revealed_ability_id = event.data["ability_id"]
         self._next_event_index = len(events)
 
 
@@ -180,6 +194,7 @@ class AgentSide:
                 status_condition=pokemon.current_status.status_condition,
                 revealed_move_ids=tuple(record.revealed_move_ids),
                 revealed_item_id=record.revealed_item_id,
+                revealed_ability_id=record.revealed_ability_id,
                 is_active=party_index == opponent.active_index,
             ))
         return TurnObservation(

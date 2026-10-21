@@ -6,7 +6,7 @@
 from typing import Dict, Iterable, List, Optional, Tuple
 
 from factory.observation import OWNER_OPPONENT, VisibleEvent
-from interface.text import is_status_move, item_name, move_name, pokemon_name, status_text
+from interface.text import ability_name, is_status_move, item_name, move_name, pokemon_name, status_text
 
 
 class Narrator:
@@ -63,6 +63,10 @@ class Narrator:
             if data["after"] is None:
                 return f"{self._name(event)} の {item_name(data['before'])} が なくなった"
             return f"{self._name(event)} の 持ち物が {item_name(data['before'])} から {item_name(data['after'])} に かわった"
+        if kind == "ability":
+            return f"［{self._name(event)} の {ability_name(data['ability_id'])}］"
+        if kind == "item_activate":
+            return f"［{self._name(event)} の {item_name(data['item_id'])}］"
         if kind == "battle_end":
             if data.get("is_draw"):
                 return "引き分け！"
