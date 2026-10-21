@@ -412,3 +412,40 @@ def test_rampage_confuses_after_last_turn():
         battle.use_move(user, target, move)
     assert user.current_status.rampage_move is None
     assert user.current_status.confusion_turns_remaining > 0
+
+
+# ---- みらいよち ----
+
+# みらいよちを使ってから攻撃が来るターン終了時まで進める（命中判定は必ず当たるようにする）
+def run_future_sight(monkeypatch, battle, user, target):
+    monkeypatch.setattr(battle_module, "check_hit", lambda hitrate, rng: True)
+    battle.use_move(user, target, user.moves[0])
+    trainer = battle.get_trainer(target)
+    damage = trainer.future_sight_damage
+    for _ in range(battle_module.FUTURE_SIGHT_DELAY):
+        battle.apply_future_sight()
+    return damage
+
+
+# 第4世代では、まもるで防げない（使ったターン・攻撃が来るターンのどちらに守っていても当たる）
+def test_future_sight_ignores_protect(monkeypatch):
+    user = make("フーディン", ["みらいよち"])
+    target = make("カビゴン", ["だましうち"])
+    battle = Battle(user, target, rng=random.Random(0))
+    target.current_status.is_protected = True
+    damage = run_future_sight(monkeypatch, battle, user, target)
+    assert damage > 0
+    assert target.current_status.current_hp == target.status.hp - damage
+
+
+# 第4世代では、身代わりは無視しない。身代わりが受け、身代わりの残りHPを超えた分は本体に届かない
+@pytest.mark.parametrize("substitute_hp", [1, 9999])
+def test_future_sight_hits_substitute(monkeypatch, substitute_hp):
+    user = make("フーディン", ["みらいよち"])
+    target = make("カビゴン", ["だましうち"], item="きあいのタスキ")
+    battle = Battle(user, target, rng=random.Random(0))
+    target.current_status.substitute_hp = substitute_hp
+    damage = run_future_sight(monkeypatch, battle, user, target)
+    assert target.current_status.current_hp == target.status.hp
+    assert target.current_status.substitute_hp == max(0, substitute_hp - damage)
+    assert target.item is not None
