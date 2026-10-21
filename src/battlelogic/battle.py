@@ -1123,8 +1123,10 @@ class Battle:
             attacker.current_status.charge_turns_remaining = 0
 
         # げきりん・あばれるの固定ターンを1減らし、最後のターンを終えたら疲れてこんらんする
-        # (外れた・まもるで防がれた場合も固定は続く)
-        if attacker.current_status.rampage_move is move:
+        # 外れた・まもるで防がれた・タイプや特性で無効にされた場合は、その時点でこんらんせずに固定が解ける（第4世代仕様）
+        if attacker.current_status.rampage_move is move and not result["hit"]:
+            self.end_rampage(attacker)
+        elif attacker.current_status.rampage_move is move:
             attacker.current_status.rampage_turns_remaining -= 1
             if attacker.current_status.rampage_turns_remaining <= 0:
                 self.end_rampage(attacker)
