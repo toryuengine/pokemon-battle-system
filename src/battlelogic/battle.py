@@ -1354,10 +1354,18 @@ class Battle:
         # かるわざ: 持ち物を消費すると素早さが上がる
         self.get_ability(pokemon).on_item_consumed(self, pokemon)
 
-    # 場に出ている両者について、条件を満たしていれば持ち物（きのみ・しろいハーブ）を発動させる
+    # 場に出ている両者について、条件を満たしていれば特性（めんえき等の状態異常の回復）と持ち物（きのみ・しろいハーブ）を発動させる
     def activate_held_items_on_field(self):
         for pokemon in (self.pokemon1, self.pokemon2):
+            self.activate_update_ability(pokemon)
             self.activate_held_items(pokemon)
+
+    # 状態を見て発動する特性の処理（BaseAbility.on_update）。持ち物より先に判定するので、
+    # めんえきで治るどくにラムのみを使ってしまうことは無い
+    def activate_update_ability(self, pokemon: Pokemon):
+        if self.is_fainted(pokemon):
+            return
+        self.get_ability(pokemon).on_update(self, pokemon)
 
     # 状態異常・残りHP・能力ランクの低下に反応して発動する持ち物の処理（きのみ・しろいハーブ。発動したら消費する）
     def activate_held_items(self, pokemon: Pokemon):
