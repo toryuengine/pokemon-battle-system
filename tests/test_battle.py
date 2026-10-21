@@ -348,3 +348,47 @@ def test_no_effects_on_fainted_target():
     assert not battle.try_apply_stat_change(target, "atk", -1, 1.0, source=source)
     assert not battle.try_apply_flinch(target, 1.0, source=source)
     assert target.current_status.status_condition is None
+
+
+# ---- げきりん・あばれる ----
+
+# 外れた・まもるで防がれた・タイプで無効にされた場合は、その時点でこんらんせずに固定が解ける
+@pytest.mark.parametrize("disruption", ["miss", "protect", "immune"])
+def test_rampage_ends_when_disrupted(monkeypatch, disruption):
+    user = make("カイリュー", ["あばれる"])
+    target = make("ゲンガー", ["だましうち"], level=100)
+    battle = Battle(user, target)
+    move = user.moves[0]
+    # 1ターン目は当てて固定させる（ゴーストタイプにノーマル技を当てるため、みやぶる状態にしておく）
+    target.current_status.is_identified = True
+    battle.use_move(user, target, move)
+    assert user.current_status.rampage_move is move
+    assert user.current_status.rampage_turns_remaining >= 1
+    target.current_status.current_hp = target.status.hp
+
+    if disruption == "miss":
+        monkeypatch.setattr(battle_module, "check_hit", lambda hitrate, rng: False)
+    elif disruption == "protect":
+        target.current_status.is_protected = True
+    else:
+        target.current_status.is_identified = False
+    result = battle.use_move(user, target, move)
+    assert not result["hit"]
+    assert user.current_status.rampage_move is None
+    assert user.current_status.rampage_turns_remaining == 0
+    assert user.current_status.confusion_turns_remaining == 0
+
+
+# 当たり続ければ、最後のターンを終えたところで固定が解けてこんらんする
+def test_rampage_confuses_after_last_turn():
+    user = make("カイリュー", ["げきりん"])
+    target = make("カビゴン", ["だましうち"], level=100)
+    battle = Battle(user, target, rng=random.Random(0))
+    move = user.moves[0]
+    battle.use_move(user, target, move)
+    turns = user.current_status.rampage_turns_remaining
+    for _ in range(turns):
+        target.current_status.current_hp = target.status.hp
+        battle.use_move(user, target, move)
+    assert user.current_status.rampage_move is None
+    assert user.current_status.confusion_turns_remaining > 0
