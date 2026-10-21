@@ -274,6 +274,26 @@ def test_roost_removes_flying_type_for_the_turn():
     assert TYPE_ID_FLYING in (skarmory.type1, skarmory.type2)
 
 
+# じこさいせい・タマゴうみ等の回復技は、HPが満タンなら失敗する（減っていれば最大HPの1/2を回復する）
+@pytest.mark.parametrize("name, move_name", [
+    ("スターミー", "じこさいせい"), ("ハピナス", "タマゴうみ"), ("フシギバナ", "こうごうせい"),
+    ("ムクホーク", "はねやすめ"),
+])
+def test_heal_move_fails_at_full_hp(name, move_name):
+    user = make(name, [move_name])
+    battle = Battle(user, make("カビゴン", ["だましうち"]))
+
+    assert not user.moves[0].try_execute(battle, user, battle.pokemon2)
+    result = battle.use_move(user, battle.pokemon2, user.moves[0])
+    assert not result["hit"]
+    assert user.current_status.current_hp == user.status.hp
+
+    user.current_status.current_hp = 1
+    assert user.moves[0].try_execute(battle, user, battle.pokemon2)
+    battle.use_move(user, battle.pokemon2, user.moves[0])
+    assert user.current_status.current_hp == 1 + user.status.hp // 2
+
+
 # くさむすびの威力は相手の体重で決まる
 @pytest.mark.parametrize("name, power", [("ムウマージ", 20), ("ライチュウ", 60), ("カビゴン", 120), ("ジュゴン", 100)])
 def test_grass_knot_power_by_weight(name, power):
