@@ -48,6 +48,7 @@ class CheckingAgent(RandomAgent):
             assert view.pokemon_id == truth.pokemon_id
             assert set(view.revealed_move_ids) <= set(truth.move_ids)
             assert view.revealed_item_id in (None, truth.item_id)
+            assert view.revealed_ability_id in (None, truth.ability_id)
             assert 0 <= view.hp_ratio <= 1
         # 最初の行動を決める時点では、相手は先発しか見えず、まだ技も見ていない
         if len(self.observations) == 1:
@@ -87,9 +88,9 @@ def test_observations_show_only_visible_information(seed):
     assert result.won == (battle.trainer2.is_defeated() and not battle.trainer1.is_defeated())
 
 
-# 対戦が進めば、相手の使った技・判明した持ち物が観測に貯まっていく
+# 対戦が進めば、相手の使った技・判明した特性・持ち物が観測に貯まっていく
 def test_observations_accumulate_revealed_information():
-    revealed_moves = revealed_items = 0
+    revealed_moves = revealed_items = revealed_abilities = 0
     for seed in range(30):
         rng = random.Random(seed)
         own, opponent = random_team(rng), random_team(rng)
@@ -98,7 +99,8 @@ def test_observations_accumulate_revealed_information():
         last = agent.observations[-1]
         revealed_moves += sum(len(view.revealed_move_ids) for view in last.opponent_seen)
         revealed_items += sum(view.revealed_item_id is not None for view in last.opponent_seen)
-    assert revealed_moves > 0 and revealed_items > 0
+        revealed_abilities += sum(view.revealed_ability_id is not None for view in last.opponent_seen)
+    assert revealed_moves > 0 and revealed_items > 0 and revealed_abilities > 0
 
 
 # 相手も Agent にでき、相手の観測は相手側から見たものになる

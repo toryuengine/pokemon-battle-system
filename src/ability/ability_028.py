@@ -8,4 +8,5 @@ class Hydration(BaseAbility):
 
     def on_end_of_turn(self, battle, pokemon):
         if battle.get_effective_weather() == "rain" and pokemon.current_status.status_condition is not None:
+            battle.reveal_ability(pokemon, self)
             battle.cure_status(pokemon)

@@ -7,4 +7,6 @@ class Steadfast(BaseAbility):
         super().__init__(id=75)
 
     def on_flinched(self, battle, pokemon):
+        if battle.get_stages(pokemon).spd < 6:
+            battle.reveal_ability(pokemon, self)
         battle.change_stage(pokemon, "spd", 1)

@@ -183,6 +183,8 @@ def battle_state(observation: TurnObservation) -> List[str]:
         known = []
         if opponent.revealed_move_ids:
             known.append("見た技: " + "・".join(move_name(move_id) for move_id in opponent.revealed_move_ids))
+        if opponent.revealed_ability_id is not None:
+            known.append("特性: " + ability_name(opponent.revealed_ability_id))
         if opponent.revealed_item_id is not None:
             known.append("持ち物: " + item_name(opponent.revealed_item_id))
         if known:

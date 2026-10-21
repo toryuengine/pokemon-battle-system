@@ -15,6 +15,11 @@ from typing import Optional
 #   "faint"       瀕死になった。party_index
 #   "status"      状態異常（status_condition）が変わった。party_index・before・after
 #   "item"        持ち物が変わった（消費・はたきおとす・トリック等）。party_index・before・after（持ち物のID。無ければNone）
+#   "ability"     特性が発動し、画面のメッセージで判明した（いかく・プレッシャー・ちくでん等。テクニシャンのように
+#                 メッセージが出ない特性は入らない）。party_index・ability_id・
+#                 is_original（元の特性か。トレース・へんしんでコピーした特性ならFalse）
+#   "item_activate" 持ち物が消費されずに発動し、画面のメッセージで判明した（たべのこし・いのちのたま・きあいのハチマキ等）。
+#                 party_index・item_id（消費した・奪われた持ち物は"item"で分かるので、こちらには入れない）
 #   "battle_end"  対戦が終わった。winner_side（1/2。引き分け・ターン上限ならNone）・is_draw
 
 

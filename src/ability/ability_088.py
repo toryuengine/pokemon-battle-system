@@ -14,6 +14,7 @@ class Truant(BaseAbility):
     def on_before_action(self, battle, pokemon) -> bool:
         if self.is_loafing:
             self.is_loafing = False
+            battle.reveal_ability(pokemon, self)
             return False
         self.is_loafing = True
         return True

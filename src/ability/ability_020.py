@@ -9,4 +9,7 @@ class Sturdy(BaseAbility):
         super().__init__(id=20)
 
     def on_try_hit(self, battle, attacker, defender, move) -> bool:
-        return move.is_ohko
+        if not move.is_ohko:
+            return False
+        battle.reveal_ability(defender, self)
+        return True

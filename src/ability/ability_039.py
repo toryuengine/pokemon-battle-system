@@ -11,4 +11,7 @@ class CuteCharm(BaseAbility):
     def on_contact_received(self, battle, pokemon, attacker, move):
         if battle.rng.random() >= CONTACT_EFFECT_CHANCE:
             return
+        was_infatuated = attacker.current_status.infatuated_by is not None
         battle.perform_attract(pokemon, attacker)
+        if not was_infatuated and attacker.current_status.infatuated_by is pokemon:
+            battle.reveal_ability(pokemon, self)

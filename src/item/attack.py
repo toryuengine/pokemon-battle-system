@@ -48,7 +48,9 @@ class LifeOrb(BaseItem):
         return LIFE_ORB_MULTIPLIER
 
     def on_after_damage(self, battle, attacker, defender, move, total_damage: int):
-        battle.apply_indirect_damage(attacker, max(1, int(attacker.status.hp * LIFE_ORB_RECOIL_RATIO)))
+        # マジックガードならHPが減らず、メッセージも出ない
+        if battle.apply_indirect_damage(attacker, max(1, int(attacker.status.hp * LIFE_ORB_RECOIL_RATIO))):
+            battle.reveal_item(attacker)
 
 
 # たつじんのおび: 効果抜群の技のダメージ1.2倍

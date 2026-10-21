@@ -14,4 +14,5 @@ class Download(BaseAbility):
         stages = battle.get_stages(opponent)
         defense = opponent.status.defense * stage_multiplier(stages.defense)
         spdef = opponent.status.spdef * stage_multiplier(stages.spdef)
+        battle.reveal_ability(pokemon, self)
         battle.change_stage(pokemon, "atk" if defense < spdef else "spatk", 1)

@@ -11,5 +11,7 @@ class PoisonHeal(BaseAbility):
     def on_residual_status(self, battle, pokemon, condition) -> bool:
         if condition != "poison":
             return False
+        # どくのダメージを受けないことが見えるので、HPが満タンでも判明する
+        battle.reveal_ability(pokemon, self)
         battle.apply_heal(pokemon, POISON_HEAL_RATIO)
         return True

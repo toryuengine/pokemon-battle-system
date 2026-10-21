@@ -15,5 +15,6 @@ class Aftermath(BaseAbility):
             return
         if battle.is_damp_active():
             return
-        # マジックガードの相手はダメージを受けない
-        battle.apply_indirect_damage(attacker, max(1, int(attacker.status.hp * AFTERMATH_DAMAGE_RATIO)))
+        # マジックガードの相手はダメージを受けない（メッセージも出ない）
+        if battle.apply_indirect_damage(attacker, max(1, int(attacker.status.hp * AFTERMATH_DAMAGE_RATIO))):
+            battle.reveal_ability(pokemon, self)

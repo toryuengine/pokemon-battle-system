@@ -12,4 +12,7 @@ class Soundproof(BaseAbility):
         super().__init__(id=14)
 
     def on_try_hit(self, battle, attacker, defender, move) -> bool:
-        return move.id in SOUND_MOVE_IDS
+        if move.id not in SOUND_MOVE_IDS:
+            return False
+        battle.reveal_ability(defender, self)
+        return True

@@ -13,7 +13,9 @@ class SlowStart(BaseAbility):
         # 効果が続く残りターン数。トレースでコピーされた場合も、コピーした時点から5ターン効果が出る
         self.turns_remaining = SLOW_START_TURNS
 
+    # 場に出た時に「調子が出ない」とメッセージが出る
     def on_switch_in(self, battle, pokemon):
+        battle.reveal_ability(pokemon, self)
         self.turns_remaining = SLOW_START_TURNS
 
     def on_end_of_turn(self, battle, pokemon):
