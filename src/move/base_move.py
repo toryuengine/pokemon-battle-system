@@ -190,6 +190,9 @@ class BaseMove:
     # 命中判定の直前に呼ばれる。技を出す条件を満たしていなければFalseを返し、技は失敗する（PPは消費済み）
     # なげつける（持ち物が無い）・はきだす/のみこむ（たくわえていない）等はサブクラス側で上書きする
     def try_execute(self, battle, attacker, defender) -> bool:
+        # じこさいせい・タマゴうみ等の回復技は、HPが満タンなら失敗する（本編仕様）
+        if any(effect[0] == "heal" for effect in self.effects):
+            return attacker.current_status.current_hp < attacker.status.hp
         return True
 
     # 命中していれば、self.effectsの内容を順番にBattleへ適用する
