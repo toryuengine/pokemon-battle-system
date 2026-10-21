@@ -2176,6 +2176,7 @@ class Battle:
         return result
 
     # ターン終了時、みらいよちの残りターンを1減らし、0になったらその時点で場に出ている個体を攻撃する
+    # 第4世代仕様で、まもるでは防げないが、身代わりは無視しない（身代わりが受け、超えた分は本体に届かない）
     def apply_future_sight(self):
         for trainer in (self.trainer1, self.trainer2):
             if trainer.future_sight_turns_remaining <= 0:
@@ -2186,6 +2187,9 @@ class Battle:
 
             target = trainer.active
             if self.is_fainted(target) or not check_hit(trainer.future_sight_hitrate, self.rng):
+                continue
+            if self.has_substitute(target):
+                self.apply_substitute_damage(target, trainer.future_sight_damage)
                 continue
             damage = self.apply_survival_effects(target, trainer.future_sight_damage)
             self.apply_damage(target, damage)
