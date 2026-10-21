@@ -58,13 +58,26 @@ class HealingAbsorbAbility(TypeAbsorbAbility):
         battle.apply_heal(pokemon, ABSORB_HEAL_RATIO)
 
 
-# 特定の状態異常にかからない（すでにかかっている状態異常を治す効果は未実装）
+# 特定の状態異常にかからない。トレース・へんしんで特性を得た時や、かたやぶりの相手に状態異常にされた時など、
+# すでにその状態異常にかかっていれば、すぐに治す（「〜の めんえきで どくが なおった」と表示されるので特性が判明する）
 class StatusImmunityAbility(BaseAbility):
     is_breakable = True
     immune_condition = None
 
     def can_receive_status(self, battle, pokemon, condition) -> bool:
         return condition != self.immune_condition
+
+    def on_update(self, battle, pokemon):
+        status = pokemon.current_status
+        if self.immune_condition == "confusion":
+            if status.confusion_turns_remaining <= 0:
+                return
+            status.confusion_turns_remaining = 0
+        elif status.status_condition == self.immune_condition:
+            battle.cure_status(pokemon)
+        else:
+            return
+        battle.reveal_ability(pokemon, self)
 
 
 class WeatherEvasionAbility(BaseAbility):

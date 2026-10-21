@@ -116,6 +116,11 @@ class BaseAbility:
     def on_try_hit(self, battle, attacker, defender, move) -> bool:
         return False
 
+    # 状態の変化の後（行動・交代・ターン終了時の各処理の後。持ち物の発動の直前）に、状態を見て発動する
+    # (めんえき等が、トレース・へんしん・かたやぶりの技でかかっていた状態異常を治す)
+    def on_update(self, battle, pokemon):
+        pass
+
     # 状態異常（こんらん含む）にかかるかどうか
     def can_receive_status(self, battle, pokemon, condition) -> bool:
         return True
