@@ -449,3 +449,18 @@ def test_future_sight_hits_substitute(monkeypatch, substitute_hp):
     assert target.current_status.current_hp == target.status.hp
     assert target.current_status.substitute_hp == max(0, substitute_hp - damage)
     assert target.item is not None
+
+
+# 第4世代では、ねんちゃくはむしくい・ついばむを防げない（防ぐのは第5世代から）。
+# きのみは奪われ、使った側がその効果（オボンのみなら最大HPの1/4回復）を得る
+@pytest.mark.parametrize("move_name", ["むしくい", "ついばむ"])
+def test_sticky_hold_does_not_prevent_bug_bite(move_name):
+    user = make("ムクホーク", [move_name])
+    target = make("カビゴン", ["だましうち"], ability="ねんちゃく", item="オボンのみ")
+    battle = Battle(user, target, rng=random.Random(0))
+    user.current_status.current_hp = 1
+
+    battle.perform_eat_berry(user, target)
+    assert target.item is None
+    assert user.current_status.current_hp == 1 + user.status.hp // 4
+    assert not [event for event in battle.events if event.kind == "ability"]
