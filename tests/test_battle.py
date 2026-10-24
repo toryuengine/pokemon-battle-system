@@ -320,6 +320,20 @@ def test_sucker_punch_conditions(selected, has_moved, succeeds):
     assert result["hit"] is succeeds
 
 
+# ねこだまし: 場に出た最初のターンにひるみ等で行動できなかった場合も、最初の行動の機会は終わった扱いで、次のターンは失敗する
+def test_fake_out_fails_after_missing_first_turn():
+    fast = make("マニューラ", ["ねこだまし"], level=100)
+    slow = make("カビゴン", ["ねこだまし"], level=100)
+    battle = Battle(fast, slow, rng=random.Random(0))
+    battle.MAX_TURNS = 2
+    battle.start_battle()
+    results = [(event.turn, event.side, event.data["hit"]) for event in battle.events if event.kind == "move_result"]
+    cant_moves = [(event.turn, event.side) for event in battle.events if event.kind == "cant_move"]
+    # 1ターン目: 速い側だけ成功し、遅い側はひるんで動けない。2ターン目: 両者とも失敗する
+    assert results == [(1, 1, True), (2, 1, False), (2, 2, False)]
+    assert cant_moves == [(1, 2)]
+
+
 # がむしゃら: 相手の残りHPを自分の残りHPと同じにする。自分の方がHPが多ければ失敗し、ゴーストタイプには当たらない
 def test_endeavor():
     attacker = make("カビゴン", ["がむしゃら"])
