@@ -1982,16 +1982,14 @@ class Battle:
         self.on_item_lost(target)
 
     # むしくい・ついばむ: 相手の持っているきのみを奪って食べ、その効果を自分が得る（HP等の発動条件に関係なく食べる）
-    # 相手がねんちゃくなら奪えない（第4世代仕様）。食べられたきのみは相手のリサイクルでも取り戻せない
+    # 第4世代では相手がねんちゃくでも奪える（ねんちゃくが防ぐようになったのは第5世代から）。
+    # 食べられたきのみは相手のリサイクルでも取り戻せない
     # 半減実のように、食べても効果が無いきのみは奪うだけになる
     def perform_eat_berry(self, attacker: Pokemon, target: Pokemon):
         if self.is_shielded_by_substitute(target, attacker):
             return
         berry = target.item
         if berry is None or not berry.is_berry:
-            return
-        if self.get_target_ability(target, attacker).prevents_item_removal:
-            self.reveal_ability(target)
             return
         target.item = None
         self.on_item_lost(target)
