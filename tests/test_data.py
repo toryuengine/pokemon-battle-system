@@ -21,6 +21,7 @@ from move.movefactory import create_move
 from pokemon import Pokemon
 from readpokemondata import (load_ability_data, load_base_stats_data, load_item_data, load_move_data, load_pokemon_data,
                              load_nejiki_pool, load_round_data, load_round_pool)
+from trainer import Trainer
 
 
 def pokemon_id_of(name):
@@ -214,6 +215,30 @@ def test_slow_start():
     # 交代して出直すと、また5ターン半分になる
     regigigas.ability.on_switch_in(battle, regigigas)
     assert battle.get_effective_speed(regigigas) == slowed_speed
+
+
+# スロースタート（プラチナ・HGSS）: いえきで消されている間はターン終了時のカウントが進まない
+# いえきは場を退くまで解けず、出直すとカウントは最初から数え直しになるので、途中から再開することはない
+def test_slow_start_count_while_suppressed():
+    regigigas = Pokemon(pokemon_id_of("レジギガス"), 0, rng=random.Random(0))
+    other = Pokemon(0, 0, rng=random.Random(0))
+    battle = Battle(Trainer([regigigas, other]), Pokemon(0, 0, rng=random.Random(0)), rng=random.Random(0))
+    regigigas.ability.on_switch_in(battle, regigigas)
+    battle.apply_end_of_turn_abilities()
+    battle.apply_end_of_turn_abilities()
+    assert regigigas.ability.turns_remaining == 3
+
+    battle.perform_suppress_ability(regigigas)
+    assert battle.get_ability(regigigas).id is None
+    for _ in range(3):
+        battle.apply_end_of_turn_abilities()
+    assert regigigas.ability.turns_remaining == 3
+
+    # 引っ込めると、いえきが解けると同時にカウントも最初から数え直しになる
+    battle.switch_in(battle.trainer1, 1)
+    battle.switch_in(battle.trainer1, 0)
+    assert not regigigas.current_status.is_ability_suppressed
+    assert regigigas.ability.turns_remaining == 5
 
 
 @pytest.mark.parametrize("name, stat_name", [("ミストボール", "spatk"), ("ラスターパージ", "spdef")])
