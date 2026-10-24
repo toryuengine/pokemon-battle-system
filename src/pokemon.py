@@ -74,6 +74,12 @@ class CurrentStatus:
     is_ability_suppressed: bool = False
     # トレースで相手の特性をコピーする前の、元の特性（トレースのインスタンス）。場を退くと元に戻す
     ability_before_trace: Optional[BaseAbility] = None
+    # まねっこでコピーする・ものまねで変身する前の技構成（技のインスタンスのリスト。PPの減り具合もそのまま持つ）。
+    # Noneならコピー・変身していない。場を退くと元に戻す
+    moves_before_copy: Optional[List[BaseMove]] = None
+    # ものまねで変身する前のタイプ・特性・実数値 (type1, type2, ability, PokemonStatus)。Noneなら変身していない。
+    # 場を退くと元に戻す
+    form_before_transform: Optional[tuple] = None
     # こだわりハチマキ・こだわりメガネ・こだわりスカーフで固定された技のインスタンス。Noneなら固定されていない。
     # 交代すると解除される
     choice_locked_move: Optional[BaseMove] = None

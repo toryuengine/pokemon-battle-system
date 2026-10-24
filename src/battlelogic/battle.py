@@ -463,13 +463,16 @@ class Battle:
         # しぜんかいふく等、場を退く時に発動する特性（瀕死で退く場合は発動しない）
         if not self.is_fainted(outgoing):
             self.get_ability(outgoing).on_switch_out(self, outgoing)
+        # はねやすめで無くしたひこうタイプは、場を退くと戻る
+        # (変身した後にはねやすめを使った場合に、変身後のタイプで元の姿のタイプを上書きしないよう、変身より先に戻す)
+        self.restore_roost_types(outgoing)
+        # まねっこでコピーした技・ものまねで変身した姿は、場を退くと元に戻る
+        # (トレースした後に変身した場合に、トレースした特性→トレースの順で戻るよう、トレースより先に戻す)
+        self.restore_copied_state(outgoing)
         # トレースでコピーした特性は、場を退くと元のトレースに戻る
         if outgoing_status.ability_before_trace is not None:
             outgoing.ability = outgoing_status.ability_before_trace
             outgoing_status.ability_before_trace = None
-
-        # はねやすめで無くしたひこうタイプは、場を退くと戻る
-        self.restore_roost_types(outgoing)
         # みやぶるの「見破られた」状態、まもる・みきり・こらえるの連続成功カウンタは、場を退くと解除される
         outgoing_status.is_identified = False
         outgoing_status.protect_stall_counter = 0
@@ -1796,7 +1799,7 @@ class Battle:
 
     # まねっこ: targetが直前に使った技を、attackerの技構成の中のmimic_move(まねっこ自身)の枠にコピーする
     # コピーした技のPPは固定5。targetがまだ技を使っていない場合や、コピー不可の技(わるあがき)なら失敗する
-    # 注意: 交代して元のまねっこに戻す処理はまだ実装していない
+    # 場を退くと元の技構成に戻る（Battle.restore_copied_state）
     def perform_mimic(self, attacker: Pokemon, target: Pokemon, mimic_move: BaseMove):
         last_move_id = target.current_status.last_move_used_id
         if last_move_id is None or last_move_id == STRUGGLE_ID:
@@ -1804,6 +1807,7 @@ class Battle:
 
         for index, move in enumerate(attacker.moves):
             if move is mimic_move:
+                self.save_moves_before_copy(attacker)
                 copied_move = create_move(last_move_id)
                 copied_move.pp = COPIED_MOVE_PP
                 copied_move.current_pp = COPIED_MOVE_PP
@@ -1812,8 +1816,26 @@ class Battle:
 
     # ものまね: attackerがtargetに変身する。タイプ・実数値(HPを除く)・技構成(各PP5)・特性をコピーする
     # 現在HP・状態異常・持ち物はコピーしない
-    # 注意: 交代して元の姿に戻す処理はまだ実装していない
+    # 場を退くと元の姿（タイプ・特性・実数値・技構成）に戻る（Battle.restore_copied_state）
     def perform_transform(self, attacker: Pokemon, target: Pokemon):
+        status = attacker.current_status
+        # 2回目以降の変身では、最初の変身の前の姿を残しておく
+        if status.form_before_transform is None:
+            original_stats = attacker.status
+            # パワートリックで入れ替えていた攻撃と防御は、入れ替える前の実数値に戻して残す
+            # (変身で入れ替えた状態は無くなるので、場を退いた時に入れ替え後の実数値のまま戻らないようにする)
+            if status.is_power_trick_active:
+                original_stats = PokemonStatus(
+                    hp=original_stats.hp,
+                    atk=original_stats.defense,
+                    defense=original_stats.atk,
+                    spatk=original_stats.spatk,
+                    spdef=original_stats.spdef,
+                    spd=original_stats.spd,
+                )
+            status.form_before_transform = (attacker.type1, attacker.type2, attacker.ability, original_stats)
+        self.save_moves_before_copy(attacker)
+
         attacker.type1 = target.type1
         attacker.type2 = target.type2
         # 特性ごとの状態（もらいびの発動済み等）は引き継がず、同じ特性の新しいインスタンスを持つ
@@ -1837,6 +1859,25 @@ class Battle:
             copied_move.current_pp = COPIED_MOVE_PP
             copied_moves.append(copied_move)
         attacker.moves = copied_moves
+
+    # まねっこ・ものまねで技構成が変わる前の技構成を残しておく（既にコピー・変身していれば、最初の技構成のまま）
+    # 技のインスタンスごと残すので、まねっこ自身などの減ったPPも元に戻した時にそのまま残る
+    def save_moves_before_copy(self, pokemon: Pokemon):
+        if pokemon.current_status.moves_before_copy is None:
+            pokemon.current_status.moves_before_copy = list(pokemon.moves)
+
+    # まねっこでコピーした技・ものまねで変身した姿を、コピー・変身する前に戻す（場を退く時に呼ぶ）
+    # 第4世代仕様: 交代で手持ちに戻ると、コピーした技はまねっこに、変身した姿は元の姿に戻る
+    def restore_copied_state(self, pokemon: Pokemon):
+        status = pokemon.current_status
+        if status.moves_before_copy is not None:
+            pokemon.moves = status.moves_before_copy
+            status.moves_before_copy = None
+        if status.form_before_transform is not None:
+            pokemon.type1, pokemon.type2, pokemon.ability, pokemon.status = status.form_before_transform
+            status.form_before_transform = None
+            # 変身した後にパワートリックで入れ替えていても、入れ替えたのは変身後の実数値なので、元の姿では入れ替えていない
+            status.is_power_trick_active = False
 
     # とんぼがえり: 攻撃したpokemon自身が、手持ちの生きている個体に強制的に交代する
     # (交代先はswitch_policyではなく、瀕死のときと同じreplacement_policyに聞く)

@@ -478,3 +478,64 @@ def test_sticky_hold_does_not_prevent_bug_bite(move_name):
     assert target.item is None
     assert user.current_status.current_hp == 1 + user.status.hp // 4
     assert not [event for event in battle.events if event.kind == "ability"]
+
+
+# ---- まねっこ・ものまね ----
+
+# まねっこでコピーした技は、交代して手持ちに戻ると元のまねっこに戻る（まねっこを使って減ったPPもそのまま）
+def test_mimic_reverts_on_switch_out():
+    mimicker = make("バリヤード", ["サイコキネシス", "まねっこ"])
+    bench = make("カビゴン", ["のしかかり"])
+    target = make("カビゴン", ["じしん"])
+    battle = Battle(Trainer([mimicker, bench]), Trainer([target]), rng=random.Random(0))
+    target.current_status.last_move_used_id = move_id_of("じしん")
+    original_moves = list(mimicker.moves)
+    mimic_move = mimicker.moves[1]
+
+    battle.execute_move_action(mimicker, mimic_move)
+    assert mimicker.moves[1].id == move_id_of("じしん")
+
+    battle.switch_in(battle.trainer1, 1)
+    assert mimicker.moves == original_moves
+    assert mimicker.moves[1] is mimic_move
+    assert mimic_move.current_pp == mimic_move.pp - 1
+    assert mimicker.current_status.moves_before_copy is None
+
+
+# ものまねで変身した姿（タイプ・特性・実数値・技構成）は、交代して手持ちに戻ると元に戻る
+def test_transform_reverts_on_switch_out():
+    transformer = make("バリヤード", ["ものまね"], ability="ぼうおん")
+    bench = make("カビゴン", ["のしかかり"])
+    target = make("カビゴン", ["じしん", "のしかかり"], ability="めんえき")
+    battle = Battle(Trainer([transformer, bench]), Trainer([target]), rng=random.Random(0))
+    original = (transformer.type1, transformer.type2, transformer.ability, transformer.status, list(transformer.moves))
+
+    battle.execute_move_action(transformer, transformer.moves[0])
+    assert transformer.ability.id == ability_id_of("めんえき")
+    assert [move.id for move in transformer.moves] == [move_id_of("じしん"), move_id_of("のしかかり")]
+
+    battle.switch_in(battle.trainer1, 1)
+    assert (transformer.type1, transformer.type2, transformer.ability, transformer.status,
+            transformer.moves) == original
+    assert transformer.current_status.form_before_transform is None
+
+
+# パワートリックで攻撃と防御を入れ替えてから変身・変身してからパワートリックを使った場合も、
+# 交代すると入れ替える前の元の実数値に戻る
+@pytest.mark.parametrize("power_trick_before_transform", [True, False])
+def test_transform_with_power_trick_reverts_to_original_stats(power_trick_before_transform):
+    transformer = make("バリヤード", ["ものまね"])
+    bench = make("カビゴン", ["のしかかり"])
+    target = make("カビゴン", ["じしん"])
+    battle = Battle(Trainer([transformer, bench]), Trainer([target]), rng=random.Random(0))
+    original_atk, original_def = transformer.status.atk, transformer.status.defense
+
+    if power_trick_before_transform:
+        battle.perform_power_trick(transformer)
+    battle.perform_transform(transformer, target)
+    if not power_trick_before_transform:
+        battle.perform_power_trick(transformer)
+
+    battle.switch_in(battle.trainer1, 1)
+    assert (transformer.status.atk, transformer.status.defense) == (original_atk, original_def)
+    assert not transformer.current_status.is_power_trick_active
